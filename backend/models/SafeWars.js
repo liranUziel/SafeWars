@@ -6,10 +6,15 @@ const safeSchema = mongoose.Schema({
         required:true,
         ref:'Class'
     },
-    users:[{
+    safes:[{
         type:mongoose.Schema.Types.ObjectID,
         required:true,
-        ref:'Users'
+        ref:'Safe'
+    }],
+    solve:[{
+        type:mongoose.Schema.Types.ObjectID,
+        required:true,
+        ref:'Safe'
     }],
     showScoore:{
         type:Boolean,

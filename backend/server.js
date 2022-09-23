@@ -46,11 +46,11 @@ app.use(express.static('/public'));
 
 const usersRoute = require('./routes/Users');
 const safeRoute = require('./routes/Safe');
-//const safeRoute = require('./routes/Class');
+const classRoute = require('./routes/Class');
 
 app.use('/users',usersRoute);
 app.use('/safe',safeRoute);
-//app.use('/class',safeRoute);
+app.use('/class',classRoute);
 
 //defult route
 

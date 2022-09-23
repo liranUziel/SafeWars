@@ -4,7 +4,15 @@ const {getSafe} = require('../controllers/classController');
 const router = express.Router();
 const {protect} = require('../middleware/authMiddleware');
 
-router.get('/safes',registerUser);
-//protect this
+//protect this login
+//all public safe
+//localhost/class/safe
+router.get('/safes',);
+
+//protect this login + class
+//localhost/class/safes/turnamment
+//all private safe
+router.get('/safes/turnamment',getSafe);
+
 
 module.exports = router;
