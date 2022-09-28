@@ -10,8 +10,7 @@ const User = require("../models/User");
 const getSafe = aysncHanler(async (req, res) => {
   //load public safe
   const admin = await User.findOne({ userType: "admin" });
-  const safe = await Safe.find({});
-  console.log(safe);
+  const safe = await Safe.find({ user: admin._id });
 
   res.status(200).json(safe);
 });

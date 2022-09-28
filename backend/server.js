@@ -46,7 +46,7 @@ const safeRoute = require("./routes/Safe");
 const classRoute = require("./routes/Class");
 
 app.use("/users", usersRoute);
-app.use("/safe", safeRoute);
+app.use("/safes", safeRoute);
 app.use("/class", classRoute);
 
 //defult route

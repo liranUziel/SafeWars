@@ -50,7 +50,6 @@ const registerUser = aysncHanler(async (req, res) => {
     userName,
     email,
     password: hashedPassword,
-    userType: "student",
   });
   if (user) {
     res.status(201).json({
