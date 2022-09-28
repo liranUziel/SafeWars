@@ -1,0 +1,60 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.header{
+    display: grid;
+    grid-template-columns: 20% 1fr 5% 2%;
+    background-color:#369993;
+    align-items: center;
+}
+.logo{
+    padding:10px;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+svg{
+    font-size: 1.5rem;
+}
+
+.logo svg::after{
+    content:"s";
+    color:white;
+    position:absolute;
+    left:17px;
+    top: 14px;
+    font-size:0.9rem;
+}
+li.header_item{
+    list-style-type: none;
+    
+}
+
+button:hover{
+    list-style-type: none;
+    color:white;
+}
+
+.user_name{
+
+}
+
+.header_item_btn{
+    border: none;
+    background-color:#369993;
+    height:100%;
+}
+.logout_btn{
+    border: none;
+    background-color:#369993;
+    font-weight:bold;;
+    height:100%;
+}
+.class_name{
+    font-weight:bold;
+}
+.header_item_list{
+    display: flex;
+    gap: 20px;
+}
