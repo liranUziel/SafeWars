@@ -9,33 +9,60 @@
     margin:10px;
 }
 
-.card{
+.safe{
     width: 200px;
     height: 200px;
+    border-radius: 5px;
+}
+.safe.solve{
+    box-shadow: 0px 0px 10px 3px #369993;
 }
 
-.frame{
+.safe__frame.solve{
+    background-color:#369993;
+}
+.safe__frame{
     background-color:#454A5E;
     border-radius: 5px;
     width:inherit;
     height: inherit;
     display: grid;
 }
+
+
 .btn-array{
     display: flex;
     gap:5px;
     justify-content: right;
-    margin: 10px;
-    color:#6e7386;
+    
+    
 }
-.btn-array i:hover{
+.btn-array__btn{
+    color:#297d77;
+    padding-top: 3px;
+    margin: 3px;
+}
+
+.btn-array__btn.solve{
+    color:#6e7386;
+    padding-top: 3px;
+    margin: 3px;
+}
+
+.btn-array .btn-array__btn:hover{
+    color:white;
+}
+
+.btn-array .btn-array__btn.solve:hover{
     color:#369993;
 }
+
 
 .info{
     background-color:white;
     width:inherit;
     padding-left: 10px;
+    margin-top: 10px;
 }
 .icon{
     display: flex;
@@ -76,8 +103,14 @@
     display:flex;
 }
 
+.vaultIcon.solve{
+    font-size:150px;
+    color:#297d77;
+    padding: 20px;
+}
+
 .vaultIcon{
-    font-size:120px;
+    font-size:130px;
     color:#6e7386;
     padding: 20px;
 }
@@ -85,11 +118,6 @@
 .vaultIcon:hover + .break{
     display:block;
     z-index:-1;
-}
-.vaultIcon{
-    font-size:120px;
-    color:#6e7386;
-    padding: 0 35px 35px;
 }
 .fileName{
     color: #369993;

@@ -5,9 +5,12 @@
 
 .header{
     display: grid;
-    grid-template-columns: 20% 1fr 5% 2%;
+    grid-template-columns: 40% 1fr 10% 2% 2%;
     background-color:#369993;
     align-items: center;
+}
+.header > * {
+    margin-left: 10px;  
 }
 .logo{
     padding:10px;
@@ -37,7 +40,8 @@ button:hover{
 }
 
 .user_name{
-
+    font-family: sans-serif;
+    margin-left: 10px;
 }
 
 .header_item_btn{
@@ -48,7 +52,7 @@ button:hover{
 .logout_btn{
     border: none;
     background-color:#369993;
-    font-weight:bold;;
+    font-weight:bold;
     height:100%;
 }
 .class_name{
