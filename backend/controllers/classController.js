@@ -10,11 +10,15 @@ const User = require("../models/User");
 
 const getClass = aysncHanler(async (req, res) => {
   const { id, userType } = req.body.user;
+  classIn = {};
+  if (userType === "student") {
+    const classIn = await Class.find({ students: { _id: id } });
+  }
   //load public safe
-  const calsses = await Class.find({});
-  const safe = await Safe.find({ user: admin._id });
+  // const calsses = await Class.find({});
+  // const safe = await Safe.find({ user: admin._id });
 
-  res.status(200).json("KARMIEL RULES!");
+  res.status(200).json(classIn);
 });
 
 const getAdminSafes = aysncHanler(async (req, res) => {
