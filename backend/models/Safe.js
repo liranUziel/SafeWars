@@ -1,19 +1,20 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const safeSchema = mongoose.Schema({
-    user:{
-        type:mongoose.Schema.Types.ObjectID,
-        required:true,
-        ref:'Users'
+const safeSchema = mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Users",
     },
-    safeName:{
-        type:String,
-        required: [true,'Please add safe name'],
+    safeName: {
+      type: String,
+      required: [true, "Please add safe name"],
     },
-    safeType:{
-        type:String,
-        required: [true,'Please add safe type'],
-    }
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('safes',safeSchema);
+module.exports = mongoose.model("safes", safeSchema);

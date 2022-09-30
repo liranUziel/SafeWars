@@ -1,21 +1,31 @@
 //wrap async and then we don't have to use try catch
-const aysncHanler = require('express-async-handler');
-const Safe = require('../models/Safe');
-const User = require('../models/User');
+const aysncHanler = require("express-async-handler");
+const Class = require("../models/Class");
+const Safe = require("../models/Safe");
+const User = require("../models/User");
 
-// @desc get user safe
-// @route GET /safe
-// @access Public
+// @desc get class info
+// @route GET /class/
+// @access private
 
-const  getSafe = aysncHanler(async (req,res) =>{
-    
-    //load public safe  
-    const admin = await User.findOne({userType:'admin'});
-    const safe = await Safe.find({user:admin._id});
+const getClass = aysncHanler(async (req, res) => {
+  const { id, userType } = req.body.user;
+  //load public safe
+  const calsses = await Class.find({});
+  const safe = await Safe.find({ user: admin._id });
 
-    res.status(200).json(safe);
-})
+  res.status(200).json("KARMIEL RULES!");
+});
+
+const getAdminSafes = aysncHanler(async (req, res) => {
+  //load public safe
+  const admin = await User.findOne({ userType: "admin" });
+  const safe = await Safe.find({ user: admin._id });
+
+  res.status(200).json(safe);
+});
 
 module.exports = {
-    getSafe,  
-}
+  getAdminSafes,
+  getClass,
+};
