@@ -1,23 +1,33 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const ClassSchema = mongoose.Schema({
-    className:{
-        type:String,
-        required: [true,'Please add a name'],
-        unique: true
+const ClassSchema = mongoose.Schema(
+  {
+    className: {
+      type: String,
+      required: [true, "Please add a name"],
+      unique: true,
     },
-    classID:{
-        type:String,
-        required: [true,'Please add an id'],
-        unique: true
+    classNumber: {
+      type: String,
+      required: [true, "Please add a class number"],
+      unique: true,
     },
-    instructorId:{
-        type:String,
-        required: [true,'Please add a password']
+    instructorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "Please add a valid instructor id"],
     },
-    students:[String],
-},{
-    timestamps:true,
-});
+    students: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+    },
+    district: {
+      type: string,
+      required: [true, "Please add a district"],
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model('class',ClassSchema);
+module.exports = mongoose.model("class", ClassSchema);

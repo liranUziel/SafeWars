@@ -1,18 +1,17 @@
-const express = require('express');
+const express = require("express");
 
-const {getSafe} = require('../controllers/classController');
+const { getClass, getAdminSafes } = require("../controllers/classController");
 const router = express.Router();
-const {protect} = require('../middleware/authMiddleware');
+const { protect } = require("../middleware/authMiddleware");
 
-//protect this login
+//protect this path
 //all public safe
-//localhost/class/safe
-router.get('/safes',);
+//localhost/class/
+router.get("/", protect, getClass);
 
-//protect this login + class
-//localhost/class/safes/turnamment
-//all private safe
-router.get('/safes/turnamment',getSafe);
-
+//protect this path
+//all public safes
+//localhost/class/safes
+router.get("/safes", protect, getAdminSafes);
 
 module.exports = router;
