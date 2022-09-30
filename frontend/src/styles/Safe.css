@@ -1,0 +1,96 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+/* grid of the cards */
+.safe_container {
+    display: flex;
+    gap:20px;
+    margin:10px;
+}
+
+.card{
+    width: 200px;
+    height: 200px;
+}
+
+.frame{
+    background-color:#454A5E;
+    border-radius: 5px;
+    width:inherit;
+    height: inherit;
+    display: grid;
+}
+.btn-array{
+    display: flex;
+    gap:5px;
+    justify-content: right;
+    margin: 10px;
+    color:#6e7386;
+}
+.btn-array i:hover{
+    color:#369993;
+}
+
+.info{
+    background-color:white;
+    width:inherit;
+    padding-left: 10px;
+}
+.icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btnCA{
+    position: absolute;
+    display: none;
+    
+}
+.breakBtn{
+    background-color:#369993;
+    color:white;
+    font-weight: bold;
+    width: 100px;
+    height: 30px;
+    border:none;
+    border-radius: 5px;
+    border: 0;
+}
+/* .editBtn{
+    background-color:#51b3ac;
+    color:white;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    border:none;
+    border-radius: 0 5px 5px 0;
+    border: 0;
+} */
+
+.btnCA:hover{
+    box-shadow: 2px 2px 20px #3ba59e;
+}
+
+.icon:hover i + .btnCA{
+    display:flex;
+}
+
+.vaultIcon{
+    font-size:120px;
+    color:#6e7386;
+    padding: 20px;
+}
+
+.vaultIcon:hover + .break{
+    display:block;
+    z-index:-1;
+}
+.vaultIcon{
+    font-size:120px;
+    color:#6e7386;
+    padding: 0 35px 35px;
+}
+.fileName{
+    color: #369993;
+}
