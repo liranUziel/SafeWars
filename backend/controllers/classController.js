@@ -10,7 +10,7 @@ const User = require("../models/User");
 // @access private
 
 const getClass = aysncHanler(async (req, res) => {
-  let { _id: id, userType } = req.user;
+  const { _id: id, userType } = req.user;
   classIn = {};
   if (userType === "student") {
     classIn = await Class.find({ studentIds: id });

@@ -28,8 +28,27 @@ const updateTournamnet = asyncHandler(async (req, res) => {
   res.status(200).json("Cool Info");
 });
 
+// @desc get all tournament safes
+// @route PUT /tournament/safes
+// @access private
+
+const getTournamentSafes = asyncHandler(async (req, res) => {
+  let safes = [];
+  const { _id: id, userType } = req.user;
+  if (userType === "student") {
+    classIn = await Class.find({ studentIds: id });
+  } else if (userType === "instructor") {
+    classIn = await Class.find({ instructorId: id });
+  }
+  //load public safe
+  const admin = await User.findOne({ userType: "admin" });
+  const safe = await Safe.find({ user: admin._id });
+  res.status(200).json("Cool Info");
+});
+
 module.exports = {
   getTournament,
   createTournamnet,
   updateTournamnet,
+  getTournamentSafes,
 };
