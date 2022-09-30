@@ -2,13 +2,13 @@ import Safe from './Safe'
 import '../../styles/Safe.css'
 const HomeClass = () => {
 
-  const safes = [{id:1,name:"Adding"},{id:2,name:"EZ"},{id:3,name:"Substract"}];
+  const safes = [{id:1,name:"Adding",solve:true},{id:2,name:"EZ",solve:true},{id:3,name:"Substract",solve:false}];
   // const safes = [];
   if (safes.length != 0)
     return (
-      <div class="safe_container">
+      <div className="safe_container">
         {
-          safes.map(safe => <Safe safeID={safe.id} safeName={safe.name}></Safe>)
+          safes.map(safe => <Safe key={safe.id} safe={safe}></Safe>)
         }
       </div>
     )
