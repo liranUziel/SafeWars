@@ -9,10 +9,17 @@ import { logout,reset } from '../features/auth/authSlice';
 
 import '../styles/Header.css'
 
+import classUtil from '../utils/class'
+
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {user} = useSelector((state)=> state.auth);
+    const [className,setClassName] = useState('');
+    useEffect(() =>{
+        //axios function in util class;
+        setClassName(classUtil.getClassInfo());
+    },[]); 
 
     const onLogout = () =>{
         dispatch(logout())
@@ -42,7 +49,7 @@ const Header = () => {
                 <li id="" className="header_item">
                     <button className="header_item_btn" onClick={GotoClass}>
                         <FaChalkboardTeacher/>
-                        Class <span className="class_name"> Emek Ysrael</span>
+                        Class <span className="class_name">{className}</span>
                     </button>
                 </li>
                 <li id="" className="header_item">
