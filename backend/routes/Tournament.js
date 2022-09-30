@@ -4,6 +4,7 @@ const {
   getTournament,
   createTournamnet,
   updateTournamnet,
+  getTournamentSafes,
 } = require("../controllers/tournamentController");
 const router = express.Router();
 
@@ -15,5 +16,7 @@ router.get("/", protect, authorizedProtect, getTournament);
 router.post("/", protect, authorizedProtect, createTournamnet);
 
 router.put("/", protect, authorizedProtect, updateTournamnet);
+
+router.get("/safes", protect, getTournamentSafes);
 
 module.exports = router;
