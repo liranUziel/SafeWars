@@ -42,11 +42,11 @@ app.use(express.static("/public"));
 //Import Routes
 
 const usersRoute = require("./routes/Users");
-const safeRoute = require("./routes/Safe");
+const tournamentRoute = require("./routes/Tournament");
 const classRoute = require("./routes/Class");
 
 app.use("/users", usersRoute);
-app.use("/safes", safeRoute);
+app.use("/tournament", tournamentRoute);
 app.use("/class", classRoute);
 
 //defult route

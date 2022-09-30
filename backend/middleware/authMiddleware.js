@@ -2,6 +2,15 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 
+const allowedPersonel = ["teacher", "admin"];
+
+const authorizedProtect = asyncHandler(async (req, res, next) => {
+  if (allowedPersonel.includes(req.user.userType)) {
+    return next();
+  }
+  res.status(401).json("You shall not pass!");
+});
+
 const protect = asyncHandler(async (req, res, next) => {
   let token;
   if (
@@ -27,4 +36,4 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { protect };
+module.exports = { protect, authorizedProtect };

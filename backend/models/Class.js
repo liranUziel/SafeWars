@@ -16,7 +16,10 @@ const ClassSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: [true, "Please add a valid instructor id"],
     },
-    students: [mongoose.Schema.Types.ObjectId],
+    students: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+    },
     district: {
       type: string,
       required: [true, "Please add a district"],

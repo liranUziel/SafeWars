@@ -29,6 +29,8 @@ const getUser = aysncHanler(async (req, res) => {
 const registerUser = aysncHanler(async (req, res) => {
   const { realName, userName, email, password } = req.body;
 
+  console.log(realName, userName, email, password);
+
   if (!realName || !userName || !email || !password) {
     res.status(400);
     throw new Error("Please add all fields");

@@ -19,6 +19,11 @@ const UserSchema = mongoose.Schema(
       type: String,
       default: "student",
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     solvedSafes: [
       {
         type: mongoose.Schema.Types.ObjectId,
