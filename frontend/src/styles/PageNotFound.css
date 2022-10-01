@@ -1,0 +1,50 @@
+:root{
+    --textColor:lightgray;
+}
+.page__not__found__text{
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+.page__not__found__text.title{
+    font-weight:500;
+    font-size: 3rem;
+
+}
+
+.page__not__found__text.subtitle{
+    font-weight:500;
+    font-size: 1.5rem;
+    padding-right: 10px;
+}
+.page__not__found___container.page__not__found{
+   padding-top: 100px;
+    display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+.page__not__found__btn{
+    background-color:#369993;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-weight:500;
+    font-size:1rem;
+    color:white;
+    border:none;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+}
+.page__not__found__img{
+    width:100px;
+}
+.page__not__found_404{
+    width: 200px;
+    height:fit-content;
+}
+.page__not__found__btn:hover{
+    background-color:#46b7b0;
+    box-shadow:0px 0px 10px #369993;
+}
+.page__not__found__text.safe_box{
+    display: flex;
+    align-items:center;
+}

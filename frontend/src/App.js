@@ -8,7 +8,7 @@ import FormPage from './pages/FormPage/FormPage';
 import Home from './pages/Home/Home';
 import Class from './pages/Home/HomeClass';
 import HomeSafeZone from './pages/Home/HomeSafeZone';
-import PageNotFound from './pages/Home/PageNotFound';
+import PageNotFound from './companents/PageNotFound';
 
 function App() {
   

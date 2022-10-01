@@ -2,6 +2,11 @@ import {BsFillArrowDownCircleFill,BsFillArrowUpCircleFill,BsFillXCircleFill,BsSa
 import {RiSafe2Fill} from 'react-icons/ri'
 import '../../styles/Safe.css'
 const Safe = ({safe}) => {
+
+    const breakSafe = (e) =>{
+        console.log(e.target.id);
+    }   
+
     return (
         <div className={safe.solve ? "safe solve ":"safe"} id={safe._id}>
             <div className={safe.solve ? "safe__frame solve ":"safe__frame"}>
@@ -16,8 +21,8 @@ const Safe = ({safe}) => {
                     <BsSafe className="vaultIcon"/>}
                     {/* <span class="vaultIcon"></span> */}
                     <div className="btnCA">
-                        <button className="breakBtn" id="sf1128b">BREAK</button>
-                        {/* <!-- <button className="editBtn">...</button> --> */}
+                        <button className="breakBtn" id={"s"+safe._id} onClick={breakSafe}>BREAK</button>
+                        {/* <button className="editBtn">...</button> */}
                     </div>
                 </div>
             </div>

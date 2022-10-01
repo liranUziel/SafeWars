@@ -99,7 +99,7 @@
     box-shadow: 2px 2px 20px #3ba59e;
 }
 
-.icon:hover i + .btnCA{
+.icon:hover .vaultIcon + .btnCA{
     display:flex;
 }
 
