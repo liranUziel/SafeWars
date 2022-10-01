@@ -1,4 +1,4 @@
-const aysncHanler = require("express-async-handler");
+const aysncHandler = require("express-async-handler");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -13,7 +13,7 @@ const TokenGenertor = (id) => {
 // @desc get user data
 // @route GET /users/user
 // @access Private
-const getUser = aysncHanler(async (req, res) => {
+const getUser = aysncHandler(async (req, res) => {
   const { _id, realName, email } = await User.findById(req.user.id);
   res.status(200).json({
     id: _id,
@@ -26,7 +26,7 @@ const getUser = aysncHanler(async (req, res) => {
 // @desc register user info
 // @route POST /users
 // @access Public
-const registerUser = aysncHanler(async (req, res) => {
+const registerUser = aysncHandler(async (req, res) => {
   const { realName, userName, email, password } = req.body;
 
   console.log(realName, userName, email, password);
@@ -70,7 +70,7 @@ const registerUser = aysncHanler(async (req, res) => {
 // @desc login user info
 // @route POST /users/login
 // @access Public
-const loginUser = aysncHanler(async (req, res) => {
+const loginUser = aysncHandler(async (req, res) => {
   const { userName, password } = req.body;
   if (!userName || !password) {
     res.status(400);
