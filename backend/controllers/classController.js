@@ -13,9 +13,15 @@ const getClass = aysncHanler(async (req, res) => {
   const { _id: id, userType } = req.user;
   classIn = {};
   if (userType === "student") {
-    classIn = await Class.find({ studentIds: id });
+    classIn = await Class.find({ studentIds: id }).select({
+      classInfo: 1,
+      _id: 0,
+    });
   } else if (userType === "instructor") {
-    classIn = await Class.find({ instructorId: id });
+    classIn = await Class.find({ instructorId: id }).select({
+      classInfo: 1,
+      _id: 0,
+    });
   }
 
   res.status(200).json(classIn);

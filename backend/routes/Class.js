@@ -5,7 +5,6 @@ const router = express.Router();
 const { protect } = require("../middleware/authMiddleware");
 
 //protect this path
-//all public safe
 //localhost/class/
 router.get("/", protect, getClass);
 

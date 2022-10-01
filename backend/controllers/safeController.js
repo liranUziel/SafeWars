@@ -2,6 +2,8 @@
 const asyncHandler = require("express-async-handler");
 const Safe = require("../models/Safe");
 const User = require("../models/User");
+const Tournament = require("../models/Tournament");
+const Class = require("../models/Class");
 
 /**************************************/
 const path = require("path");
@@ -10,7 +12,7 @@ const multer = require("multer");
 
 const fileStorageEngine = multer.diskStorage({
   destination: (req, res, cb) => {
-    const userFolder = req.user["userName"];
+    const userFolder = req.user.userName;
     /*
         Folder Structure
             root '\'

@@ -2,10 +2,10 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const colors = require("colors");
 const { errorHandler } = require("./middleware/errorMiddleware");
-
 const cors = require("cors");
-// X const bodyParser = require('body-parser');
 const morgan = require("morgan");
+
+const multer = require("multer");
 
 //all configuretion are store in .env file
 require("dotenv").config();
