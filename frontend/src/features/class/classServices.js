@@ -4,14 +4,16 @@ const API_URL_CLASS = 'http://localhost:8080/class'
 const API_URL_CLASS_SAFES = 'http://localhost:8080/class/safes'
 
 
-const getSafeInfo = async () =>{
-    const response = await axios.get(API_URL_CLASS);
-    return response.data;
+const getClassInfo = async () =>{
+    // const response = await axios.get(API_URL_CLASS,);
+    // return response.data;
+    // localStorage.setItem('class',"my class");
+    return;
 }
 
 
 const classService = {
-    getSafeInfo,
+    getClassInfo,
 };
 
 

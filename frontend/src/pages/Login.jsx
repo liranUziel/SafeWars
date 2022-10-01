@@ -1,20 +1,44 @@
 import {useState,useEffect} from 'react';
 import {FaSignInAlt} from 'react-icons/fa';
+
+import {useSelector,useDispatch} from 'react-redux';
+
+import {login,reset} from '../features/auth/authSlice';
+
 function Login() {
     const [formData,setFormData] = useState({
         userName:'',
         password:''
     })
     const {userName,password} = formData;
+    const {user,isLoading,isError,isSuccess,message} = useSelector((state)=> state.auth);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const onChange = (e) =>{
         setFormData((prevState) =>  ({
             ...prevState,
             [e.target.name]:e.target.value
         }))
     }
+
+    useEffect(()=>{
+        if(isError){
+            toast.error(message);
+        }
+        if(isSuccess || user){
+            navigate('/home');
+        }
+        dispatch(reset());
+    },[user,isError,isSuccess,message,navigate,dispatch]);
+
     const onSubmit = (e) =>{
-        
+        console.log("hello");
         e.preventDefault();
+        const userData = {
+            userName,
+            password,
+        }
+        dispatch(login(userData));
     }
     return (
         <>

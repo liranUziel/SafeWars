@@ -3,6 +3,7 @@ import {BsFillShieldFill,BsSafeFill,BsFillBarChartFill} from 'react-icons/bs';
 import {RiAdminFill} from 'react-icons/ri';
 
 import {useNavigate,Link} from 'react-router-dom';
+import {useEffect,useState} from 'react';
 
 import { useSelector ,useDispatch} from 'react-redux';
 import { logout,reset } from '../features/auth/authSlice';
@@ -11,14 +12,18 @@ import '../styles/Header.css'
 
 import classUtil from '../utils/class'
 
+
+
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {user} = useSelector((state)=> state.auth);
-    const [className,setClassName] = useState('');
+    const {className,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
+    // const [className,setClassName] = useState('');
     useEffect(() =>{
         //axios function in util class;
-        setClassName(classUtil.getClassInfo());
+        // setClassName(classUtil.getClassInfo());
+        // setClassName("class");
     },[]); 
 
     const onLogout = () =>{
@@ -49,7 +54,7 @@ const Header = () => {
                 <li id="" className="header_item">
                     <button className="header_item_btn" onClick={GotoClass}>
                         <FaChalkboardTeacher/>
-                        Class <span className="class_name">{className}</span>
+                        Class <span className="class_name">Emek Yisrael {className}</span>
                     </button>
                 </li>
                 <li id="" className="header_item">
@@ -85,7 +90,7 @@ const Header = () => {
                 </span>
             </div>
             <div className="logout">
-                <button className="logout_btn">
+                <button className="logout_btn" onClick={onLogout}>
                     Logout
                     <i className="fa-solid fa-right-from-bracket"></i>
                 </button>

@@ -35,7 +35,7 @@ function Register() {
             toast.error(message);
         }
         if(isSuccess || user){
-            navigate('/');
+            navigate('/home');
         }
         dispatch(reset());
     },[user,isError,isSuccess,message,navigate,dispatch]);

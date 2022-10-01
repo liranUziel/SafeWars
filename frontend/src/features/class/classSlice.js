@@ -7,9 +7,9 @@ const user = JSON.parse(localStorage.getItem('user'));
 
 // Helper function
 // Register user 
-export const getCalssInfo = createAsyncThunk('class/getsafe',async (user,thunkAPI) =>{
+export const getClassInfo = createAsyncThunk('class/getsafe',async (user,thunkAPI) =>{
     try {
-        return await classSerivce.getSafeInfo();
+        return await classSerivce.getClassInfo();
     } catch (error) {
         const message = ((error.response && error.response.data && error.response.data.message) || error.message || error.toString() );
         return thunkAPI.rejectWithValue(message) ;
@@ -33,15 +33,15 @@ export const classSlice = createSlice({
     },
     extraReducers:(builder)=>{
         builder
-        .addCase(getCalssInfo.pending,(state)=>{
+        .addCase(getClassInfo.pending,(state)=>{
             state.isLoading = true;
         })
-        .addCase(getCalssInfo.fulfilled,(state,action)=>{
+        .addCase(getClassInfo.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.isSuccess = true;
             state.className = action.payload;
         })
-        .addCase(getCalssInfo.rejected,(state,action)=>{
+        .addCase(getClassInfo.rejected,(state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
