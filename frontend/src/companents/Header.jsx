@@ -7,32 +7,42 @@ import {useEffect,useState} from 'react';
 
 import { useSelector ,useDispatch} from 'react-redux';
 import { logout,reset } from '../features/auth/authSlice';
+import {clearClass} from '../features/class/classSlice';
 
 import '../styles/Header.css'
+import {getClassInfo,getClassSafes} from '../features/class/classSlice';
 
 import classUtil from '../utils/class'
-
-
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {user} = useSelector((state)=> state.auth);
-    const {className,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
-    // const [className,setClassName] = useState('');
+    const {classInfo,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
+    const [className,setClassName] = useState('');
     useEffect(() =>{
-        //axios function in util class;
-        // setClassName(classUtil.getClassInfo());
-        // setClassName("class");
-    },[]); 
+        if(classInfo.length === 1)
+        {
+            const {className,classNumber} = classInfo[0]["classInfo"];
+            setClassName(`${className} ${classNumber}`);
+        }
+        else{
+            setClassName('');
+        }
+    },[classInfo,dispatch]); 
 
+    useEffect(() =>{
+        dispatch(getClassInfo(user));
+    },[]); 
     const onLogout = () =>{
-        dispatch(logout())
-        dispatch(reset())
+        dispatch(logout());
+        dispatch(reset());
+        dispatch(clearClass());
         navigate('/')
     }
     const GotoClass = () =>{
-        navigate('/home/class')
+        dispatch(getClassSafes(user));
+        navigate('/home/class');
     }
     const GotoSafe = () =>{
         navigate('/home/safezone')
@@ -54,7 +64,7 @@ const Header = () => {
                 <li id="" className="header_item">
                     <button className="header_item_btn" onClick={GotoClass}>
                         <FaChalkboardTeacher/>
-                        Class <span className="class_name">Emek Yisrael {className}</span>
+                        Class <span className="class_name">{className}</span>
                     </button>
                 </li>
                 <li id="" className="header_item">

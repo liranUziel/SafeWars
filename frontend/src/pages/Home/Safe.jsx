@@ -3,7 +3,7 @@ import {RiSafe2Fill} from 'react-icons/ri'
 import '../../styles/Safe.css'
 const Safe = ({safe}) => {
     return (
-        <div className={safe.solve ? "safe solve ":"safe"} id={safe.id}>
+        <div className={safe.solve ? "safe solve ":"safe"} id={safe._id}>
             <div className={safe.solve ? "safe__frame solve ":"safe__frame"}>
                 <div className="btn-array">
                     <BsFillArrowDownCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
@@ -22,7 +22,7 @@ const Safe = ({safe}) => {
                 </div>
             </div>
             <div className="info">
-                <h3 className="safeName">file name: <span className="fileName">{safe.name}</span></h3>
+                <h3 className="safeName">file name: <span className="fileName">{safe.safeName}</span></h3>
                 <span className="safeUploadDate">date: 15/8/2022 17:11 pm</span>
             </div>
         </div>
