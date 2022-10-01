@@ -1,5 +1,6 @@
 //wrap async and then we don't have to use try catch
 const aysncHanler = require("express-async-handler");
+const { default: mongoose } = require("mongoose");
 const Class = require("../models/Class");
 const Safe = require("../models/Safe");
 const User = require("../models/User");
@@ -9,12 +10,15 @@ const User = require("../models/User");
 // @access private
 
 const getClass = aysncHanler(async (req, res) => {
-  const { id, userType } = req.body.user;
-  //load public safe
-  const calsses = await Class.find({});
-  const safe = await Safe.find({ user: admin._id });
+  const { _id: id, userType } = req.user;
+  classIn = {};
+  if (userType === "student") {
+    classIn = await Class.find({ studentIds: id });
+  } else if (userType === "instructor") {
+    classIn = await Class.find({ instructorId: id });
+  }
 
-  res.status(200).json("KARMIEL RULES!");
+  res.status(200).json(classIn);
 });
 
 const getAdminSafes = aysncHanler(async (req, res) => {

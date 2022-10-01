@@ -2,26 +2,31 @@ const mongoose = require("mongoose");
 
 const ClassSchema = mongoose.Schema(
   {
-    className: {
-      type: String,
-      required: [true, "Please add a name"],
+    classInfo: {
+      className: {
+        type: String,
+        default: "Missing",
+      },
+      classNumber: {
+        type: Number,
+        default: -1,
+      },
+      type: Object,
       unique: true,
-    },
-    classNumber: {
-      type: String,
-      required: [true, "Please add a class number"],
-      unique: true,
+      required: [true, "Please add class info"],
     },
     instructorId: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, "Please add a valid instructor id"],
+      ref: "User",
     },
-    students: {
+    studentIds: {
       type: [mongoose.Schema.Types.ObjectId],
       default: [],
+      ref: "User",
     },
     district: {
-      type: string,
+      type: String,
       required: [true, "Please add a district"],
     },
   },

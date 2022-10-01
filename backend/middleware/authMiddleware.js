@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/User");
 
-const allowedPersonel = ["teacher", "admin"];
+const allowedPersonel = ["instructor", "admin"];
 
 const authorizedProtect = asyncHandler(async (req, res, next) => {
   if (allowedPersonel.includes(req.user.userType)) {
