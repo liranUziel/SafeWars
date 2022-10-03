@@ -42,10 +42,12 @@ app.use(express.static("/public"));
 const usersRoute = require("./routes/Users");
 const tournamentRoute = require("./routes/Tournament");
 const classRoute = require("./routes/Class");
+const safesRoute = require("./routes/safes");
 
 app.use("/users", usersRoute);
 app.use("/tournament", tournamentRoute);
 app.use("/class", classRoute);
+app.use("/safes", safesRoute);
 
 //defult route
 
