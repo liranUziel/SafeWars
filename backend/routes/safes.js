@@ -17,6 +17,8 @@ const router = express.Router();
 
 // Download Safe
 // /safes?safeId=this_is_the_id
-router.get("/", protect, downloadSafe);
+router.get("/", protect, addClassData, downloadSafe);
+// /safes
+router.post("/", protect, addClassData, uploadSafe, upload.single("safe"));
 
 module.exports = router;

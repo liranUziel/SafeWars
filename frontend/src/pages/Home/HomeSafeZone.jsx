@@ -1,9 +1,9 @@
 import '../../styles/SafeZone.css';
-import '../../utils/SafeZone'
 import {RiSafe2Fill} from 'react-icons/ri'
 import {useEffect, useState} from 'react'
 import { useSelector ,useDispatch} from 'react-redux';
 import {removeSafe,getSafe} from '../../features/userSafe/userSafeSlice';
+import safesService from '../../utils/userSafe'
 
 
 const HomeSafeZone = () => {
@@ -11,6 +11,8 @@ const HomeSafeZone = () => {
   const [popupActive,setPopupActive] = useState(false);
   const {user} = useSelector((state)=> state.auth);
   const {safeName,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
+
+  const [file, setFile] = useState()
   
   const [userSafename,setUserSafename] = useState("");
   
@@ -46,18 +48,12 @@ const HomeSafeZone = () => {
 
   }
 
-  const handleSubmit = (e)=>{
-    e.preventDefault()
-    console.log(e)
-    setPopupActive(false);
-  }
+  
 
   useEffect(() =>{
       dispatch(getSafe(user));
       if(safeName !== "") return
-      console.log("HERE")
       const inputElement = document.getElementsByClassName("upload_container__input")[0];
-      console.log(inputElement)
       const dropZoneElement = document.getElementsByClassName("upload_container")[0];
 
       dropZoneElement.addEventListener("dragover", (e) => {
@@ -75,6 +71,9 @@ const HomeSafeZone = () => {
           e.preventDefault();
           if (e.dataTransfer.files.length === 1) {
               const fileElement = e.dataTransfer.files[0];
+              inputElement.files = e.dataTransfer.files
+              setFile(inputElement.files[0])
+              console.log(e)
               updateThumbnail(dropZoneElement,fileElement);
           }else if(e.dataTransfer.files.length > 1){
               console.error('too many files')
@@ -84,7 +83,9 @@ const HomeSafeZone = () => {
 
       inputElement.addEventListener("change", (e) => {
           if (inputElement.files.length) {
-              updateThumbnail(dropZoneElement, inputElement.files[0]);
+            setFile(inputElement.files[0])
+            console.log(`second: ${file}`)
+            updateThumbnail(dropZoneElement, inputElement.files[0]);
           }
       });
 
@@ -94,6 +95,17 @@ const HomeSafeZone = () => {
     setUserSafename(safeName);
     
   },[safeName]);
+
+  const handleFileChanged = (e)=>{
+    setFile(e.target.files[0])
+    console.log(file)
+  }
+
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    safesService.postSafe(user, file)
+    setPopupActive(false);
+  }
 
   return (
     <>
@@ -109,7 +121,7 @@ const HomeSafeZone = () => {
               <div className="upload_container__prompt__container">
                   <i className="fa-solid fa-cloud-arrow-up upload_container__upload_icon"></i>
                   <div className="upload_container__prompt">Drag and Drop safe file or click on upload</div>
-                  <input type="file" className="upload_container__input" name="safe"/>
+                  <input type="file" className="upload_container__input" name="safe" onChange={handleFileChanged}/>
               </div>
           </div>
           <button type="submit" className="upload_form_container__button">Upload</button>

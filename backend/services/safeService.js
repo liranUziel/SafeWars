@@ -4,8 +4,9 @@ const multer = require("multer");
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     const userName = req.user.userName;
-    const classIn = req.classIn.classInfo;
-    let path = `../public/safes/${classIn.className}/${classIn.classNumber}`;
+    const classInfo = req.classIn.classInfo;
+    console.log(classInfo);
+    let path = `../public/safes/${classInfo.className}/${classInfo.classNumber}`;
     fs.mkdirsSync(path);
     callback(null, path);
   },
