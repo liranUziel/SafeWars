@@ -11,14 +11,11 @@ const Class = require("../models/Class");
 
 const getSafe = asyncHandler(async (req, res) => {
   //load user safe
-  const safe = await Safe.find({ user: req.user.id });
+  const safe = await Safe.find({ user: req.user.id }).select("safeName");
   if (safe.length === 0) {
     return res.status(400).json("Upload at first a safe");
   }
-  res
-    .status(200)
-    .json(safe)
-    .sendFile(`../public/safes/${classIn.className}/${classIn.classNumber}`);
+  res.status(200).json(safe);
 });
 
 // @desc update user safe
