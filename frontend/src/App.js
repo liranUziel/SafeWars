@@ -9,6 +9,7 @@ import Home from './pages/Home/Home';
 import Class from './pages/Home/HomeClass';
 import HomeSafeZone from './pages/Home/HomeSafeZone';
 import PageNotFound from './companents/PageNotFound';
+import Defult from './pages/Home/Defult';
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
       <Router>
           <Routes>
             <Route path="home" element={<Home/>} >
+              <Route path="" element={<Defult/>}/>
               <Route path="class" element={<Class/>}/>
               <Route path="safezone" element={<HomeSafeZone/>}/>
               <Route path="*" element={<PageNotFound/>} />
