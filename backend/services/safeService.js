@@ -3,12 +3,15 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    const userName = req.user.userName;
-    const classInfo = req.classIn.classInfo;
-    console.log(classInfo);
-    let path = `../public/safes/${classInfo.className}/${classInfo.classNumber}`;
-    fs.mkdirsSync(path);
-    callback(null, path);
+    const classIn = req.classIn;
+    classIn.forEach((currClass) => {
+      const { classInfo } = currClass;
+      let path = `../public/safes/${classInfo.className}/${classInfo.classNumber}`;
+      console.log(path);
+      fs.mkdirsSync(path);
+    });
+    //fs.mkdirsSync(path);
+    //callback(null, path);
   },
   filename: (req, file, callback) => {
     //originalname is the uploaded file's name with extn

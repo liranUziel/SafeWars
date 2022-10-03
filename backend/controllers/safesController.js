@@ -43,7 +43,6 @@ const updateSafe = asyncHandler(async (req, res) => {
 });
 
 const uploadSafe = asyncHandler(async (req, res) => {
-  console.log(req);
   await Safe.create({
     user: req.user._id,
     safeName: req.file.filename,
