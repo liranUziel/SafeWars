@@ -101,9 +101,10 @@ const HomeSafeZone = () => {
     console.log(file)
   }
 
-  const handleSubmit = (e)=>{
+  const handleSubmit = async (e)=>{
     e.preventDefault()
-    safesService.postSafe(user, file)
+    const response = await safesService.postSafe(user, file)
+    dispatch(getSafe(user))
     setPopupActive(false);
   }
 

@@ -6,12 +6,11 @@ const storage = multer.diskStorage({
     const classIn = req.classIn;
     classIn.forEach((currClass) => {
       const { classInfo } = currClass;
-      let path = `../public/safes/${classInfo.className}/${classInfo.classNumber}`;
+      let path = `${__dirname}/../public/safes/${classInfo.className}/${classInfo.classNumber}`;
       console.log(path);
       fs.mkdirsSync(path);
+      callback(null, path);
     });
-    //fs.mkdirsSync(path);
-    //callback(null, path);
   },
   filename: (req, file, callback) => {
     //originalname is the uploaded file's name with extn
