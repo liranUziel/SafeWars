@@ -1,3 +1,5 @@
+import '../styles/Header.css'
+
 import {FaSignInAlt,FaSignOutAlt,FaUser,FaChalkboardTeacher,FaChessKing} from 'react-icons/fa';
 import {BsFillShieldFill,BsSafeFill,BsFillBarChartFill} from 'react-icons/bs';
 import {RiAdminFill} from 'react-icons/ri';
@@ -6,13 +8,12 @@ import {useNavigate,Link} from 'react-router-dom';
 import {useEffect,useState} from 'react';
 
 import { useSelector ,useDispatch} from 'react-redux';
+
 import { logout,reset } from '../features/auth/authSlice';
-import {clearClass} from '../features/class/classSlice';
+import {removeSafe,getSafe} from '../features/userSafe/userSafeSlice';
 
-import '../styles/Header.css'
-import {getClassInfo,getClassSafes} from '../features/class/classSlice';
 
-import classUtil from '../utils/class'
+import {clearClass,getClassInfo,getClassSafes} from '../features/class/classSlice';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -33,19 +34,22 @@ const Header = () => {
 
     useEffect(() =>{
         dispatch(getClassInfo(user));
+        // dispatch(getSafe(user));
     },[]); 
     const onLogout = () =>{
         dispatch(logout());
         dispatch(reset());
         dispatch(clearClass());
+        dispatch(removeSafe())
         navigate('/')
     }
     const GotoClass = () =>{
-        dispatch(getClassSafes(user));
+        // dispatch(getClassSafes(user));
         navigate('/home/class');
     }
     const GotoSafe = () =>{
-        navigate('/home/safezone')
+        //dispatch(getSafe(user));
+        navigate('/home/safezone');
     }
     const user_type = "student";
     return (

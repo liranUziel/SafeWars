@@ -2,13 +2,21 @@ import Safe from './Safe'
 import '../../styles/Safe.css'
 import Spinner from '../../companents/Spinner';
 
-import { useSelector} from 'react-redux';
-const HomeClass = () => {
+import { useDispatch,useSelector} from 'react-redux';
+import {clearClass,getClassInfo,getClassSafes} from '../../features/class/classSlice';
+import {useEffect,useState} from 'react';
 
-  const safe = [{id:1,name:"Adding",solve:true},{id:2,name:"EZ",solve:true},{id:3,name:"Substract",solve:false}];
-  // const safes = [];
+
+const HomeClass = () => {
+  const dispatch = useDispatch();
+  const {user} = useSelector((state)=> state.auth);
   const {classSafes,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
   const safes = classSafes;
+
+  useEffect(() =>{
+    dispatch(getClassSafes(user));
+  },[dispatch]); 
+
   if(isLoading)    {
     return <Spinner/>
   }
