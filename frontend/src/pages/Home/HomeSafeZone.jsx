@@ -10,21 +10,17 @@ const HomeSafeZone = () => {
   const dispatch = useDispatch();
   const [popupActive,setPopupActive] = useState(false);
   const {user} = useSelector((state)=> state.auth);
-  const {safeInfo,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
+  const {safeName,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
   
-  const [safeName,setSafeName] = useState("");
+  const [userSafename,setUserSafename] = useState("");
   
   const closeOverlay = (e) =>{
 
       setPopupActive(false);
   }
+  
   const openPopup = (e) =>{
       setPopupActive(true);
-  }
-  const uploadSafe = (e) =>{
-    e.preventDefault();
-    setSafeName('upload');
-    setPopupActive(false);
   }
 
   function updateThumbnail(dropZoneElement, file) {
@@ -50,10 +46,18 @@ const HomeSafeZone = () => {
 
   }
 
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    console.log(e)
+    setPopupActive(false);
+  }
 
   useEffect(() =>{
       dispatch(getSafe(user));
+      if(safeName !== "") return
+      console.log("HERE")
       const inputElement = document.getElementsByClassName("upload_container__input")[0];
+      console.log(inputElement)
       const dropZoneElement = document.getElementsByClassName("upload_container")[0];
 
       dropZoneElement.addEventListener("dragover", (e) => {
@@ -85,10 +89,11 @@ const HomeSafeZone = () => {
       });
 
   },[dispatch]); 
+
   useEffect(() =>{
-    let name = safeInfo === undefined ? "" : safeInfo[0].safeName;
-    setSafeName(name);
-  },[safeInfo]);
+    setUserSafename(safeName);
+    
+  },[safeName]);
 
   return (
     <>
@@ -99,7 +104,7 @@ const HomeSafeZone = () => {
           <button data-close-button className="close-button" onClick={closeOverlay}>&times;</button>
         </div>
         <div className="safe_popup__body">
-        <form action="" method="post" className="upload_form_container">
+        <form action="" method="post" className="upload_form_container" onSubmit={handleSubmit}>
           <div className="upload_container">
               <div className="upload_container__prompt__container">
                   <i className="fa-solid fa-cloud-arrow-up upload_container__upload_icon"></i>

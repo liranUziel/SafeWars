@@ -11,16 +11,20 @@ const HomeClass = () => {
   const dispatch = useDispatch();
   const {user} = useSelector((state)=> state.auth);
   const {classSafes,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
-  const safes = classSafes;
+  const [safes, setSafes] = useState([]);
 
   useEffect(() =>{
     dispatch(getClassSafes(user));
-  },[dispatch]); 
+  },[dispatch]);
+
+  useEffect(()=>{
+    setSafes(classSafes)
+  },[classSafes])
 
   if(isLoading)    {
     return <Spinner/>
   }
-  if (safes.length != 0)
+  if (safes.length !== 0)
     return (
       <div className="safe_container">
         {

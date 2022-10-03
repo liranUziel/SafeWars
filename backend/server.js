@@ -39,7 +39,7 @@ app.use(express.static("/public"));
 
 //Import Routes
 
-const usersRoute = require("./routes/Users");
+const usersRoute = require("./routes/users");
 const tournamentRoute = require("./routes/Tournament");
 const classRoute = require("./routes/Class");
 const safesRoute = require("./routes/safes");
