@@ -103,7 +103,7 @@ const HomeSafeZone = () => {
 
   const handleSubmit = (e)=>{
     e.preventDefault()
-    safesService.postSafe(user, file)
+    safesService.postSafe(user, file);
     setPopupActive(false);
   }
 

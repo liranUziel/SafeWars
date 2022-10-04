@@ -9,6 +9,7 @@ const postSafe = async (userData, file) => {
     headers: {
       Authorization: `Bearer ${userData.token}`,
       "Content-Type": "multipart/form-data",
+
     },
   });
   return response.data;
