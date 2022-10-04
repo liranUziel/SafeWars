@@ -110,8 +110,12 @@ const HomeSafeZone = () => {
   
   return (
     <>
-    {safeName===""?<div>
-      <button onClick={openPopup}>upload safe</button>
+    {safeName===""?
+    <div>
+      <div className="empty_container">
+        You have not safe, please click on upload safe to uplaod one, you can only have one safe at any time.<br/>
+        <button onClick={openPopup} className="safe_upload_button">upload safe</button>
+      </div>
       <div className={popupActive?"safe_popup active":"safe_popup"} id="safe_popup">
         <div className="safe_popup__header">
           <button data-close-button className="close-button" onClick={closeOverlay}>&times;</button>

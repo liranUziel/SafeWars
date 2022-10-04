@@ -8,6 +8,7 @@ import FormPage from './pages/FormPage/FormPage';
 import Home from './pages/Home/Home';
 import Class from './pages/Home/HomeClass';
 import HomeSafeZone from './pages/Home/HomeSafeZone';
+import Tournament from './pages/Home/HomeTournament';
 import PageNotFound from './companents/PageNotFound';
 import Defult from './pages/Home/Defult';
 
@@ -21,6 +22,7 @@ function App() {
               <Route path="" element={<Defult/>}/>
               <Route path="class" element={<Class/>}/>
               <Route path="safezone" element={<HomeSafeZone/>}/>
+              <Route path="tournament" element={<Tournament/>}/>
               <Route path="*" element={<PageNotFound/>} />
             </Route>
             <Route path="/" element={<FormPage/>} />

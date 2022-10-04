@@ -34,9 +34,10 @@ const HomeClass = () => {
     )
   else{
     return (
-    <>
+    <div className="empty_container">
+      <img src={require('../../Images/safes_not_found.png')} className="page__not__found__img"/>
       Safes list is empty
-    </>
+    </div>
     )
   }
 }

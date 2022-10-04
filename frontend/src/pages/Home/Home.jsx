@@ -21,8 +21,11 @@ const Home = () => {
     return (
         (user) ? 
         <>
-            <Header/>
-            <Outlet/>
+            <div className="container__home">
+                <Header/>
+                <Outlet/>
+                {/* <div className="home_footer">Footer</div> */}
+            </div>
         </> 
         :
         <Navigate to='/'/>

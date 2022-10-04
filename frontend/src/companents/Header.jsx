@@ -51,6 +51,9 @@ const Header = () => {
         //dispatch(getSafe(user));
         navigate('/home/safezone');
     }
+    const GotoTournament = () => {
+        navigate('/home/tournament');
+    }
     const user_type = "student";
     return (
         
@@ -73,7 +76,7 @@ const Header = () => {
                 </li>
                 <li id="" className="header_item">
                 <Link to='/home'></Link>
-                    <button className="header_item_btn">
+                    <button className="header_item_btn" onClick={GotoTournament}>
                         <FaChessKing/>
                         Tournament
                     </button>

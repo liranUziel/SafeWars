@@ -132,6 +132,17 @@ font-weight: bold;
 .upload_container__input_button{
     
 }
+
+.safe_upload_button{
+    border:none;
+    background-color:cadetblue;
+    color:white;
+    font-size:1rem;
+    font-weight:bold;
+    border-radius:5px;
+    height: 30px;
+    width:100px;
+}
 .upload_container__prompt{
     font-size:1.2rem;
     /* font-weight:bold; */
