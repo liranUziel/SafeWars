@@ -8,6 +8,7 @@ const {
 } = require("../controllers/tournamentController");
 const router = express.Router();
 
+const { addClassData } = require("../middleware/dataMiddleware");
 //Auth
 const { protect, authorizedProtect } = require("../middleware/authMiddleware");
 
@@ -17,6 +18,6 @@ router.post("/", protect, authorizedProtect, createTournamnet);
 
 router.put("/", protect, authorizedProtect, updateTournamnet);
 
-router.get("/safes", protect, getTournamentSafes);
+router.get("/safes", protect, addClassData, getTournamentSafes);
 
 module.exports = router;

@@ -6,13 +6,18 @@ const tournamentSchema = mongoose.Schema({
     required: true,
     ref: "Class",
   },
-  safes: [
-    {
+  safes: {
+    type: [Object],
+    safeId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "Safe",
     },
-  ],
+    safeName: {
+      type: String,
+      required: true,
+    },
+  },
   showScore: {
     type: Boolean,
     default: false,
