@@ -3,6 +3,17 @@
     margin: 0;
 }
 
+.header_item__score{
+    background-color:black;
+    color:white;
+    font-weight:bold;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    padding:2px 5px;
+    width:fit-content;
+    height: 20px;
+}
+
 .header{
     display: grid;
     grid-template-columns: 40% 1fr 10% 2% 2%;
@@ -37,6 +48,10 @@ li.header_item{
 button:hover{
     list-style-type: none;
     color:white;
+}
+button:hover span{
+    background-color:white;
+    color:black;
 }
 
 .user_name{

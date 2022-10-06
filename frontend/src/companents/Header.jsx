@@ -54,6 +54,9 @@ const Header = () => {
     const GotoTournament = () => {
         navigate('/home/tournament');
     }
+    const GotoScoreBoard = () => {
+        navigate('/home/scoreboard');
+    }
     const user_type = "student";
     return (
         
@@ -82,9 +85,9 @@ const Header = () => {
                     </button>
                 </li>
                 <li id="" className="header_item">
-                    <button className="header_item_btn">
+                    <button className="header_item_btn" onClick={GotoScoreBoard}>
                         <BsFillBarChartFill/>
-                        Score Borad
+                        Score Borad <span className="header_item__score">1124</span>
                     </button>
                 </li>
                 {user_type === "student" ? (

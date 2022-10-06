@@ -26,7 +26,7 @@ export const getSafe = createAsyncThunk(
 
 // The initial state
 const initialState = {
-  safeName: "",
+  safeInfo: {},
   file: "",
   isError: false,
   isSuccess: false,
@@ -47,13 +47,13 @@ export const safeSlice = createSlice({
       .addCase(getSafe.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.safeName = action.payload[0].safeName;
+        state.safeInfo = action.payload[0];
       })
       .addCase(getSafe.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.safeName = "";
+        state.safeInfo = {};
       });
   },
 });

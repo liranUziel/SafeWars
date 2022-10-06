@@ -1,15 +1,15 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
 
-import classSerivce from './classService';
+import tournamentService from './tournamentServices';
 
 // Get user from localStorage
 const user = JSON.parse(localStorage.getItem('user'));
 
 // Helper function
 // Register user 
-export const getClassInfo = createAsyncThunk('class/getClassInfo',async (user,thunkAPI) =>{
+export const getTournamentInfo = createAsyncThunk('tournament/getTournamentInfo',async (user,thunkAPI) =>{
     try {
-        return await classSerivce.getClassInfo(user);
+        return await tournamentService.getTournamentInfo(user);
     } catch (error) {
         const message = ((error.response && error.response.data && error.response.data.message) || error.message || error.toString() );
         return thunkAPI.rejectWithValue(message) ;
@@ -18,9 +18,9 @@ export const getClassInfo = createAsyncThunk('class/getClassInfo',async (user,th
 }); 
 
 
-export const getClassSafes = createAsyncThunk('class/getClassSafes',async (user,thunkAPI) =>{
+export const getTournamentSafes = createAsyncThunk('tournament/getTournamentSafes',async (user,thunkAPI) =>{
     try {
-        return await classSerivce.getClassSafes(user);
+        return await tournamentService.getTournamentSafe(user);
     } catch (error) {
         const message = ((error.response && error.response.data && error.response.data.message) || error.message || error.toString() );
         return thunkAPI.rejectWithValue(message) ;
@@ -31,48 +31,48 @@ export const getClassSafes = createAsyncThunk('class/getClassSafes',async (user,
 
 // The initial state
 const initialState = {
-    classInfo:[],
-    classSafes:[],
+    tournamentInfo:[],
+    tournamentSafes:[],
     isError:false,
     isSuccess:false,
     isLoading:false,
     message:''
 }
 export const classSlice = createSlice({
-    name:'class',
+    name:'tournament',
     initialState,
     reducers:{
-        clearClass: (state) => initialState,
+        clearTournament: (state) => initialState,
     },
     extraReducers:(builder)=>{
         builder
-        .addCase(getClassInfo.pending,(state)=>{
+        .addCase(getTournamentInfo.pending,(state)=>{
             state.isLoading = true;
         })
-        .addCase(getClassInfo.fulfilled,(state,action)=>{
+        .addCase(getTournamentInfo.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            state.classInfo = action.payload;
+            state.tournamentInfo = action.payload;
         })
-        .addCase(getClassInfo.rejected,(state,action)=>{
+        .addCase(getTournamentInfo.rejected,(state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.className = '';
+            state.tournamentInfo = [];
         })
-        .addCase(getClassSafes.pending,(state)=>{
+        .addCase(getTournamentSafes.pending,(state)=>{
             state.isLoading = true;
         })
-        .addCase(getClassSafes.fulfilled,(state,action)=>{
+        .addCase(getTournamentSafes.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            state.classSafes = action.payload;
+            state.tournamentSafes = action.payload;
         })
-        .addCase(getClassSafes.rejected,(state,action)=>{
+        .addCase(getTournamentSafes.rejected,(state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.classSafes = [];
+            state.tournamentSafes = [];
         })
     }
 })

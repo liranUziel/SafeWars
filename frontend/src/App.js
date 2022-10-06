@@ -11,6 +11,7 @@ import HomeSafeZone from './pages/Home/HomeSafeZone';
 import Tournament from './pages/Home/HomeTournament';
 import PageNotFound from './companents/PageNotFound';
 import Defult from './pages/Home/Defult';
+import HomeScoreBoard from './pages/Home/HomeScoreBoard';
 
 function App() {
   
@@ -23,6 +24,7 @@ function App() {
               <Route path="class" element={<Class/>}/>
               <Route path="safezone" element={<HomeSafeZone/>}/>
               <Route path="tournament" element={<Tournament/>}/>
+              <Route path="scoreboard" element={<HomeScoreBoard/>}/>
               <Route path="*" element={<PageNotFound/>} />
             </Route>
             <Route path="/" element={<FormPage/>} />

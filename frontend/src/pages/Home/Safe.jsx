@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {BsFillArrowDownCircleFill,BsFillArrowUpCircleFill,BsFillXCircleFill,BsSafe} from 'react-icons/bs'
 import {RiSafe2Fill} from 'react-icons/ri'
 import '../../styles/Safe.css'
@@ -10,36 +10,36 @@ import {useSelector} from 'react-redux';
 
 const Safe = ({safe:_safe}) => {
     const {user} = useSelector((state)=> state.auth);
-    const [safe, setSafe] = useState(_safe)
-
+    const [safe, setSafe] = useState({});
     const breakSafe = (e) =>{
         console.log(e.target.id);
     }   
-
+    useEffect(()=>{
+        setSafe(_safe)
+    },[_safe]) 
     const downloadSafe = async (e) => {
-        console.log("DONWLOADING")
         const response = await getSafe(user, safe._id)
-        fileDownload(response.data, safe.safeName)
-        console.log(response.data)
+        fileDownload(response.data, safe.safeName)  
     }
-
     return (
         <div className={safe.solved ? "safe solved ":"safe"} id={safe._id}>
             <div className={safe.solved ? "safe__frame solved ":"safe__frame"}>
                 <div className="btn-array">
                     <BsFillArrowDownCircleFill onClick={downloadSafe} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
-                    <BsFillArrowUpCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
-                    <BsFillXCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
+                    {/* <BsFillArrowUpCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/> */}
+                    {/* <BsFillXCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/> */}
                 </div>
                 <div className="icon">
                     {safe.solved ? 
                     <RiSafe2Fill className="vaultIcon solved"/> :
                     <BsSafe className="vaultIcon"/>}
                     {/* <span class="vaultIcon"></span> */}
+                    {safe.solved? 
+                    <></>:
                     <div className="btnCA">
                         <button className="breakBtn" id={"s"+safe._id} onClick={breakSafe}>BREAK</button>
-                        {/* <button className="editBtn">...</button> */}
                     </div>
+                    } 
                 </div>
             </div>
             <div className="info">

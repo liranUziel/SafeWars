@@ -1,28 +1,30 @@
 import Safe from './Safe'
 import '../../styles/Safe.css'
 import Spinner from '../../companents/Spinner';
-
 import { useDispatch,useSelector} from 'react-redux';
-// import {clearClass,getClassInfo,getClassSafes} from '../../features/class/classSlice';
+import {clearTournament,getTournamentInfo,getTournamentSafes} from '../../features/tournament/tournamentSlice';
 import {useEffect,useState} from 'react';
 
 const HomeTournament = () => {
     const dispatch = useDispatch();
     const {user} = useSelector((state)=> state.auth);
-    // const {classSafes,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
+    const {tournamentInfo,tournamentSafes,isLoading,isError,isSuccess,message} = useSelector((state)=> state.tournament);
     const [safes, setSafes] = useState([]);
     const [tournamentEnable,setTournamentEnable] = useState(false);
-    let isLoading = false;
+    // let isLoading = false;
     console.log(`loading: ${isLoading} tournamentEnable: ${tournamentEnable}`);
-    /*
+    console.log(`Tournamet info:`);
+    console.log(tournamentInfo);
+    
     useEffect(() =>{
-        // dispatch(getClassSafes(user));
+        dispatch(getTournamentInfo(user));
+        dispatch(getTournamentSafes(user));
     },[dispatch]);
     
       useEffect(()=>{
-        // setSafes(classSafes)
-    },[classSafes])
-    */
+        setSafes(tournamentSafes);
+    },[tournamentSafes])
+    
         if(isLoading)    {
         return <Spinner/>
         }

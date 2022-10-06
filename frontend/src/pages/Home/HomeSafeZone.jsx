@@ -12,12 +12,11 @@ const HomeSafeZone = () => {
   const dispatch = useDispatch();
   const [popupActive,setPopupActive] = useState(false);
   const {user} = useSelector((state)=> state.auth);
-  const {safeName,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
-  console.log(safeName)
+  const {safeInfo,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
   const [file, setFile] = useState();
 
   const [uploadingStatus,setUploadingStatus] = useState({status:'idel'});
-  const [userSafename,setUserSafename] = useState("");
+  const [safe,setSafe] = useState({});
   
   const closeOverlay = (e) =>{
 
@@ -55,7 +54,7 @@ const HomeSafeZone = () => {
 
   useEffect(() =>{
       dispatch(getSafe(user));
-      if(safeName !== "") return
+      if(safeInfo.safeName !== "") return
       const inputElement = document.getElementsByClassName("upload_container__input")[0];
       const dropZoneElement = document.getElementsByClassName("upload_container")[0];
 
@@ -76,7 +75,6 @@ const HomeSafeZone = () => {
               const fileElement = e.dataTransfer.files[0];
               inputElement.files = e.dataTransfer.files
               setFile(inputElement.files[0])
-              console.log(e)
               updateThumbnail(dropZoneElement,fileElement);
           }else if(e.dataTransfer.files.length > 1){
               console.error('too many files')
@@ -87,7 +85,6 @@ const HomeSafeZone = () => {
       inputElement.addEventListener("change", (e) => {
           if (inputElement.files.length) {
             setFile(inputElement.files[0])
-            console.log(`second: ${file}`)
             updateThumbnail(dropZoneElement, inputElement.files[0]);
           }
       });
@@ -95,13 +92,11 @@ const HomeSafeZone = () => {
   },[dispatch]); 
 
   useEffect(() =>{
-    setUserSafename(safeName);
-    
-  },[safeName]);
+    setSafe({...safeInfo,solved:false});
+  },[safeInfo]);
 
   const handleFileChanged = (e)=>{
     setFile(e.target.files[0])
-    console.log(file)
   }
 
   const handleSubmit = async (e)=>{
@@ -116,7 +111,7 @@ const HomeSafeZone = () => {
   
   return (
     <>
-    {safeName===""?
+    {safeInfo.safeName===""?
     <div>
       <div className="empty_container">
         You have not safe, please click on upload safe to uplaod one, you can only have one safe at any time.<br/>
@@ -151,10 +146,8 @@ const HomeSafeZone = () => {
       <div id="overlay" className={popupActive?"active":""}></div>
     </div>
     :<>
-    display safe
-      <div>
-        <h1>safe name: {safeName}</h1>
-        {/* <span>id: {safeInfo._id}</span> */}
+      <div className="user_safe_container">
+        <Safe safe={safe}/> 
       </div>
     </>}
     </>

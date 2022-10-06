@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 
 const API_URL_CLASS = 'http://localhost:8080/class'
