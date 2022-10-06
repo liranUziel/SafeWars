@@ -9,8 +9,9 @@ const Tournament = require("../models/Tournament");
 // @access private
 
 const getTournament = asyncHandler(async (req, res) => {
-  const tournaments = await Tournament.find({ class: req.classIn._id });
-  const ans = [];
+  const tournaments = req.classIn.map(async (currClass) => {
+    return await Tournament.find({ class: currClass._id });
+  });
   if (tournaments.length === 0) {
     return res.status(400).json("No tournament available.");
   }
