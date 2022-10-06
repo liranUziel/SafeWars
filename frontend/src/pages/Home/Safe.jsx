@@ -8,33 +8,40 @@ import fileDownload  from 'js-file-download'
 import {useSelector} from 'react-redux';
 
 
-const Safe = ({safe:_safe}) => {
+const Safe = ({safe:_safe,type}) => {
     const {user} = useSelector((state)=> state.auth);
     const [safe, setSafe] = useState({});
     const breakSafe = (e) =>{
         console.log(e.target.id);
-    }   
+    } 
     useEffect(()=>{
-        setSafe(_safe)
+        setSafe(_safe);
     },[_safe]) 
     const downloadSafe = async (e) => {
-        const response = await getSafe(user, safe._id)
-        fileDownload(response.data, safe.safeName)  
+        const response = await getSafe(user, safe._id);
+        fileDownload(response.data, safe.safeName);
+    }
+    const uploadSafe = (e) =>{
+        e.preventDefault();
+        /* setUploadingStatus({status:'uploading'});
+        const response = await safesService.postSafe(user, file)
+        setUploadingStatus({status:'done'});
+        dispatch(getSafe(user));
+        setUploadingStatus({status:'idel'});
+        setPopupActive(false);*/
     }
     return (
         <div className={safe.solved ? "safe solved ":"safe"} id={safe._id}>
             <div className={safe.solved ? "safe__frame solved ":"safe__frame"}>
                 <div className="btn-array">
                     <BsFillArrowDownCircleFill onClick={downloadSafe} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
-                    {/* <BsFillArrowUpCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/> */}
-                    {/* <BsFillXCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/> */}
+                    {type==='private'?<BsFillArrowUpCircleFill onClick={uploadSafe} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>:<></> }
                 </div>
                 <div className="icon">
                     {safe.solved ? 
                     <RiSafe2Fill className="vaultIcon solved"/> :
                     <BsSafe className="vaultIcon"/>}
-                    {/* <span class="vaultIcon"></span> */}
-                    {safe.solved? 
+                    {safe.solved || type==='private'? 
                     <></>:
                     <div className="btnCA">
                         <button className="breakBtn" id={"s"+safe._id} onClick={breakSafe}>BREAK</button>

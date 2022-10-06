@@ -31,7 +31,7 @@ const HomeClass = () => {
           safes.map(safe =>{
             console.log(user.safesSolved.includes(safe._id))
             safe = {...safe, solved: user.safesSolved.includes(safe._id)}
-            return <Safe key={safe._id} safe={safe}></Safe>})
+            return <Safe key={safe._id} safe={safe} type='public'></Safe>})
         }
       </div>
     )

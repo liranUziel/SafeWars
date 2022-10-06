@@ -24,7 +24,6 @@ const HomeTournament = () => {
       useEffect(()=>{
         setSafes(tournamentSafes);
     },[tournamentSafes])
-    
         if(isLoading)    {
         return <Spinner/>
         }

@@ -147,7 +147,7 @@ const HomeSafeZone = () => {
     </div>
     :<>
       <div className="user_safe_container">
-        <Safe safe={safe}/> 
+        <Safe safe={safe} type={"private"}/> 
       </div>
     </>}
     </>

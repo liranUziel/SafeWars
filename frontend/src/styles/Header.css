@@ -49,7 +49,7 @@ button:hover{
     list-style-type: none;
     color:white;
 }
-button:hover span{
+button:hover .header_item__score{
     background-color:white;
     color:black;
 }
