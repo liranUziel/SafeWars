@@ -12,7 +12,7 @@ const { addClassData } = require("../middleware/dataMiddleware");
 //Auth
 const { protect, authorizedProtect } = require("../middleware/authMiddleware");
 
-router.get("/", protect, authorizedProtect, addClassData, getTournament);
+router.get("/", protect, addClassData, getTournament);
 
 router.post("/", protect, authorizedProtect, createTournamnet);
 
