@@ -19,7 +19,8 @@ const getTournament = asyncHandler(async (req, res) => {
 const createTournamnet = asyncHandler(async (req, res) => {
   // Only instructor can create
   const classesIn = req.classIn;
-  const wantedClassId = req.data.wantedClassId;
+  const wantedClassId = req.body.wantedClassId;
+  const tournament = Tournament.findOne({ class: wantedClassId });
   res.status(200).json("TODI: CREATE: " + wantedClassId);
 });
 

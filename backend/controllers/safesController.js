@@ -66,7 +66,7 @@ const downloadSafe = asyncHandler(async (req, res) => {
   let filePath =
     user.userType === "admin"
       ? `${__dirname}/../public/safes/admin`
-      : `${__dirname}/../public/safes/${classOfUser.className}/${classOfUser.classNumber}`;
+      : `${__dirname}/../public/safes/${classOfUser.classInfo.className}/${classOfUser.classInfo.classNumber}`;
   filePath = path.resolve(filePath);
   console.log(`Donwloading from: ${filePath}\\${safe.safeName}`);
   res.status(200).sendFile(`${filePath}\\${safe.safeName}`);
