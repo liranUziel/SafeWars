@@ -14,7 +14,7 @@ const { protect, authorizedProtect } = require("../middleware/authMiddleware");
 
 router.get("/", protect, authorizedProtect, addClassData, getTournament);
 
-router.post("/", protect, authorizedProtect, addClassData, createTournamnet);
+router.post("/", protect, authorizedProtect, createTournamnet);
 
 router.put("/", protect, authorizedProtect, addClassData, updateTournamnet);
 

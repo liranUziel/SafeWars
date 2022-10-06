@@ -9,7 +9,17 @@ const Tournament = require("../models/Tournament");
 // @access private
 
 const getTournament = asyncHandler(async (req, res) => {
-  res.status(200).json("Cool Info");
+  const tournaments = await Tournament.find({ class: req.classIn._id });
+  const ans = [];
+  if (tournaments.length === 0) {
+    return res.status(400).json("No tournament available.");
+  }
+  if (req.user.userType === "student") {
+    return res.status(200).json({ deadline: tournaments[0].deadline });
+  }
+  if (req.user.userType === "instructor") {
+    return res.status(200).json(tournaments);
+  }
 });
 
 // @desc create tournament
@@ -18,10 +28,16 @@ const getTournament = asyncHandler(async (req, res) => {
 
 const createTournamnet = asyncHandler(async (req, res) => {
   // Only instructor can create
-  const classesIn = req.classIn;
-  const wantedClassId = req.body.wantedClassId;
+  const { wantedClassId, showScore, deadline } = req.body;
   const tournament = Tournament.findOne({ class: wantedClassId });
-  res.status(200).json("TODI: CREATE: " + wantedClassId);
+  if (tournament !== undefined)
+    return res.status(400).json("Why create again if you have already?");
+  const justCreated = await Tournament.create({
+    class: wantedClassId,
+    showScore,
+    deadline,
+  });
+  res.status(200).json(justCreated);
 });
 
 // @desc update tournament info
@@ -45,6 +61,9 @@ const getTournamentSafes = asyncHandler(async (req, res) => {
   //load tournamnt safe
   const safes = await Safe.find({ user: relatedIds });
   // TODO: Change all safe names
+  safes.map((safe) => {
+    return { ...safe, safeName: "CHANGED-" + safe.safeName };
+  });
   res.status(200).json(safes);
 });
 

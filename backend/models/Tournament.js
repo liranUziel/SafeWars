@@ -6,19 +6,6 @@ const tournamentSchema = mongoose.Schema({
     required: true,
     ref: "Class",
   },
-  scores: [
-    {
-      type: Object,
-      studentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-      },
-      studentScore: {
-        type: Number,
-        required: true,
-      },
-    },
-  ],
   showScore: {
     type: Boolean,
     default: false,
