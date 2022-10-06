@@ -142,6 +142,7 @@ const HomeSafeZone = () => {
         <>
           <div class="box_uploading_container__box">
             <BsSafe/>
+            Uploading<span>...</span>
           </div>
         </>}  
         </div>

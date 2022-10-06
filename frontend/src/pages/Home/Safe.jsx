@@ -7,11 +7,15 @@ const Safe = ({safe}) => {
         console.log(e.target.id);
     }   
 
+    const downloadSafe = (e) => {
+        console.log(e.target.id);
+    }
+
     return (
         <div className={safe.solve ? "safe solve ":"safe"} id={safe._id}>
             <div className={safe.solve ? "safe__frame solve ":"safe__frame"}>
                 <div className="btn-array">
-                    <BsFillArrowDownCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
+                    <BsFillArrowDownCircleFill onClick={downloadSafe} className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
                     <BsFillArrowUpCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
                     <BsFillXCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
                 </div>

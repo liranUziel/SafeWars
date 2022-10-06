@@ -18,7 +18,7 @@ const HomeClass = () => {
   },[dispatch]);
 
   useEffect(()=>{
-    setSafes(classSafes)
+    setSafes(classSafes);
   },[classSafes])
 
   if(isLoading)    {
