@@ -3,6 +3,9 @@ const asyncHandler = require("express-async-handler");
 const Safe = require("../models/Safe");
 const User = require("../models/User");
 const Tournament = require("../models/Tournament");
+const Class = require("../models/Class");
+
+const numWords = require("num-words");
 
 // @desc get tournament info
 // @route GET /tournament
@@ -38,10 +41,24 @@ const createTournamnet = asyncHandler(async (req, res) => {
   const tournament = await Tournament.findOne({ class: classId });
   if (tournament)
     return res.status(400).json("Why create again if you have already?");
+  // Get the students in the class
+  const { studentIds } = await Class.findById(classId);
+  const relatedIds = studentIds.concat([req.user._id]);
+  console.log(relatedIds);
+  //load tournamnt safes
+  const safes = await Safe.find({ user: relatedIds });
+  console.log(safes);
+  //const amountInWords = numWords(12345)
+  const tournamentSafes = safes.map((safe, index) => {
+    return { safeName: `safe_${numWords(index)}`, _id: safe._id };
+  });
+
+  // Get all safes of the student and
   const justCreated = await Tournament.create({
     class: classId,
     showScore,
     deadline,
+    safes: tournamentSafes,
   });
   res.status(200).json(justCreated);
 });
@@ -59,19 +76,16 @@ const updateTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const getTournamentSafes = asyncHandler(async (req, res) => {
-  let relatedIds = [];
-  // Get all related Ids to the user
-  req.classIn.map((currClass) => {
-    // []: relatedIds = relatedIds + currClass.instructorId + currClass.studentIds
-    relatedIds = relatedIds.concat(
-      [currClass.instructorId].concat(currClass.studentIds)
-    );
-  });
-  //load tournamnt safe
-  const safes = await Safe.find({ user: relatedIds });
-  // TODO: Change all safe names
-  safes.map((safe) => {
-    return { ...safe, safeName: "CHANGED-" + safe.safeName };
+  // Get all related tournaments to user
+  const tournaments = await Promise.all(
+    await req.classIn.map(async (currClass) => {
+      return Tournament.findOne({ class: currClass._id });
+    })
+  );
+
+  // Get all related tournaments to user
+  const safes = tournaments.map((currTournament) => {
+    return currTournament.safes;
   });
   res.status(200).json(safes);
 });
