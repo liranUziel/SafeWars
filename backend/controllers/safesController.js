@@ -66,30 +66,9 @@ const downloadSafe = asyncHandler(async (req, res) => {
   res.sendFile(path + safe.safeName + ".asm");
 });
 
-// // @desc set user safe
-// // @route SET /safe
-// // @access Private
-// // Cases:
-// // Admin can upload many safe ("under his name"). Admin safes are public safe to all users.
-// // Base User: can only upload one safe. Base user safe are priavte, except in class SafeWar.
-// const setSafe = asyncHandler(async (req, res) => {
-//   if (!req.body.safeName) {
-//     res.status(400);
-//     throw new Error("Plaease add safe name");
-//   }
-//   const userSafe = await Safe.find({ user: req.user.id });
-//   if (userSafe.length !== 0 && req.user.userType !== "admin") {
-//     res.status(400);
-//     throw new Error(
-//       "There is a safe for this user try to remove first or update"
-//     );
-//   }
-//   const safe = await Safe.create({
-//     safeName: req.body.safeName,
-//     user: req.user.id,
-//   });
-//   res.status(201).json(safe);
-// });
+const solveSafe = asyncHandler(async (req, res) => {
+  res.status(505);
+});
 
 module.exports = {
   getUserSafe,

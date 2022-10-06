@@ -18,6 +18,7 @@ const HomeClass = () => {
   },[dispatch]);
 
   useEffect(()=>{
+    console.log(user.safesSolved)
     setSafes(classSafes)
   },[classSafes])
 
@@ -28,7 +29,10 @@ const HomeClass = () => {
     return (
       <div className="safe_container">
         {
-          safes.map(safe => <Safe key={safe._id} safe={safe}></Safe>)
+          safes.map(safe =>{
+            console.log(user.safesSolved.includes(safe._id))
+            safe = {...safe, solved: user.safesSolved.includes(safe._id)}
+            return <Safe key={safe._id} safe={safe}></Safe>})
         }
       </div>
     )

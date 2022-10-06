@@ -14,11 +14,11 @@
     height: 200px;
     border-radius: 5px;
 }
-.safe.solve{
+.safe.solved{
     box-shadow: 0px 0px 10px 3px #369993;
 }
 
-.safe__frame.solve{
+.safe__frame.solved{
     background-color:#369993;
 }
 .safe__frame{
@@ -43,7 +43,7 @@
     margin: 3px;
 }
 
-.btn-array__btn.solve{
+.btn-array__btn.solved{
     color:#6e7386;
     padding-top: 3px;
     margin: 3px;
@@ -53,7 +53,7 @@
     color:white;
 }
 
-.btn-array .btn-array__btn.solve:hover{
+.btn-array .btn-array__btn.solved:hover{
     color:#369993;
 }
 
@@ -103,7 +103,7 @@
     display:flex;
 }
 
-.vaultIcon.solve{
+.vaultIcon.solved{
     font-size:150px;
     color:#297d77;
     padding: 20px;

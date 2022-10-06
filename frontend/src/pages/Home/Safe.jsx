@@ -8,16 +8,16 @@ const Safe = ({safe}) => {
     }   
 
     return (
-        <div className={safe.solve ? "safe solve ":"safe"} id={safe._id}>
-            <div className={safe.solve ? "safe__frame solve ":"safe__frame"}>
+        <div className={safe.solved ? "safe solved ":"safe"} id={safe._id}>
+            <div className={safe.solved ? "safe__frame solved ":"safe__frame"}>
                 <div className="btn-array">
-                    <BsFillArrowDownCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
-                    <BsFillArrowUpCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
-                    <BsFillXCircleFill className={safe.solve ? "btn-array__btn":"btn-array__btn solve"}/>
+                    <BsFillArrowDownCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
+                    <BsFillArrowUpCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
+                    <BsFillXCircleFill className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
                 </div>
                 <div className="icon">
-                    {safe.solve ? 
-                    <RiSafe2Fill className="vaultIcon solve"/> :
+                    {safe.solved ? 
+                    <RiSafe2Fill className="vaultIcon solved"/> :
                     <BsSafe className="vaultIcon"/>}
                     {/* <span class="vaultIcon"></span> */}
                     <div className="btnCA">
