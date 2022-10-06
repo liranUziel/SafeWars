@@ -4,6 +4,7 @@ const Safe = require("../models/Safe");
 const User = require("../models/User");
 const Tournament = require("../models/Tournament");
 const Class = require("../models/Class");
+const path = require("path");
 
 const getUserSafe = asyncHandler(async (req, res) => {
   //load user safe
@@ -54,16 +55,21 @@ const downloadSafe = asyncHandler(async (req, res) => {
   // Extract the Id of the user
   const safeId = req.query.safeId;
   //load safe na
-  const safe = await Safe.find({ _id: safeId }).select("safeName");
-  if (safe.length === 0) {
+  const safe = await Safe.findById(safeId);
+  if (!safe) {
     return res.status(400).json("No such safe!");
   }
-  // Find the data about the student that holds the safe
-  const user = User.findOne({ _id: safeId });
+  // Find the data about the user that holds the safe
+  const user = await User.findById(safe.user);
   // Find the class where the user is in
-  const classOfUser = Class.findOne({ studentIds: id });
-  let path = `../public/safes/${classOfUser.className}/${classOfUser.classNumber}/`;
-  res.sendFile(path + safe.safeName + ".asm");
+  const classOfUser = await Class.findOne({ studentIds: user._id });
+  let filePath =
+    user.userType === "admin"
+      ? `${__dirname}/../public/safes/admin`
+      : `${__dirname}/../public/safes/${classOfUser.className}/${classOfUser.classNumber}`;
+  filePath = path.resolve(filePath);
+  console.log(`Donwloading from: ${filePath}\\${safe.safeName}`);
+  res.status(200).sendFile(`${filePath}\\${safe.safeName}`);
 });
 
 const solveSafe = asyncHandler(async (req, res) => {

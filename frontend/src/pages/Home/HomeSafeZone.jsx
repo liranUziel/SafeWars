@@ -5,6 +5,7 @@ import {useEffect, useState} from 'react'
 import { useSelector ,useDispatch} from 'react-redux';
 import {removeSafe,getSafe} from '../../features/userSafe/userSafeSlice';
 import safesService from '../../utils/userSafe'
+import Safe from './Safe';
 
 
 const HomeSafeZone = () => {
@@ -12,7 +13,7 @@ const HomeSafeZone = () => {
   const [popupActive,setPopupActive] = useState(false);
   const {user} = useSelector((state)=> state.auth);
   const {safeName,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
-
+  console.log(safeName)
   const [file, setFile] = useState();
 
   const [uploadingStatus,setUploadingStatus] = useState({status:'idel'});

@@ -1,14 +1,26 @@
+import { useState } from 'react'
 import {BsFillArrowDownCircleFill,BsFillArrowUpCircleFill,BsFillXCircleFill,BsSafe} from 'react-icons/bs'
 import {RiSafe2Fill} from 'react-icons/ri'
 import '../../styles/Safe.css'
-const Safe = ({safe}) => {
+
+import {getSafe} from '../../utils/safes'
+import fileDownload  from 'js-file-download' 
+import {useSelector} from 'react-redux';
+
+
+const Safe = ({safe:_safe}) => {
+    const {user} = useSelector((state)=> state.auth);
+    const [safe, setSafe] = useState(_safe)
 
     const breakSafe = (e) =>{
         console.log(e.target.id);
     }   
 
-    const downloadSafe = (e) => {
-        console.log(e.target.id);
+    const downloadSafe = async (e) => {
+        console.log("DONWLOADING")
+        const response = await getSafe(user, safe._id)
+        fileDownload(response.data, safe.safeName)
+        console.log(response.data)
     }
 
     return (
