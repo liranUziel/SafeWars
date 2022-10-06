@@ -17,7 +17,10 @@ const getTournament = asyncHandler(async (req, res) => {
 // @access private
 
 const createTournamnet = asyncHandler(async (req, res) => {
-  res.status(200).json("Cool Info");
+  // Only instructor can create
+  const classesIn = req.classIn;
+  const wantedClassId = req.data.wantedClassId;
+  res.status(200).json("TODI: CREATE: " + wantedClassId);
 });
 
 // @desc update tournament info
@@ -25,7 +28,7 @@ const createTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const updateTournamnet = asyncHandler(async (req, res) => {
-  res.status(200).json("Cool Info");
+  res.status(200).json("TODO: UPDATE TOURNAMENTCool Info");
 });
 
 // @desc get all tournament safes
@@ -33,13 +36,15 @@ const updateTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const getTournamentSafes = asyncHandler(async (req, res) => {
-  let safes = [];
-  const classIn = req.classIn;
-  //load tournamnt safe
-  const tournamentSafes = await Tournament.find({ class: classIn._id }).select({
-    safes: 1,
+  const relatedIds = [];
+  // Get all related Ids to the user
+  req.classIn.map((currClass) => {
+    relatedIds += [currClass.instructorId + [...currClass.studentIds]];
   });
-  res.status(200).json(tournamentSafes);
+  //load tournamnt safe
+  const safes = await Safe.find({ user: relatedIds });
+  // TODO: Change all safe names
+  res.status(200).json(safes);
 });
 
 module.exports = {
