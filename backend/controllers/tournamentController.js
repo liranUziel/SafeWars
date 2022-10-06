@@ -9,9 +9,11 @@ const Tournament = require("../models/Tournament");
 // @access private
 
 const getTournament = asyncHandler(async (req, res) => {
-  const tournaments = req.classIn.map(async (currClass) => {
-    return await Tournament.find({ class: currClass._id });
-  });
+  let tournaments = await Promise.all(
+    await req.classIn.map(async (currClass) => {
+      return Tournament.findOne({ class: currClass._id });
+    })
+  );
   if (tournaments.length === 0) {
     return res.status(400).json("No tournament available.");
   }
@@ -30,7 +32,7 @@ const getTournament = asyncHandler(async (req, res) => {
 const createTournamnet = asyncHandler(async (req, res) => {
   // Only instructor can create
   const { wantedClassId, showScore, deadline } = req.body;
-  const tournament = Tournament.findOne({ class: wantedClassId });
+  const tournament = await Tournament.findOne({ class: wantedClassId });
   if (tournament !== undefined)
     return res.status(400).json("Why create again if you have already?");
   const justCreated = await Tournament.create({
@@ -54,10 +56,13 @@ const updateTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const getTournamentSafes = asyncHandler(async (req, res) => {
-  const relatedIds = [];
+  let relatedIds = [];
   // Get all related Ids to the user
   req.classIn.map((currClass) => {
-    relatedIds += [currClass.instructorId + [...currClass.studentIds]];
+    // []: relatedIds = relatedIds + currClass.instructorId + currClass.studentIds
+    relatedIds = relatedIds.concat(
+      [currClass.instructorId].concat(currClass.studentIds)
+    );
   });
   //load tournamnt safe
   const safes = await Safe.find({ user: relatedIds });
