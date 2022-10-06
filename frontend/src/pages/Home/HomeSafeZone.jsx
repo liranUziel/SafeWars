@@ -1,5 +1,6 @@
 import '../../styles/SafeZone.css';
-import {RiSafe2Fill} from 'react-icons/ri'
+import {RiSafe2Fill} from 'react-icons/ri';
+import {BsSafe} from 'react-icons/bs';
 import {useEffect, useState} from 'react'
 import { useSelector ,useDispatch} from 'react-redux';
 import {removeSafe,getSafe} from '../../features/userSafe/userSafeSlice';
@@ -12,8 +13,9 @@ const HomeSafeZone = () => {
   const {user} = useSelector((state)=> state.auth);
   const {safeName,isLoading,isError,isSuccess,message} = useSelector((state)=> state.safe);
 
-  const [file, setFile] = useState()
-  
+  const [file, setFile] = useState();
+
+  const [uploadingStatus,setUploadingStatus] = useState({status:'idel'});
   const [userSafename,setUserSafename] = useState("");
   
   const closeOverlay = (e) =>{
@@ -102,9 +104,12 @@ const HomeSafeZone = () => {
   }
 
   const handleSubmit = async (e)=>{
-    e.preventDefault()
+    e.preventDefault();
+    setUploadingStatus({status:'uploading'});
     const response = await safesService.postSafe(user, file)
-    dispatch(getSafe(user))
+    setUploadingStatus({status:'done'});
+    dispatch(getSafe(user));
+    setUploadingStatus({status:'idel'});
     setPopupActive(false);
   }
   
@@ -121,16 +126,24 @@ const HomeSafeZone = () => {
           <button data-close-button className="close-button" onClick={closeOverlay}>&times;</button>
         </div>
         <div className="safe_popup__body">
-        <form action="" method="post" className="upload_form_container" onSubmit={handleSubmit}>
-          <div className="upload_container">
-              <div className="upload_container__prompt__container">
-                  <i className="fa-solid fa-cloud-arrow-up upload_container__upload_icon"></i>
-                  <div className="upload_container__prompt">Drag and Drop safe file or click on upload</div>
-                  <input type="file" className="upload_container__input" name="safe" onChange={handleFileChanged}/>
-              </div>
+        {uploadingStatus.status === 'idel'?
+        <>
+          <form action="" method="post" className="upload_form_container" onSubmit={handleSubmit}>
+            <div className="upload_container">
+                <div className="upload_container__prompt__container">
+                    <i className="fa-solid fa-cloud-arrow-up upload_container__upload_icon"></i>
+                    <div className="upload_container__prompt">Drag and Drop safe file or click on upload</div>
+                    <input type="file" className="upload_container__input" name="safe" onChange={handleFileChanged}/>
+                </div>
+            </div>
+            <button type="submit" className="upload_form_container__button">Upload</button>
+          </form>
+        </> :
+        <>
+          <div class="box_uploading_container__box">
+            <BsSafe/>
           </div>
-          <button type="submit" className="upload_form_container__button">Upload</button>
-        </form>
+        </>}  
         </div>
       </div>
       <div id="overlay" className={popupActive?"active":""}></div>

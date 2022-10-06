@@ -1,0 +1,16 @@
+.scoreboard__line{
+    background-color:#3b93c2;
+    /* background-image:linear-gradient(to right,white 0%,#3b93c2 2%,#3b93c2 98%,white 98%); */
+    margin-bottom:10px;
+    list-style-type: none;
+    border-radius:10px;
+    min-height:20px;
+    padding:5px;
+}
+.scoreboard__line:hover{
+    background-color: #6cbeea;
+}
+
+.scoreboard__line:has(.scoreboard__student_name.empty) {
+    background-color:#6cbeea;
+}
