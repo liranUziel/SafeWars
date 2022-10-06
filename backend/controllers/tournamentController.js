@@ -82,12 +82,12 @@ const getTournamentSafes = asyncHandler(async (req, res) => {
       return Tournament.findOne({ class: currClass._id });
     })
   );
-
+  console.log(tournaments);
   // Get all related tournaments to user
   const safes = tournaments.map((currTournament) => {
     return currTournament.safes;
   });
-  res.status(200).json(safes);
+  res.status(200).json(safes[0]);
 });
 
 module.exports = {
