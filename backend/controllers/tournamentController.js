@@ -31,12 +31,15 @@ const getTournament = asyncHandler(async (req, res) => {
 
 const createTournamnet = asyncHandler(async (req, res) => {
   // Only instructor can create
-  const { wantedClassId, showScore, deadline } = req.body;
-  const tournament = await Tournament.findOne({ class: wantedClassId });
-  if (tournament !== undefined)
+  const { classId, showScore, deadline } = req.body;
+  if (!classId) {
+    return res.status(400).json("Missing classId!");
+  }
+  const tournament = await Tournament.findOne({ class: classId });
+  if (tournament)
     return res.status(400).json("Why create again if you have already?");
   const justCreated = await Tournament.create({
-    class: wantedClassId,
+    class: classId,
     showScore,
     deadline,
   });

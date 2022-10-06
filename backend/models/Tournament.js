@@ -12,7 +12,7 @@ const tournamentSchema = mongoose.Schema({
   },
   deadline: {
     type: Date,
-    default: null,
+    default: () => new Date(+new Date() + 7 * 24 * 60 * 60 * 1000), // Add 7 days(one week) to the current date
   },
 });
 
