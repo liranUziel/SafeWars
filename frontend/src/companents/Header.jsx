@@ -40,7 +40,7 @@ const Header = () => {
         dispatch(logout());
         dispatch(reset());
         dispatch(clearClass());
-        dispatch(removeSafe())
+        dispatch(removeSafe()); 
         navigate('/')
     }
     const GotoClass = () =>{
