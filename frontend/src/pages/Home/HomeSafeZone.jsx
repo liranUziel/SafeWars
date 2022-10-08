@@ -6,7 +6,7 @@ import { useSelector ,useDispatch} from 'react-redux';
 import {removeSafe,getSafe} from '../../features/userSafe/userSafeSlice';
 import safesService from '../../utils/userSafe'
 import Safe from './Safe';
-
+import {toast} from 'react-toastify';
 
 const HomeSafeZone = () => {
   const dispatch = useDispatch();
@@ -18,15 +18,6 @@ const HomeSafeZone = () => {
   const [uploadingStatus,setUploadingStatus] = useState({status:'idel'});
   const [safe,setSafe] = useState({});
   
-  const closeOverlay = (e) =>{
-    setProgress(null);
-    setPopupActive(false);
-  }
-  
-  const openPopup = (e) =>{
-    setProgress(0);
-    setPopupActive(true);
-  }
 
   function updateThumbnail(dropZoneElement, file) {
     let thumbnailElement = dropZoneElement.querySelector(".upload_container__thumb");
@@ -113,6 +104,34 @@ const HomeSafeZone = () => {
     //setPopupActive(false);
   }
 
+  const reuploadSafe = (e) =>{
+    toast.warn('Warrning reuploading safe will remove the old one', {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+    console.log(`reupload safe`);
+    e.preventDefault();
+    setSafe({});
+    dispatch(removeSafe());
+    openPopup(e);
+  }
+
+  const closeOverlay = (e) =>{
+    setProgress(null);
+    setPopupActive(false);
+  }
+  
+  const openPopup = (e) =>{
+    setProgress(0);
+    setPopupActive(true);
+  }
+
+
   const getKey = async (e)=>{
     setProgress(2);
     setPopupActive(false);
@@ -174,7 +193,7 @@ const HomeSafeZone = () => {
     </div>
     :<>
       <div className="user_safe_container">
-        <Safe safe={safe} type={"private"}/> 
+        <Safe safe={safe} action={reuploadSafe} type={"private"}/> 
       </div>
     </>}
     </>

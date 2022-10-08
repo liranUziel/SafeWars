@@ -65,30 +65,30 @@ const Header = () => {
         
         <header className='header'>
             <div className="logo">
-                <Link to='/home'><BsFillShieldFill/>afe <span className="Z-letter">Z</span>one</Link>
+                <Link to='/home'><span className="shield"><BsFillShieldFill/></span>afe <span className="Z-letter">Z</span>one</Link>
             </div>
-            <ul className="header_item_list">
-                <li id="" className="header_item">
-                    <button className="header_item_btn" onClick={GotoSafe}>
+            <ul className="header__list">
+                <li id="" className="header__list__item">
+                    <button className="header__list__item_btn" onClick={GotoSafe}>
                         <BsSafeFill/>
                         My safe
                     </button>
                 </li>
-                <li id="" className="header_item">
-                    <button className="header_item_btn" onClick={GotoClass}>
+                <li id="" className="header__list__item">
+                    <button className="header__list__item_btn" onClick={GotoClass}>
                         <FaChalkboardTeacher/>
                         Class <span className="class_name">{className}</span>
                     </button>
                 </li>
-                <li id="" className="header_item">
+                <li id="" className="header__list__item">
                 <Link to='/home'></Link>
-                    <button className="header_item_btn" onClick={GotoTournament}>
+                    <button className="header__list__item_btn" onClick={GotoTournament}>
                         <FaChessKing/>
                         Tournament
                     </button>
                 </li>
-                <li id="" className="header_item">
-                    <button className="header_item_btn" onClick={GotoScoreBoard}>
+                <li id="" className="header__list__item">
+                    <button className="header__list__item_btn" onClick={GotoScoreBoard}>
                         <BsFillBarChartFill/>
                         Score Borad <span className="header_item__score">1124</span>
                     </button>
@@ -96,8 +96,8 @@ const Header = () => {
                 {user_type === "student" ? (
                 <>
                 </>):(
-                    <li id="" className="header_item">
-                        <button className="header_item_btn" onClick={GotoDashboard}>
+                    <li id="" className="header__list__item">
+                        <button className="header__list__item_btn" onClick={GotoDashboard}>
                             <RiAdminFill/>
                             Mangement
                         </button>
@@ -108,12 +108,12 @@ const Header = () => {
             </ul>
             <div className="user">
                 <FaUser/>
-                <span className="user_name">
+                <span className="user_name header__text">
                     {user.name}
                 </span>
             </div>
             <div className="logout">
-                <button className="logout_btn" onClick={onLogout}>
+                <button className="logout_btn header__text" onClick={onLogout}>
                     Logout
                     <i className="fa-solid fa-right-from-bracket"></i>
                 </button>

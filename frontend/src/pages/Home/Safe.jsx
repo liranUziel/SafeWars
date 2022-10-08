@@ -8,7 +8,7 @@ import fileDownload  from 'js-file-download'
 import {useSelector} from 'react-redux';
 
 
-const Safe = ({safe:_safe,type}) => {
+const Safe = ({safe:_safe,type,action}) => {
     const {user} = useSelector((state)=> state.auth);
     const [safe, setSafe] = useState({});
     const [name,setName] = useState("");
@@ -38,7 +38,7 @@ const Safe = ({safe:_safe,type}) => {
             <div className={safe.solved ? "safe__frame solved ":"safe__frame"}>
                 <div className="btn-array">
                     <BsFillArrowDownCircleFill onClick={downloadSafe} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
-                    {type==='private'?<BsFillArrowUpCircleFill onClick={uploadSafe} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>:<></> }
+                    {type==='private'?<BsFillArrowUpCircleFill onClick={action} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>:<></> }
                 </div>
                 <div className="icon">
                     {safe.solved ? 

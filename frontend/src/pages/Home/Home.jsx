@@ -6,6 +6,7 @@ import '../../styles/Home.css';
 
 import Spinner from '../../companents/Spinner';
 import Header from '../../companents/Header';
+import Footer from '../../companents/Footer';
 
 const Home = () => {
     
@@ -24,7 +25,7 @@ const Home = () => {
             <div className="container__home">
                 <Header/>
                 <Outlet/>
-                {/* <div className="home_footer">Footer</div> */}
+                <Footer className="home_footer"/>
             </div>
         </> 
         :

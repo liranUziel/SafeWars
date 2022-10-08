@@ -16,6 +16,16 @@ body{
     left:50%;
     transform: translate(-50%,-50%);
 }
+.container__home{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: 
+        'header'
+        'main'
+        'footer';
+    height: 100%;
+}
 
 /* .container__home{
     display: grid;
