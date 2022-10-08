@@ -57,7 +57,10 @@ const Header = () => {
     const GotoScoreBoard = () => {
         navigate('/home/scoreboard');
     }
-    const user_type = "student";
+    const GotoDashboard = () => {
+        navigate('/home/dashboard');
+    }
+    const user_type = "teacher";
     return (
         
         <header className='header'>
@@ -94,7 +97,7 @@ const Header = () => {
                 <>
                 </>):(
                     <li id="" className="header_item">
-                        <button className="header_item_btn">
+                        <button className="header_item_btn" onClick={GotoDashboard}>
                             <RiAdminFill/>
                             Mangement
                         </button>

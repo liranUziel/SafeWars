@@ -195,3 +195,31 @@ font-weight: bold;
     70%{ width: 30px; background-color:rgb(150, 150, 150);}
     100% { width: 50px; background-color:rgb(100, 100, 100);}
 }
+
+.safe_popup__body__progress_bar{
+    display:flex;
+    position: absolute;
+    top:80%;
+}
+.safe_popup__body__progress_bar_item{
+    background-color:white;
+    display:flex;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    /* font-size: 1.3rem;*/
+    align-items: center;
+    justify-content: center;
+    border:3px solid var(--light_gray);
+    color:var(--light_gray);
+    margin-right: 10px;
+}
+
+.safe_popup__body__progress_bar_item.done{
+    border:3px solid var(--accent-color);
+    color:var(--accent-color);
+}
+.safe_popup__body__progress_bar_item.current{
+    border:3px solid var(--light-accent-color);
+    color:var(--light-accent-color);
+}

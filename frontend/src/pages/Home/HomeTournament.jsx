@@ -4,6 +4,7 @@ import Spinner from '../../companents/Spinner';
 import { useDispatch,useSelector} from 'react-redux';
 import {clearTournament,getTournamentInfo,getTournamentSafes} from '../../features/tournament/tournamentSlice';
 import {useEffect,useState} from 'react';
+import converter from 'number-to-words';
 
 const HomeTournament = () => {
     const dispatch = useDispatch();
@@ -11,38 +12,41 @@ const HomeTournament = () => {
     const {tournamentInfo,tournamentSafes,isLoading,isError,isSuccess,message} = useSelector((state)=> state.tournament);
     const [safes, setSafes] = useState([]);
     const [tournamentEnable,setTournamentEnable] = useState(false);
-    // let isLoading = false;
-    console.log(`loading: ${isLoading} tournamentEnable: ${tournamentEnable}`);
-    console.log(`Tournamet info:`);
-    console.log(tournamentInfo);
-    
     useEffect(() =>{
         dispatch(getTournamentInfo(user));
         dispatch(getTournamentSafes(user));
     },[dispatch]);
-    
+    useEffect(()=>{
+        if(tournamentInfo.deadline !== undefined || tournamentInfo.deadline < Date.now()){
+            setTournamentEnable(true);
+        }
+    },[tournamentInfo])
       useEffect(()=>{
         setSafes(tournamentSafes);
+        console.log(safes);
     },[tournamentSafes])
         if(isLoading)    {
         return <Spinner/>
         }
 
-        if (safes.length !== 0)
+        if (safes.length !== 0 && tournamentEnable)
         return (
             <div className="safe_container">
-            {
-                safes.map(safe => <Safe key={safe._id} safe={safe}></Safe>)
+            {   
+            // arry of arrays
+                safes.map(safe => <Safe key={safe._id} safe={safe[0]} type='tournament'></Safe>)
             }
             </div>
         )
         else if(tournamentEnable){
         return (
             <div className="empty_container">
+                <img src={require('../../Images/safes_not_found.png')} className="page__not__found__img"/>
                 Safes list is empty
             </div>
         )
         }else{
+
             return (
             <div className="empty_container">
                 Tournament is not open at this moment, please contect your teacher.

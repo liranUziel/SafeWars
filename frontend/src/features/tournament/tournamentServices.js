@@ -6,7 +6,6 @@ const API_URL_TOURNAMENT_SAFES = 'http://localhost:8080/tournament/safes'
 
 const getTournamentInfo = async (userData) =>{
     const response = await axios.get(API_URL_TOURNAMENT,{headers:{Authorization:`Bearer ${userData.token}`}});
-    console.log(response);
     return response.data;
 }
 

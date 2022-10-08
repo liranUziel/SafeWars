@@ -17,7 +17,7 @@
 .header{
     display: grid;
     grid-template-columns: 40% 1fr 10% 2% 2%;
-    background-color:#369993;
+    background-color:var(--accent-color);
     align-items: center;
 }
 .header > * {

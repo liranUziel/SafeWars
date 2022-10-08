@@ -11,11 +11,14 @@ import {useSelector} from 'react-redux';
 const Safe = ({safe:_safe,type}) => {
     const {user} = useSelector((state)=> state.auth);
     const [safe, setSafe] = useState({});
+    const [name,setName] = useState("");
     const breakSafe = (e) =>{
         console.log(e.target.id);
     } 
     useEffect(()=>{
         setSafe(_safe);
+        setName(safe.safeName);
+        
     },[_safe]) 
     const downloadSafe = async (e) => {
         const response = await getSafe(user, safe._id);
@@ -50,7 +53,7 @@ const Safe = ({safe:_safe,type}) => {
                 </div>
             </div>
             <div className="info">
-                <h3 className="safeName">file name: <span className="fileName">{safe.safeName}</span></h3>
+                <h3 className="safeName">file name: <span className="fileName">{name}</span></h3>
                 <span className="safeUploadDate">date: 15/8/2022 17:11 pm</span>
             </div>
         </div>
