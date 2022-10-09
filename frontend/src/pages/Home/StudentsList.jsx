@@ -29,7 +29,7 @@ const StudentsList = ({students}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {students.map((student,index) =><StudemtItem key={student._id} index={index} student={student} removeStudent={removeStudent}/>)}
+                    {students.map((student,index) =><StudemtItem key={student.id} index={index} student={student} removeStudent={removeStudent}/>)}
                 </tbody>
             </table>
             <form onSubmit={addStudent}>
