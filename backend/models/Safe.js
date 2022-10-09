@@ -5,7 +5,7 @@ const safeSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Users",
+      ref: "user",
     },
     safeName: {
       type: String,
@@ -17,4 +17,4 @@ const safeSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("safes", safeSchema);
+module.exports = mongoose.model("safe", safeSchema);

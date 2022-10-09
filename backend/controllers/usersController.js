@@ -83,6 +83,7 @@ const loginUser = aysncHandler(async (req, res) => {
       name: user.realName,
       email: user.email,
       safesSolved: user.solvedSafes,
+      userType: user.userType,
       token: TokenGenertor(user.id),
       message: "login sucsecfully",
     });

@@ -15,12 +15,10 @@ const getClass = aysncHanler(async (req, res) => {
   if (userType === "student") {
     classIn = await Class.find({ studentIds: id }).select({
       classInfo: 1,
-      _id: 0,
     });
-  } else if (userType === "instructor") {
+  } else if (userType === "instructor" || userType === "admin") {
     classIn = await Class.find({ instructorId: id }).select({
       classInfo: 1,
-      _id: 0,
     });
   }
 
@@ -35,7 +33,27 @@ const getAdminSafes = aysncHanler(async (req, res) => {
   res.status(200).json(safe);
 });
 
+const getStudentsInClass = aysncHanler(async (req, res) => {
+  const { classId } = req.body;
+  const classIn = await Class.findById(classId).populate("studentIds");
+
+  let studentList = await Promise.all(
+    await classIn.studentIds.map(async (student) => {
+      const currSafe = await Safe.findOne({ user: student._id });
+      return {
+        id: student.userName,
+        name: student.realName,
+        hasSubmitedSafe: currSafe !== undefined,
+        score: "No Score Available!",
+      };
+    })
+  );
+
+  res.status(200).json(studentList);
+});
+
 module.exports = {
   getAdminSafes,
   getClass,
+  getStudentsInClass,
 };

@@ -28,7 +28,7 @@ const UserSchema = mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "Safe",
+        ref: "safe",
       },
     ],
   },
@@ -37,4 +37,4 @@ const UserSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Users", UserSchema);
+module.exports = mongoose.model("user", UserSchema);

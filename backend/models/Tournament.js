@@ -4,7 +4,7 @@ const tournamentSchema = mongoose.Schema({
   class: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "Class",
+    ref: "class",
   },
   showScore: {
     type: Boolean,
@@ -21,7 +21,7 @@ const tournamentSchema = mongoose.Schema({
       safeId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "Safe",
+        ref: "safe",
       },
       secretName: {
         type: String,
