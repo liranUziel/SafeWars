@@ -34,7 +34,7 @@ const HomeTournament = () => {
             <div className="safe_container">
             {   
             // arry of arrays
-                safes.map(safe => <Safe key={safe._id} safe={safe[0]} type='tournament'></Safe>)
+                safes.map(safe => <Safe key={safe._id} safe={safe} type='tournament'></Safe>)
             }
             </div>
         )
