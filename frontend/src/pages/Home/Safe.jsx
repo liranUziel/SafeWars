@@ -14,6 +14,7 @@ const Safe = ({safe:_safe,type,action}) => {
     const [name,setName] = useState("");
     const breakSafe = (e) =>{
         console.log(e.target.id);
+        //
     } 
     useEffect(()=>{
         setSafe(_safe);

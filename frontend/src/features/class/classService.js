@@ -15,9 +15,16 @@ const getClassSafes = async (userData) =>{
     return response.data;
 }
 
+const getClassStudents = async (userData,classId) =>{
+    const response = await axios.get(API_URL_CLASS+'/students',{headers:{Authorization:`Bearer ${userData.token}`},body:{classId}});
+    console.log(response.data);
+    return response.data;
+}
+
 const classService = {
     getClassInfo,
     getClassSafes,
+    getClassStudents,
 };
 
 

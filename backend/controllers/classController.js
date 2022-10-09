@@ -34,7 +34,9 @@ const getAdminSafes = aysncHanler(async (req, res) => {
 });
 
 const getStudentsInClass = aysncHanler(async (req, res) => {
-  const { classId } = req.body;
+  const { classId } = req;
+  console.log(req.body);
+  console.log(req.data);
   const classIn = await Class.findById(classId).populate("studentIds");
 
   let studentList = await Promise.all(

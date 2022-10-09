@@ -17,7 +17,7 @@ const Home = () => {
 
     },[user,isError,isSuccess,message,navigate,dispatch]);
     if(isLoading)    {
-        return <Spinner/>
+        return <div><Spinner/></div>
     }
     return (
         (user) ? 

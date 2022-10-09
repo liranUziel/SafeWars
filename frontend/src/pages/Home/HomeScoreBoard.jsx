@@ -1,7 +1,7 @@
 const HomeScoreBoard = () => {
   return (
     <div>
-        <div className="score">You Score is: <sapn>1124</sapn></div>
+        <div className="score">You Score is: <span>1124</span></div>
         <button>show leader board</button>
     </div>
   )

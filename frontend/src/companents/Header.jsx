@@ -26,11 +26,12 @@ const Header = () => {
         {
             const {className,classNumber} = classInfo[0]["classInfo"];
             setClassName(`${className} ${classNumber}`);
+            console.log(user);
         }
         else{
             setClassName('');
         }
-    },[classInfo,dispatch]); 
+    },[classInfo]); 
 
     useEffect(() =>{
         dispatch(getClassInfo(user));
@@ -93,7 +94,7 @@ const Header = () => {
                         Score Borad <span className="header_item__score">1124</span>
                     </button>
                 </li>
-                {user_type === "student" ? (
+                {user.userType === "student" ? (
                 <>
                 </>):(
                     <li id="" className="header__list__item">

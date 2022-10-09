@@ -2,7 +2,7 @@ import '../styles/Compannets/Footer.css';
 import {BsFillShieldFill,BsSafeFill,BsFillBarChartFill} from 'react-icons/bs';
 const Footer = () => {
   return (
-    <div className="footer_container">
+    <footer className="footer_container">
       <span className="footer__shield"><BsFillShieldFill/></span>
       <div className="line"></div>
       <div className="footer_info">
@@ -13,7 +13,7 @@ const Footer = () => {
         <div>creade by:</div>
         <div>Artur</div>
       </div>
-    </div>
+    </footer>
   )
 }
 

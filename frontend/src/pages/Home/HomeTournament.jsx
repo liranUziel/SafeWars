@@ -26,7 +26,7 @@ const HomeTournament = () => {
         console.log(safes);
     },[tournamentSafes])
         if(isLoading)    {
-        return <Spinner/>
+        return <div><Spinner/></div>
         }
 
         if (safes.length !== 0 && tournamentEnable)
@@ -48,8 +48,10 @@ const HomeTournament = () => {
         }else{
 
             return (
-            <div className="empty_container">
-                Tournament is not open at this moment, please contect your teacher.
+            <div>
+                <div className="empty_container">
+                    Tournament is not open at this moment, please contect your teacher.
+                </div>
             </div>)
         }
     }

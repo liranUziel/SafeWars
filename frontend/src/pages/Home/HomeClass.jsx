@@ -22,7 +22,7 @@ const HomeClass = () => {
   },[classSafes])
 
   if(isLoading)    {
-    return <Spinner/>
+    return <div><Spinner/></div>
   }
   if (safes.length !== 0)
     return (

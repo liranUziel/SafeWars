@@ -28,11 +28,23 @@ export const getClassSafes = createAsyncThunk('class/getClassSafes',async (user,
     }
 }); 
 
+export const getClassStudents = createAsyncThunk('class/getClassStudents',async (user,classId,thunkAPI) =>{
+    try {
+        return await classSerivce.getClassStudents(user,classId);
+    } catch (error) {
+        const message = ((error.response && error.response.data && error.response.data.message) || error.message || error.toString() );
+        return thunkAPI.rejectWithValue(message) ;
+        
+    }
+}); 
+
+
 
 // The initial state
 const initialState = {
     classInfo:[],
     classSafes:[],
+    classStudents:[],
     isError:false,
     isSuccess:false,
     isLoading:false,
@@ -72,7 +84,21 @@ export const classSlice = createSlice({
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload;
-            state.classSafes = [];
+            state.classStudents = [];
+        })
+        .addCase(getClassStudents.pending,(state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getClassStudents.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.classStudents = action.payload;
+        })
+        .addCase(getClassStudents.rejected,(state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.classStudents = [];
         })
     }
 })
