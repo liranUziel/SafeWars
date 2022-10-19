@@ -16,12 +16,13 @@ import '../../styles/LoginSignup.css';
 const LandingPageSingup = () => {
     const [formData,setFormData] = useState({
         realName:'',
+        userID:'',
         userName:'',
         email:'',
         password:'',
         confirmPassword:''
     })
-    const {realName,userName,email,password,confirmPassword} = formData;
+    const {realName,userID,userName,email,password,confirmPassword} = formData;
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -68,6 +69,8 @@ const LandingPageSingup = () => {
             <form action="#" className="signin-signup-form" id="signup-form" onSubmit={onSubmit}>
                 <label>full Name</label>
                 <input type="text"  id='realName' name='realName' value={realName} required="" placeholder="please enter your full name" onChange={onChange}/>
+                <label>user ID</label>
+                <input type="text" id='userID' name='userID' value={userID} required=""  pattern="[0-9]{9}" placeholder="please enter your user ID" onChange={onChange}/>
                 <label>user name</label>
                 <input type="text" id='userName' name='userName' value={userName} required="" placeholder="please enter your user name" onChange={onChange}/>
                 <label>email</label>

@@ -49,12 +49,22 @@ const Dashboard = () => {
             {classArray.length > 0 ?
             <div>
             <form onSubmit={createTournament}>
-                <select name="class" id="class" onChange={loadClassData}>
-                {
-                    classArray.map((classObj,index) => <option value={index} key={index}>{`${classObj.classInfo.className} ${classObj.classInfo.classNumber}`}</option>)
-                }
-                </select>
-                <button>create tournament</button>
+                <div>
+                    <select name="class" id="class" onChange={loadClassData}>
+                    {
+                        classArray.map((classObj,index) => <option value={index} key={index}>{`${classObj.classInfo.className} ${classObj.classInfo.classNumber}`}</option>)
+                    }
+                    </select>
+                </div>
+                <div>
+                    <button>create tournament</button>
+                </div>
+                <div>
+                    <label>show score board  </label>
+                    <input type="checkbox"></input>
+                </div>
+                {/* <label>set deadline</label>
+                <input type="calnder"></input> */}
             </form>
             {students.length > 1? <StudentsList students={students}></StudentsList> :<>Not students in class {`${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber}`}</>}
             </div>

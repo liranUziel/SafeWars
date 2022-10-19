@@ -3,21 +3,37 @@
     margin: 0;
 }
 
-body{
-    font-family: sans-serif;
-    background-color:red;
+/* Containers */
+.form_main{
+    display: grid;
+    grid-template-columns:50% auto;
+}
+.form_main__img{
+    background-color:var(--accent-color);
+    height:100vh;
+    display: flex;
+    align-items: center;
 }
 
-/* Containers */
-
-.container{
+.form_container{
     position:absolute;
     right:0;
     background-color:#2E3448;
     height: 100vh;
-    width: 40%;
+    width: 50%;
     box-shadow: 0 0 30px #2E3448;
 }
+
+.form_main__img__svg{
+    height:500px;
+    /* don't change color */
+    fill:var(--mid-color);
+    transform:translate(-250px,0);
+    margin:50%;
+}
+
+
+
 .toggle-container{
     display:flex;
     justify-content:right;

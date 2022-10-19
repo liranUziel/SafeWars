@@ -1,4 +1,5 @@
 import '../../styles/LoginSignup.css';
+import safeboxIcon from '../../Images/safebox.svg';
 //State
 import {useState} from 'react';
 // import {useEffect} from 'react';
@@ -9,8 +10,6 @@ import {useState} from 'react';
 
 import SigninFormPage from './SigninFormPage';
 import SingupFormPage from './SingupFormPage';
-
-
 
 function LogingAndSignup() {
     //Hold the signup-signin toggle state
@@ -31,18 +30,23 @@ function LogingAndSignup() {
     }
     return (
         <>
-            <div className="container">
-                <div className="form-container">
-                    <div className="signin-login-toggle">
-                        <button id="signup-toggle" className="signup-signin" onClick={signinToggle}>Signup</button>
-                        <button id="signin-toggle" className="signup-signin toggled" onClick={signinToggle}>Login</button>
+            <main className="form_main">
+                <div className="form_container">
+                    <div className="toggle-container">
+                        <div className="signin-login-toggle">
+                            <button id="signup-toggle" className="signup-signin" onClick={signinToggle}>Signup</button>
+                            <button id="signin-toggle" className="signup-signin toggled" onClick={signinToggle}>Login</button>
+                        </div>
+                    </div>
+                    <div className="">
+                        {isHidden?<SigninFormPage/>:null}
+                        {isHidden?null:<SingupFormPage/>}    
                     </div>
                 </div>
-                <div className="form-container">
-                    {isHidden?<SigninFormPage/>:null}
-                    {isHidden?null:<SingupFormPage/>}    
+                <div className="form_main__img">
+                    <img src={safeboxIcon} className="form_main__img__svg"/>
                 </div>
-            </div>
+            </main>
         </>
     )
 }
