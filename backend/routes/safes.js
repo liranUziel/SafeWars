@@ -1,24 +1,17 @@
-const express = require("express");
-
-const {
-  getClass,
-  getAdminSafes,
-  downloadSafe,
-} = require("../controllers/safesController");
-const { protect } = require("../middleware/authMiddleware");
-const { upload } = require("../services/safeService");
-const {
-  getSafe,
-  updateSafe,
-  uploadSafe,
-} = require("../controllers/safesController");
-const { addClassData } = require("../middleware/dataMiddleware");
+const express = require('express');
+const { protect } = require('../middleware/authMiddleware');
+const { mUploadSafe, mUploadKey } = require('../services/safeService');
+const { downloadSafe, uploadSafe, uploadKeyAndBreak } = require('../controllers/safesController');
+const { addClassData, addSafeData } = require('../middleware/dataMiddleware');
 const router = express.Router();
 
 // Download Safe
 // /safes?safeId=this_is_the_id
-router.get("/", protect, addClassData, downloadSafe);
+router.get('/', protect, addClassData, downloadSafe);
 // /safes
-router.post("/", protect, addClassData, upload.single("safe"), uploadSafe);
+router.post('/', protect, addClassData, mUploadSafe.single('safe'), uploadSafe);
+
+// /safes?safeId=this_is_the_id
+router.post('/', protect, addClassData, addSafeData, mUploadKey.single('key'), uploadKeyAndBreak);
 
 module.exports = router;

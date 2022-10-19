@@ -1,31 +1,32 @@
 //wrap async and then we don't have to use try catch
-const asyncHandler = require("express-async-handler");
-const Safe = require("../models/Safe");
-const User = require("../models/User");
-const Tournament = require("../models/Tournament");
-const Class = require("../models/Class");
+const asyncHandler = require('express-async-handler');
+const Safe = require('../models/Safe');
+const User = require('../models/User');
+const Tournament = require('../models/Tournament');
+const Class = require('../models/Class');
 
-const numWords = require("num-words");
+const numWords = require('num-words');
+const fsxtra = require('fs-extra');
 
 // @desc get tournament info
 // @route GET /tournament
 // @access private
 
 const getTournament = asyncHandler(async (req, res) => {
-  let tournaments = await Promise.all(
-    await req.classIn.map(async (currClass) => {
-      return Tournament.findOne({ class: currClass._id });
-    })
-  );
-  if (tournaments.length === 0) {
-    return res.status(400).json("No tournament available.");
-  }
-  if (req.user.userType === "student") {
-    return res.status(200).json({ deadline: tournaments[0].deadline });
-  }
-  if (req.user.userType === "instructor") {
-    return res.status(200).json(tournaments);
-  }
+	let tournaments = await Promise.all(
+		await req.classIn.map(async (currClass) => {
+			return Tournament.findOne({ class: currClass._id });
+		})
+	);
+	if (tournaments.length === 0) {
+		return res.status(400).json('No tournament available.');
+	}
+	if (req.user.userType === 'student') {
+		return res.status(200).json({ deadline: tournaments[0].deadline });
+	}
+	if (req.user.userType === 'instructor') {
+		return res.status(200).json(tournaments);
+	}
 });
 
 // @desc create tournament
@@ -33,34 +34,34 @@ const getTournament = asyncHandler(async (req, res) => {
 // @access private
 
 const createTournamnet = asyncHandler(async (req, res) => {
-  // Only instructor can create
-  const { classId, showScore, deadline } = req.body;
-  if (!classId) {
-    return res.status(400).json("Missing classId!");
-  }
-  const tournament = await Tournament.findOne({ class: classId });
-  if (tournament)
-    return res.status(400).json("Why create again if you have already?");
-  // Get the students in the class
-  const { studentIds } = await Class.findById(classId);
-  const relatedIds = studentIds.concat([req.user._id]);
-  console.log(relatedIds);
-  //load tournamnt safes
-  const safes = await Safe.find({ user: relatedIds });
-  console.log(safes);
-  //const amountInWords = numWords(12345)
-  const tournamentSafes = safes.map((safe, index) => {
-    return { safeName: `safe_${numWords(index)}`, _id: safe._id };
-  });
+	// Only instructor can create
+	const { classId, showScore, deadline } = req.body;
+	if (!classId) {
+		return res.status(400).json('Missing classId!');
+	}
+	const tournament = await Tournament.findOne({ class: classId });
+	if (tournament) return res.status(400).json('Why create again if you have already?');
+	// Get the students in the class
+	const { studentIds } = await Class.findById(classId);
+	const relatedIds = studentIds.concat([req.user._id]);
+	console.log(relatedIds);
+	//load tournamnt safes
+	const safes = await Safe.find({ user: relatedIds });
+	console.log(safes);
+	//const amountInWords = numWords(12345)
+	const tournamentSafes = safes.map((safe, index) => {
+		return { safeName: `safe_${numWords(index)}`, _id: safe._id };
+	});
 
-  // Get all safes of the student and
-  const justCreated = await Tournament.create({
-    class: classId,
-    showScore,
-    deadline,
-    safes: tournamentSafes,
-  });
-  res.status(200).json(justCreated);
+	// Get all safes of the student and
+	const justCreated = await Tournament.create({
+		class: classId,
+		showScore,
+		deadline,
+		safes: tournamentSafes,
+	});
+
+	res.status(200).json(justCreated);
 });
 
 // @desc update tournament info
@@ -68,7 +69,7 @@ const createTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const updateTournamnet = asyncHandler(async (req, res) => {
-  res.status(200).json("TODO: UPDATE TOURNAMENTCool Info");
+	res.status(200).json('TODO: UPDATE TOURNAMENTCool Info');
 });
 
 // @desc get all tournament safes
@@ -76,23 +77,23 @@ const updateTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const getTournamentSafes = asyncHandler(async (req, res) => {
-  // Get all related tournaments to user
-  const tournaments = await Promise.all(
-    await req.classIn.map(async (currClass) => {
-      return Tournament.findOne({ class: currClass._id });
-    })
-  );
-  console.log(tournaments);
-  // Get all related tournaments to user
-  const safes = tournaments.map((currTournament) => {
-    return currTournament.safes;
-  });
-  res.status(200).json(safes[0]);
+	// Get all related tournaments to user
+	const tournaments = await Promise.all(
+		await req.classIn.map(async (currClass) => {
+			return Tournament.findOne({ class: currClass._id });
+		})
+	);
+	console.log(tournaments);
+	// Get all related tournaments to user
+	const safes = tournaments.map((currTournament) => {
+		return currTournament.safes;
+	});
+	res.status(200).json(safes[0]);
 });
 
 module.exports = {
-  getTournament,
-  createTournamnet,
-  updateTournamnet,
-  getTournamentSafes,
+	getTournament,
+	createTournamnet,
+	updateTournamnet,
+	getTournamentSafes,
 };
