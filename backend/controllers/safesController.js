@@ -44,11 +44,11 @@ const updateSafe = asyncHandler(async (req, res) => {
 });
 
 const uploadSafe = asyncHandler(async (req, res) => {
-	await Safe.create({
+	const newSafe = await Safe.create({
 		user: req.user._id,
 		safeName: req.safe.safeName,
 	});
-	res.status(201).json(`Added ${req.file.filename}`);
+	res.status(201).json({ safeId: newSafe.safeId });
 });
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {

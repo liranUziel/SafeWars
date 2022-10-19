@@ -1,22 +1,37 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL_SAFES = "http://localhost:8080/safes";
+const API_URL_SAFES = 'http://localhost:8080/safes';
 
 const postSafe = async (userData, file) => {
-  const formData = new FormData();
-  formData.append("safe", file);
-  const response = await axios.post(API_URL_SAFES, formData, {
-    headers: {
-      Authorization: `Bearer ${userData.token}`,
-      "Content-Type": "multipart/form-data",
+	const formData = new FormData();
+	formData.append('safe', file);
+	const response = await axios.post(API_URL_SAFES, formData, {
+		headers: {
+			Authorization: `Bearer ${userData.token}`,
+			'Content-Type': 'multipart/form-data',
+		},
+	});
+	return response.data;
+};
 
-    },
-  });
-  return response.data;
+const postKey = async (userData, safeId, file) => {
+	const formData = new FormData();
+	formData.append('key', file);
+	const response = await axios.post(API_URL_SAFES, formData, {
+		headers: {
+			Authorization: `Bearer ${userData.token}`,
+			'Content-Type': 'multipart/form-data',
+		},
+		params: {
+			safeId,
+		},
+	});
+	return response.data;
 };
 
 const safesService = {
-  postSafe,
+	postSafe,
+	postKey,
 };
 
 export default safesService;
