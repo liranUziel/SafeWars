@@ -7,7 +7,7 @@ const Dashboard = () => {
     //# Id Name Submited Safe Score 
 
     const {user} = useSelector((state)=> state.auth);
-    const {classInfo,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
+    const {classInfo, classStudents, isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
     // const classes = [{name:'Emek',_id:123,students:[{_id:1,id:30257,name:'liran',Submited:true,Score:0},{_id:2,id:30168,name:'moshe',Submited:true,Score:0}]},{name:'Karmiel',_id:13,students:[{_id:3,id:20145,name:'gavriel',Submited:true,Score:0},{_id:4,id:20256,name:'david',Submited:false,Score:0},{_id:5,id:20367,name:'ron',Submited:true,Score:0}]}];
     const [classArray,setCalssArray] = useState([]);
     const [selection,setSelection] = useState(0);
@@ -28,6 +28,12 @@ const Dashboard = () => {
             setCalssArray(classInfo);
         }
     },[classInfo]);
+    
+    useEffect(()=>{
+        if(classStudents){
+            setStudents(classStudents);
+        }
+    },[classStudents]);
 
     useEffect(()=>{
         if(selection!==undefined){
@@ -39,7 +45,8 @@ const Dashboard = () => {
     useEffect(()=>{
         if(classArray.length > 0)
         {
-            dispatch(getClassStudents(user,classArray[selection]._id));
+            console.log(`IDK: ${classArray[selection]._id}`)
+            dispatch(getClassStudents({user,classId: classArray[selection]._id}));
         }
         // 
         console.log(`set class student list ${students}`);
@@ -66,7 +73,7 @@ const Dashboard = () => {
                 {/* <label>set deadline</label>
                 <input type="calnder"></input> */}
             </form>
-            {students.length > 1? <StudentsList students={students}></StudentsList> :<>Not students in class {`${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber}`}</>}
+            {students.length > 0 ? <StudentsList students={students}></StudentsList> :<>Not students in class {`${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber}`}</>}
             </div>
             :
             <>no classes found</>
