@@ -31,7 +31,7 @@ const addUploadSafe = asyncHandler(async (req, res, next) => {
 
 const notHasSafe = asyncHandler(async (req, res, next) => {
 	// Extract the Id of the user
-	const safe = Safe.findOne({ user: req.user._id });
+	const safe = await Safe.findOne({ user: req.user._id });
 	if (!safe) return next();
 	res.status(400).json('You have safe already.');
 });
