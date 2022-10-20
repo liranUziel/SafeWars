@@ -2,7 +2,7 @@ const express = require('express');
 const { protect, mustHaveClass } = require('../middleware/authMiddleware');
 const { mUploadSafe, mUploadKey } = require('../services/safeService');
 const { downloadSafe, uploadSafe, uploadKeyAndBreak } = require('../controllers/safesController');
-const { addClassData, addSafeData, addUploadSafe, notHasSafe } = require('../middleware/dataMiddleware');
+const { addClassData, addSafeData, addUploadSafe, notHasSafe, addClassDataToSafe } = require('../middleware/dataMiddleware');
 const router = express.Router();
 
 // Download Safe
@@ -21,6 +21,6 @@ router.post(
 );
 
 // /safes/break?safeId=this_is_the_id
-router.post('/break', protect, addClassData, mustHaveClass, addSafeData, mUploadKey.single('key'), uploadKeyAndBreak);
+router.post('/break', protect, addClassData, mustHaveClass, addSafeData, addClassDataToSafe, mUploadKey.single('key'), uploadKeyAndBreak);
 
 module.exports = router;

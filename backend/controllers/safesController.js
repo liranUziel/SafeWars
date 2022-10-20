@@ -53,7 +53,8 @@ const uploadSafe = asyncHandler(async (req, res) => {
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	const { user, safe } = req;
-	const { classInfo } = req.classIn;
+	const { classInfo } = req.safe.classIn;//student [0] teacher [0,1] admin [0,1,2,...]
+	console.log(classInfo)
 	const safePath =
 		safe.user.userType === 'admin'
 			? `${__dirname}/../public/safes/admin/${req.safe.safeName}_safe.asm`

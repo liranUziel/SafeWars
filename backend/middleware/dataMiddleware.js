@@ -18,7 +18,7 @@ const addClassData = asyncHandler(async (req, res, next) => {
 const addSafeData = asyncHandler(async (req, res, next) => {
 	// Extract the Id of the user
 	const safeId = req.query.safeId;
-	const safe = Safe.findById(safeId).populate('user');
+	const safe = await Safe.findById(safeId).populate('user');
 	req.safe = safe;
 	next();
 });
@@ -36,4 +36,17 @@ const notHasSafe = asyncHandler(async (req, res, next) => {
 	res.status(400).json('You have safe already.');
 });
 
-module.exports = { addClassData, addSafeData, addUploadSafe, notHasSafe };
+const addClassDataToSafe = asyncHandler(async (req, res, next) => {
+	// Extract the Id of the user
+	let classIn = {}
+	const userId = req.safe.user._id;
+	if (req.safe.user.userType === 'student') {
+		classIn = await Class.findOne({ studentIds: userId });
+	} else if (req.safe.user.userType === 'instructor') {
+		classIn = await Class.findOne({ instructorId: userId });
+	}
+	req.safe.classIn = classIn;
+	next();
+});
+
+module.exports = { addClassData, addSafeData, addUploadSafe, notHasSafe, addClassDataToSafe };
