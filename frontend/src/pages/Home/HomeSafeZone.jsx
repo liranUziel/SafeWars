@@ -1,6 +1,5 @@
 import '../../styles/SafeZone.css';
-import { RiSafe2Fill, RiFileUploadLine } from 'react-icons/ri';
-import { BsSafe } from 'react-icons/bs';
+
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeSafe, getSafe } from '../../features/userSafe/userSafeSlice';
@@ -9,6 +8,7 @@ import Safe from './Safe';
 import { toast } from 'react-toastify';
 import asmLogo from '../../Images/asm.svg';
 import React from 'react';
+import PopUp from './PopUp';
 
 const HomeSafeZone = () => {
 	const dispatch = useDispatch();
@@ -73,12 +73,12 @@ const HomeSafeZone = () => {
 			inputElement.type = 'file';
 			inputElement.classList.add('upload_container__input');
 			inputContainer.prepend(inputElement);
-			updateEvent();
+			// updateEvent();
 		}
 	};
 	useEffect(() => {
 		dispatch(getSafe(user));
-		updateEvent();
+		// updateEvent();
 	}, []);
 
 	const updateEvent = () => {
@@ -124,9 +124,6 @@ const HomeSafeZone = () => {
 		console.log(safeInfo.safeName);
 	}, [safeInfo]);
 
-	const handleFileChanged = (e) => {
-		setFile(e.target.files[0]);
-	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -173,9 +170,9 @@ const HomeSafeZone = () => {
 	};
 
 	const closeOverlay = (e) => {
-		setProgress(null);
+		setProgress(0);
 		setPopupActive(false);
-		restoreform();
+		// restoreform();
 	};
 
 	const openPopup = (e) => {
@@ -204,81 +201,8 @@ const HomeSafeZone = () => {
 							upload safe
 						</button>
 					</div>
-					<div className={popupActive ? 'safe_popup active' : 'safe_popup'} id='safe_popup'>
-						<div className='safe_popup__header'>
-							<button data-close-button className='close-button' onClick={closeOverlay}>
-								&times;
-							</button>
-							<div className='safe_popup__body__progress_bar'>
-								<div
-									className={`safe_popup__body__progress_bar_item ${progress > 0 ? 'done' : ''} ${
-										progress === 0 ? 'current' : ''
-									}`}
-								>
-									{progress > 0 ? 'V' : '0'}
-								</div>
-								<div
-									className={`safe_popup__body__progress_bar_item ${progress > 1 ? 'done' : ''} ${
-										progress === 1 ? 'current' : ''
-									}`}
-								>
-									{progress > 1 ? 'V' : '1'}
-								</div>
-								<div
-									className={`safe_popup__body__progress_bar_item ${progress > 2 ? 'done' : ''} ${
-										progress === 2 ? 'current' : ''
-									}`}
-								>
-									{progress > 2 ? 'V' : '2'}
-								</div>
-							</div>
-						</div>
-						<div className='safe_popup__body'>
-							{uploadingStatus === 'idel' || uploadingStatus === 'key' ? (
-								<form action='' method='post' className='upload_form_container' onSubmit={handleSubmit}>
-									<div className='upload_container'>
-										<div className='upload_container__prompt__container'>
-											<RiFileUploadLine className='upload_container__upload_icon' />
-											<div className='upload_container__prompt'>
-												Drag and Drop safe file or click on upload
-											</div>
-										</div>
-									</div>
-									<div className='upload_form_container__input'>
-										<input
-											type='file'
-											className='upload_container__input'
-											name='safe'
-											onChange={handleFileChanged}
-										/>
-										<button type='submit' className='upload_form_container__button'>
-											Upload
-										</button>
-									</div>
-								</form>
-							) : (
-								<>
-									{uploadingStatus === 'testing' ? (
-										<>
-											testing
-											<button type='submit' className='upload_form_container__button'>
-												done
-											</button>
-										</>
-									) : (
-										<>
-											<div className='box_uploading_container__box'>
-												<BsSafe />
-											</div>
-											Uploading<span>...</span>
-										</>
-									)}
-								</>
-							)}
-						</div>
-					</div>
-					<div id='overlay' className={popupActive ? 'active' : ''}></div>
-				</div>
+					<PopUp popupActive={popupActive} closeOverlay={closeOverlay}/>
+				</div> 
 			) : (
 				<>
 					<div className='user_safe_container'>

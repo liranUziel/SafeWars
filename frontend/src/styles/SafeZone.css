@@ -161,6 +161,14 @@ font-weight: bold;
     font-size:3.5rem;
 }
 
+.box_uploading_container{
+    height: 200px;
+    position: relative;
+    padding: 20px;
+    display: flex;
+    align-content: flex-end;
+    flex-wrap: wrap;
+}
 
 .box_uploading_container__box {
     position: absolute;

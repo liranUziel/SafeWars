@@ -20,7 +20,7 @@ router.post(
 	uploadSafe
 );
 
-// /safes?safeId=this_is_the_id
-router.post('/', protect, addClassData, mustHaveClass, addSafeData, mUploadKey.single('key'), uploadKeyAndBreak);
+// /safes/break?safeId=this_is_the_id
+router.post('/break', protect, addClassData, mustHaveClass, addSafeData, mUploadKey.single('key'), uploadKeyAndBreak);
 
 module.exports = router;
