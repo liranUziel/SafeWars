@@ -48,7 +48,7 @@ const uploadSafe = asyncHandler(async (req, res) => {
 		user: req.user._id,
 		safeName: req.safe.safeName,
 	});
-	res.status(201).json({ safeId: newSafe.safeId });
+	res.status(201).json({ safeId: newSafe._id });
 });
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
