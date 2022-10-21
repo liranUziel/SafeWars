@@ -5,6 +5,7 @@ const User = require('../models/User');
 const Tournament = require('../models/Tournament');
 const Class = require('../models/Class');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const getUserSafe = asyncHandler(async (req, res) => {
 	//load user safe
@@ -53,14 +54,25 @@ const uploadSafe = asyncHandler(async (req, res) => {
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	const { user, safe } = req;
-	const { classInfo } = req.safe.classIn;//student [0] teacher [0,1] admin [0,1,2,...]
-	console.log(classInfo)
-	const safePath =
+	const { classInfo } = req.safe.classIn; //student [0] teacher [0,1] admin [0,1,2,...]
+	let safePath =
 		safe.user.userType === 'admin'
 			? `${__dirname}/../public/safes/admin/${req.safe.safeName}_safe.asm`
 			: `${__dirname}/../public/safes/${classInfo.className}/${classInfo.classNumber}/${req.safe.safeName}_safe.asm`;
-	const keyPath = `${__dirname}/../public/keys/${classInfo.className}/${classInfo.classNumber}/${user.userName}/${req.safe.safeName}_key.asm`;
-	res.status(201).json({ safePath, keyPath });
+	let keyPath = `${__dirname}/../public/keys/${classInfo.className}/${classInfo.classNumber}/${user.userName}/${req.safe.safeName}_key.asm`;
+	// Nedded Data ro break
+	userId = user.userId;
+	safeName = req.safe.safeName;
+	safePath = path.resolve(safePath);
+	keyPath = path.resolve(keyPath);
+	// Break the safe and hope for the best
+	const result = getBreakResults(userId, safeName, safePath, keyPath);
+	if (!result) return res.status(400).json('Some error happend while breaking safe');
+
+	console.log(result);
+
+	const hasBeenBroken = result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
+	res.status(201).json({ hasBeenBroken });
 });
 
 const downloadSafe = asyncHandler(async (req, res) => {
@@ -84,9 +96,51 @@ const downloadSafe = asyncHandler(async (req, res) => {
 	res.status(200).sendFile(`${filePath}\\${safe.safeName}`);
 });
 
-const solveSafe = asyncHandler(async (req, res) => {
-	res.status(505);
-});
+const getBreakResults = (userId, safeName, safePath, keyPath) => {
+	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
+	// Run the script and try to break the safe
+	const { status, output, error } = spawnSync('python3', [pathToScript, userId, safeName, safePath, keyPath]);
+
+	// Check no errors happened
+	if (status !== 0 || error) {
+		output.forEach((element) => {
+			if (!element) return;
+			console.log(element.toLocaleString());
+		});
+		console.log("Error at 'getBreakResults' (status/error)", error);
+		return undefined;
+	}
+
+	let result = undefined;
+	// Extract the data from the script
+	output.forEach((element) => {
+		if (!element) return;
+		try {
+			result = JSON.parse(element.toLocaleString());
+		} catch (error) {}
+	});
+
+	if (!result) {
+		console.log("Error at 'getBreakResults' (result)", error);
+		return undefined;
+	}
+
+	// Last tests
+	const hasAllKeys = ['safeName', 'keyScore', 'safeScore', 'test'].every((value) => {
+		return value in result;
+	});
+	if (!hasAllKeys) {
+		console.log("Error at 'getBreakResults' (hasAllKeys)", error);
+		return undefined;
+	}
+
+	// Parse to int values
+	result.keyScore = Number.parseInt(result.keyScore);
+	result.safeScore = Number.parseInt(result.safeScore);
+	result.test = result.test === 'builtin' ? 0 : Number.parseInt(result.test);
+
+	return result;
+};
 
 module.exports = {
 	getUserSafe,
