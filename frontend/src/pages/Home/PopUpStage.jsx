@@ -48,9 +48,9 @@ const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
         console.log(response);
         setProgress(stage+1);
         setSatgeName('test');
+        handelTestSubmit();
     };
-    const handelTestSubmit = (e) => {
-        e.preventDefault();
+    const handelTestSubmit = () => {
         console.log(`progress [${stage+1}\\3]: testing safe`);
         // setProgress(stage+1);
     };

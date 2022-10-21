@@ -14,13 +14,10 @@ const HomeSafeZone = () => {
 	const dispatch = useDispatch();
 	const [popupActive, setPopupActive] = useState(false);
 	const { user } = useSelector((state) => state.auth);
-	const { safeInfo, isLoading, isError, isSuccess, message } = useSelector((state) => state.safe);
-	const [file, setFile] = useState();
+	const { safeInfo } = useSelector((state) => state.safe);
 	const [progress, setProgress] = useState(null);
 	const [uploadingStatus, setUploadingStatus] = useState('idel');
 	const [safe, setSafe] = useState({});
-
-	let safeId = undefined;
 
 	const updateThumbnail = (e, file) => {
 		const popupBodyElement = document.getElementsByClassName('safe_popup__body')[0];
@@ -73,84 +70,19 @@ const HomeSafeZone = () => {
 			inputElement.type = 'file';
 			inputElement.classList.add('upload_container__input');
 			inputContainer.prepend(inputElement);
-			// updateEvent();
 		}
 	};
 	useEffect(() => {
 		dispatch(getSafe(user));
-		// updateEvent();
-	}, []);
 
-	const updateEvent = () => {
-		if (safeInfo === undefined) return;
-		const inputElement = document.getElementsByClassName('upload_container__input')[0];
-		const dropZoneElement = document.getElementsByClassName('upload_container')[0];
-		const popupBody = document.getElementsByClassName('safe_popup__body')[0];
-		if (dropZoneElement !== undefined) {
-			dropZoneElement.addEventListener('dragover', (e) => {
-				e.preventDefault();
-				dropZoneElement.classList.add('upload_container__hover');
-			});
+	}, [dispatch,user]);
 
-			['dragleave', 'dragend'].forEach((type) => {
-				dropZoneElement.addEventListener(type, (e) => {
-					dropZoneElement.classList.remove('upload_container__hover');
-				});
-			});
-
-			dropZoneElement.addEventListener('drop', (e) => {
-				e.preventDefault();
-				if (e.dataTransfer.files.length === 1) {
-					const fileElement = e.dataTransfer.files[0];
-					inputElement.files = e.dataTransfer.files;
-					setFile(inputElement.files[0]);
-					updateThumbnail(popupBody, fileElement);
-				} else if (e.dataTransfer.files.length > 1) {
-					console.error('too many files');
-				}
-				dropZoneElement.classList.remove('upload_container__hover');
-			});
-
-			inputElement.addEventListener('change', (e) => {
-				if (inputElement.files.length) {
-					setFile(inputElement.files[0]);
-					updateThumbnail(popupBody, inputElement.files[0]);
-				}
-			});
-		}
-	};
+	
 	useEffect(() => {
 		setSafe({ ...safeInfo, solved: false });
 		console.log(safeInfo.safeName);
 	}, [safeInfo]);
 
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		if (uploadingStatus === 'key') {
-			setUploadingStatus('uploading');
-			if (!safeId) return;
-			const response = await safesService.postKey(user, safeId, file);
-			console.log(response);
-			setUploadingStatus('testing');
-			setProgress(2);
-			// setPopupActive(false);
-		} else if (uploadingStatus === 'idel') {
-			setUploadingStatus('uploading');
-			// Upload safe
-			const response = await safesService.postSafe(user, file);
-			safeId = response.safeId;
-			setProgress(1);
-			restoreform();
-			setUploadingStatus('key');
-			console.log(`stage 2: status ${uploadingStatus}`);
-		} else if (uploadingStatus === 'testing') {
-			console.log('MASHEU');
-			setUploadingStatus('done');
-			console.log(`stage 3: status ${uploadingStatus}`);
-			setUploadingStatus('idel');
-		}
-	};
 
 	const reuploadSafe = (e) => {
 		toast.warn('Warrning reuploading safe will remove the old one', {

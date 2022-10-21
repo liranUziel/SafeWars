@@ -1,0 +1,26 @@
+.dashboard_Container{
+    margin:20px;
+   
+}
+.dashboard_Container__box{
+    display:flex;
+    gap:50px;
+    flex-direction:column;
+}
+
+.dashboard_Container__box select{
+    padding:5px;
+    border:none;
+    color:white;
+    width:150px;
+    /* background-color:var(--mid-color); */
+    border-radius: 5px;
+    font-weight: bold;
+    background-image: linear-gradient(90deg,var(--mid-color) 85%,white 85%,white 87%,var(--mid-color) 87%);
+}
+.dashboard_Container__box__class{
+    background-color:var(--mid-color);
+}
+
+
+    
