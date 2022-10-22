@@ -11,6 +11,10 @@ const safeSchema = mongoose.Schema(
 			type: String,
 			required: [true, 'Please add safe name'],
 		},
+		isVerified: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,
