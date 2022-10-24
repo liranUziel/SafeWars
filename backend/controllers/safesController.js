@@ -6,6 +6,7 @@ const Tournament = require('../models/Tournament');
 const Class = require('../models/Class');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const fs = require('fs-extra');
 
 const getUserSafe = asyncHandler(async (req, res) => {
 	//load user safe
@@ -93,19 +94,29 @@ const downloadSafe = asyncHandler(async (req, res) => {
 	const user = await User.findById(safe.user);
 	// Find the class where the user is in
 	const classOfUser = await Class.findOne({ studentIds: user._id });
+	// Get all related paths
 	let filePath =
 		user.userType === 'admin'
 			? `${__dirname}/../public/safes/admin`
 			: `${__dirname}/../public/safes/${classOfUser.classInfo.className}/${classOfUser.classInfo.classNumber}`;
 	filePath = path.resolve(filePath);
-	console.log(`Donwloading from: ${filePath}\\${safe.safeName}`);
-	res.status(200).sendFile(`${filePath}\\${safe.safeName}`);
+	// Get paths,  dst-safe(bin), src-safe(asm)
+	dstFile = path.resolve(`${filePath}\\${safe.safeName}`);
+	srcFile = path.resolve(`${filePath}\\${safe.safeName}.asm`);
+
+	// Check if file exist, if not create one
+	if (!fs.existsSync(dstFile)) {
+		const isCompiled = await nasmCompile(srcFile, dstFile);
+		if (!isCompiled) return res.status(400).json('Error happened, ask developers to check');
+	}
+
+	res.status(200).sendFile(dstFile);
 });
 
-const getBreakResults = (userId, safeName, safePath, keyPath) => {
-	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
+const getBreakResults = async (userId, safeName, safePath, keyPath) => {
+	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\breakSafeWithKey.py`);
 	// Run the script and try to break the safe
-	const { status, output, error } = spawnSync('python3', [pathToScript, userId, safeName, safePath, keyPath]);
+	const { status, output, error } = await spawn('python3', [pathToScript, userId, safeName, safePath, keyPath]);
 
 	// Check no errors happened
 	if (status !== 0 || error) {
@@ -146,6 +157,16 @@ const getBreakResults = (userId, safeName, safePath, keyPath) => {
 	result.test = result.test === 'builtin' ? 0 : Number.parseInt(result.test);
 
 	return result;
+};
+
+const nasmCompile = async (srcPath, dstPath) => {
+	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\nasmCompile.py`);
+	// Run the script and try to break the safe
+	const { status, output, error } = await spawn('python3', [pathToScript, srcPath, dstPath]);
+	console.log('compileFile output:', output);
+
+	// Check no errors happened
+	return status !== 0 || error;
 };
 
 module.exports = {
