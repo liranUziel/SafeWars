@@ -6,14 +6,25 @@ import '../../styles/Safe.css'
 import {getSafe} from '../../utils/safes'
 import fileDownload  from 'js-file-download' 
 import {useSelector} from 'react-redux';
+import SafeBreakPopUp from './SafeBreakPopUp'
 
 
 const Safe = ({safe:_safe,type,action}) => {
     const {user} = useSelector((state)=> state.auth);
     const [safe, setSafe] = useState({});
+    const [safeId,setSafeId] = useState("");
     const [name,setName] = useState("");
+    const [popupActive, setPopupActive] = useState(false);
     const breakSafe = (e) =>{
+        console.log(e.target.id);
+        setSafeId(e.target.id);
+        setPopupActive(true);
     } 
+    const closeOverlay = (e) => {
+		setPopupActive(false);
+        console.log(`WTF?`);
+		// restoreform();
+	};
     useEffect(()=>{
         setSafe(_safe);
         setName(safe.safeName);
@@ -23,6 +34,7 @@ const Safe = ({safe:_safe,type,action}) => {
         const response = await getSafe(user, safe._id);
         fileDownload(response.data, safe.safeName);
     }
+    //! reuplaoding
     const uploadSafe = (e) =>{
         e.preventDefault();
         /* setUploadingStatus({status:'uploading'});
@@ -46,7 +58,7 @@ const Safe = ({safe:_safe,type,action}) => {
                     {safe.solved || type==='private'? 
                     <></>:
                     <div className="btnCA">
-                        <button className="breakBtn" id={"s"+safe._id} onClick={breakSafe}>BREAK</button>
+                        <button className="breakBtn" id={safe._id} onClick={breakSafe}>BREAK</button>
                     </div>
                     } 
                 </div>
@@ -55,6 +67,7 @@ const Safe = ({safe:_safe,type,action}) => {
                 <h3 className="safeName">file name: <span className="fileName">{name}</span></h3>
                 <span className="safeUploadDate">date: 15/8/2022 17:11 pm</span>
             </div>
+            <SafeBreakPopUp popupActive={popupActive} closeOverlay={closeOverlay} safeId={safeId} user={user}/>
         </div>
     )
 }

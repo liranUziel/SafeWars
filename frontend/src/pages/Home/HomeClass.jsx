@@ -1,6 +1,7 @@
 import Safe from './Safe'
 import '../../styles/Safe.css'
 import Spinner from '../../companents/Spinner';
+import PopUp from './PopUp';
 
 import { useDispatch,useSelector} from 'react-redux';
 import {clearClass,getClassInfo,getClassSafes} from '../../features/class/classSlice';
@@ -11,8 +12,8 @@ const HomeClass = () => {
   const dispatch = useDispatch();
   const {user} = useSelector((state)=> state.auth);
   const {classSafes,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
-  const [safes, setSafes] = useState([]);
-
+  const [safes, setSafes] = useState([])
+  const [popupActive, setPopupActive] = useState(false);
   useEffect(() =>{
     dispatch(getClassSafes(user));
   },[dispatch]);
@@ -20,7 +21,10 @@ const HomeClass = () => {
   useEffect(()=>{
     setSafes(classSafes);
   },[classSafes])
-
+  const closeOverlay = (e) => {
+		setPopupActive(false);
+		// restoreform();
+	};
   if(isLoading)    {
     return <div><Spinner/></div>
   }
@@ -30,9 +34,11 @@ const HomeClass = () => {
         {
           safes.map(safe =>{
             safe = {...safe, solved: user.safesSolved.includes(safe._id)}
-            return <Safe key={safe._id} safe={safe} type='public'></Safe>})
+            return <Safe key={safe._id} safe={safe} type='public' setPopupActive={setPopupActive}></Safe>})
         }
+      {/* <PopUp popupActive={popupActive} closeOverlay={closeOverlay} type='public' /> */}
       </div>
+      
     )
   else{
     return (

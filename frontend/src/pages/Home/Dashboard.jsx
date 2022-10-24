@@ -16,8 +16,9 @@ const Dashboard = () => {
     const [showScore,setShowScore] = useState(false);
     const dispatch = useDispatch();
 
-    const loadClassData = (e) =>{
+    const loadClassData = (e) =>{  
         setSelection(classArray[e.target.value]);
+        console.log(students);
     }
     const createTournament = (e) => {
         e.preventDefault();
@@ -43,10 +44,13 @@ const Dashboard = () => {
     },[selection])
 
     useEffect(()=>{
-        if(classArray.length > 0)
-        {
-            dispatch(getClassStudents({user,classId: classArray[selection]._id}));
-        }
+    console.log("classArray was loaded");
+    if(classArray.length > 0)
+    {   
+        console.log(`loading class ${classArray[selection]._id} student list`);
+        dispatch(getClassStudents({user,classId: classArray[selection]._id}));
+        
+    }
     },[classArray]);
     return (
         <div className="dashboard_Container">

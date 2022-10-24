@@ -5,7 +5,7 @@ const User = require('../models/User');
 const Tournament = require('../models/Tournament');
 const Class = require('../models/Class');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs-extra');
 
 const getUserSafe = asyncHandler(async (req, res) => {
@@ -67,7 +67,10 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	// Diffrent handle for admin safe
 	const isAdminSafe = safe.user.userType === 'admin';
 
-	const { classInfo: classInfoSafe } = safe.classIn[0];
+	let classInfoSafe = undefined
+	if(safe.classIn !== undefined && safe.classIn.length > 0){
+		 classInfoSafe = safe.classIn[0].classInfo;
+	}
 	const { classInfo: classInfoUser } = req.classIn[0];
 	const safePath = isAdminSafe
 		? path.resolve(`${__dirname}\\..\\public\\safes\\admin\\${safeName}`)
@@ -81,11 +84,11 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 
 	// Make sure safe exists, if not create
 	if (!fs.existsSync(safePath)) {
-		const isCompiled = nasmCompile(path.resolve(`${safePath}_safe.asm`, safePath));
+		const isCompiled = await nasmCompile(path.resolve(`${safePath}_safe.asm`, safePath));
 		if (!isCompiled) return res.status(400).json('Some error happend while breaking safe.');
 	}
 	// Break the safe and hope for the best
-	const result = getBreakResults(userId, safeName, safePath, keyPath);
+	const result = await getBreakResults(userId, safeName, safePath, keyPath);
 	if (!result) return res.status(400).json('Some error happend while breaking safe!');
 
 	console.log(result);
@@ -145,10 +148,6 @@ const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 
 	// Check no errors happened
 	if (status !== 0 || error) {
-		output.forEach((element) => {
-			if (!element) return;
-			console.log(element.toLocaleString());
-		});
 		console.log("Error at 'getBreakResults' (status/error)", error);
 		return undefined;
 	}

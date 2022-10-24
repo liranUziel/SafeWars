@@ -110,7 +110,7 @@ export const classSlice = createSlice({
       .addCase(getClassStudents.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.classStudents = action.payload;
+        state.classStudents = [...action.payload];
       })
       .addCase(getClassStudents.rejected, (state, action) => {
         state.isLoading = false;

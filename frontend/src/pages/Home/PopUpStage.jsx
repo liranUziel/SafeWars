@@ -3,6 +3,7 @@ import { BsSafe } from 'react-icons/bs';
 import {useState} from 'react';
 import { useSelector } from 'react-redux';
 import safesService from '../../utils/userSafe';
+import '../../styles/SafeBreak.css'
 
 const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
     
