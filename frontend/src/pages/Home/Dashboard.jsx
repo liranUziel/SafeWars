@@ -13,16 +13,16 @@ const Dashboard = () => {
     const [classArray,setCalssArray] = useState([]);
     const [selection,setSelection] = useState(0);
     const [students,setStudents] = useState([]);
-    
+    const [showScore,setShowScore] = useState(false);
     const dispatch = useDispatch();
 
     const loadClassData = (e) =>{
         setSelection(classArray[e.target.value]);
-        
     }
     const createTournament = (e) => {
         e.preventDefault();
-        console.log(`create tournament for class: ${selection.name}`);
+        console.log(`Create tournament for class ${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber} ${showScore?'and show score':''}`);
+
     }
     useEffect(()=>{
         if(classInfo){
@@ -39,44 +39,43 @@ const Dashboard = () => {
     useEffect(()=>{
         if(selection!==undefined){
             // setStudents(selection.students);
-            
         }
     },[selection])
 
     useEffect(()=>{
         if(classArray.length > 0)
         {
-            console.log(`IDK: ${classArray[selection]._id}`)
             dispatch(getClassStudents({user,classId: classArray[selection]._id}));
         }
-        // 
-        console.log(`set class student list ${students}`);
     },[classArray]);
     return (
         <div className="dashboard_Container">
             {classArray.length > 0 ?
             <div className="dashboard_Container__box">
-                <form onSubmit={createTournament}>
+                <div>
+                    <label>Select Class </label>
+                    <select name="dashboard_Container__box__classList" id="class" onChange={loadClassData}>
+                    {
+                        classArray.map((classObj,index) => <option className="dashboard_Container__box__class" value={index} key={index}>{`${classObj.classInfo.className} ${classObj.classInfo.classNumber}`}</option>)
+                    }
+                    </select>
+                </div>
+                <h1>Student List</h1>
+                <div>
+                    {students.length > 0 ? <StudentsList students={students}></StudentsList> :<>Not students in class {`${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber}`}</>}
+                </div>
+                <form onSubmit={createTournament} className="dashboard_Form">
                     <div>
-                        <select name="dashboard_Container__box__classList" id="class" onChange={loadClassData}>
-                        {
-                            classArray.map((classObj,index) => <option className="dashboard_Container__box__class" value={index} key={index}>{`${classObj.classInfo.className} ${classObj.classInfo.classNumber}`}</option>)
-                        }
-                        </select>
+                
                     </div>
                     <div>
-                        <button>create tournament</button>
-                    </div>
-                    <div>
+                        <button type="submit">create tournament</button>
                         <label>show score board  </label>
-                        <input type="checkbox"></input>
+                        <input type="checkbox" value={showScore} onChange={setShowScore}></input>
                     </div>
                     {/* <label>set deadline</label>
                     <input type="calnder"></input> */}
                 </form>
-                <div>
-                    {students.length > 0 ? <StudentsList students={students}></StudentsList> :<>Not students in class {`${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber}`}</>}
-                </div>
             </div>
             :
             <>no classes found</>

@@ -7,7 +7,6 @@ const HomeScoreBoard = () => {
     reader.onload = (e) =>{
       const placeholder = document.getElementById('text');
       placeholder.innerHTML = e.target.result;
-      console.log(e.target);
     }
   }
 

@@ -26,7 +26,6 @@ const Header = () => {
         {
             const {className,classNumber} = classInfo[0]["classInfo"];
             setClassName(`${className} ${classNumber}`);
-            console.log(user);
         }
         else{
             setClassName('');
