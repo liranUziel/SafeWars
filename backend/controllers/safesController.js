@@ -9,7 +9,7 @@ const { spawnSync } = require('child_process');
 
 const getUserSafe = asyncHandler(async (req, res) => {
 	//load user safe
-	const safe = await Safe.find({ user: req.user.id }).select('safeName');
+	const safe = await Safe.find({ user: req.user.id }).select('safeName _id isVerified');
 	if (safe.length === 0) {
 		return res.status(400).json('Upload at first a safe');
 	}
@@ -72,6 +72,12 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	console.log(result);
 
 	const hasBeenBroken = result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
+
+	// If the user breaks it's own safe verify it
+	if (safe.user._id.equals(user._id)) {
+		await Safe.findByIdAndUpdate(safe._id, { isVerified: true });
+		console.log('SELF BREAK');
+	}
 	res.status(201).json({ hasBeenBroken });
 });
 
