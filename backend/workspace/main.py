@@ -148,23 +148,22 @@ async def java_run(student_id: str, run_name: str) -> typing.Tuple[str, str]:
 # run_name == safe_name
 
 
-async def process_student_run(student_id: str, run_name: str, key_safe) -> typing.Tuple[str, str, str]:
+async def process_student_run(student_id: str, run_name: str, safe_path: str, key_path: str) -> typing.Tuple[str, str, str]:
     # Create his own temp run, run folder (safe run folder)
     runs_dir = sep_join(SCRIPT_PATH, 'temp_run', student_id, 'runs', run_name)
     prepare_dirs(runs_dir)
 
-    # Compile key and safe
+    # Compile key and copy safe
     # Create Key
     dst = sep_join(runs_dir, 'survivors', 'key')
-    await nasm_compile(key_safe[0], dst)  # key_safe[0] = key_path
+    await nasm_compile(key_path, dst)
     # Create safe
     dst = sep_join(runs_dir, 'survivors', 'safe')
-    # key_safe[1] = safe_path
-    copyfile(key_safe[1], sep_join(runs_dir, 'survivors', 'safe'))
+    copyfile(safe_path, dst)
 
     # Here I break safe
     java_tasks = [java_run(student_id, run_name)]
-    if key_safe[1]:  # if we have a safe to check if OK
+    if safe_path:  # if we have a safe to check if OK
         temp_runs_dir = sep_join(
             SCRIPT_PATH, 'temp_run', student_id, 'runs', run_name + '_TEST_SAFE')
         prepare_dirs(temp_runs_dir)
@@ -176,7 +175,7 @@ async def process_student_run(student_id: str, run_name: str, key_safe) -> typin
 
     res = await asyncio.gather(*java_tasks)
     # result = (safe_name, key_score, safe_score, empty_key_score/builtin)
-    return (run_name, ) + res[0] + (res[1][1] if key_safe[1] else 'builtin', )
+    return (run_name, ) + res[0] + (res[1][1] if safe_path else 'builtin', )
 #######################################################################################
 
 
@@ -184,7 +183,7 @@ async def get_result(user_id, safe_name, safe_path, key_path):
     # Compile empty key
     await compile_empty_key()
     # Break the safe and return the result
-    return await process_student_run(user_id, safe_name, [safe_path, key_path])
+    return await process_student_run(user_id, safe_name, safe_path, key_path)
 
 
 async def compile_file(src_path, dst_path):

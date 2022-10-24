@@ -5,7 +5,7 @@ const User = require('../models/User');
 const Tournament = require('../models/Tournament');
 const Class = require('../models/Class');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
 
 const getUserSafe = asyncHandler(async (req, res) => {
@@ -67,9 +67,9 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	// Diffrent handle for admin safe
 	const isAdminSafe = safe.user.userType === 'admin';
 
-	let classInfoSafe = undefined
-	if(safe.classIn !== undefined && safe.classIn.length > 0){
-		 classInfoSafe = safe.classIn[0].classInfo;
+	let classInfoSafe = undefined;
+	if (safe.classIn !== undefined && safe.classIn.length > 0) {
+		classInfoSafe = safe.classIn[0].classInfo;
 	}
 	const { classInfo: classInfoUser } = req.classIn[0];
 	const safePath = isAdminSafe
@@ -137,7 +137,7 @@ const downloadSafe = asyncHandler(async (req, res) => {
 const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
 	// Run the script and try to break the safe
-	const { status, output, error } = await spawn('python3', [
+	const { status, output, error } = spawnSync('python3', [
 		pathToScript,
 		'break',
 		userId,
@@ -146,8 +146,12 @@ const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 		keyPath,
 	]);
 
-	// Check no errors happened
+	// Check if errors happened
 	if (status !== 0 || error) {
+		output?.forEach((element) => {
+			if (!element) return;
+			console.log(element.toLocaleString());
+		});
 		console.log("Error at 'getBreakResults' (status/error)", error);
 		return undefined;
 	}
@@ -186,7 +190,7 @@ const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 const nasmCompile = async (srcPath, dstPath) => {
 	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
 	// Run the script and try to break the safe
-	const { status, output, error } = await spawn('python3', [pathToScript, 'compile', srcPath, dstPath]);
+	const { status, output, error } = spawnSync('python3', [pathToScript, 'compile', srcPath, dstPath]);
 	console.log('compileFile output:', output);
 
 	// Check no errors happened

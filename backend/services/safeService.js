@@ -28,9 +28,11 @@ const keyStorage = multer.diskStorage({
 		const { classIn, user, safe } = req;
 		classIn.forEach((currClass) => {
 			const { classInfo } = currClass;
-			let path = `${__dirname}/../public/keys/${classInfo.className}/${classInfo.classNumber}/${user.userName}`;
-			fs.mkdirsSync(path);
-			callback(null, path);
+			const keyPath = path.resolve(
+				`${__dirname}\\..\\public\\keys\\${classInfo.className}\\${classInfo.classNumber}\\${user.userId}`
+			);
+			fs.mkdirsSync(keyPath);
+			callback(null, keyPath);
 			//
 		});
 	},
