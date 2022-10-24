@@ -44,10 +44,8 @@ const createTournamnet = asyncHandler(async (req, res) => {
 	// Get the students in the class
 	const { studentIds } = await Class.findById(classId);
 	const relatedIds = studentIds.concat([req.user._id]);
-	console.log(relatedIds);
 	//load tournamnt safes
 	const safes = await Safe.find({ user: relatedIds, isVerified: true });
-	console.log(safes);
 	//const amountInWords = numWords(12345)
 	const tournamentSafes = safes.map((safe, index) => {
 		return { safeName: `safe_${numWords(index)}`, _id: safe._id };

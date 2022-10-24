@@ -55,17 +55,30 @@ const uploadSafe = asyncHandler(async (req, res) => {
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	const { user, safe } = req;
-	const { classInfo } = req.safe.classIn; //student [0] teacher [0,1] admin [0,1,2,...]
-	let safePath =
-		safe.user.userType === 'admin'
-			? `${__dirname}/../public/safes/admin/${req.safe.safeName}`
-			: `${__dirname}/../public/safes/${classInfo.className}/${classInfo.classNumber}/${req.safe.safeName}`;
-	let keyPath = `${__dirname}/../public/keys/${classInfo.className}/${classInfo.classNumber}/${user.userName}/${req.safe.safeName}_key.asm`;
-	// Needed Data to break
-	userId = user.userId;
-	safeName = req.safe.safeName;
-	safePath = path.resolve(safePath);
-	keyPath = path.resolve(keyPath);
+	// Admin can't break
+	if (user.userType === 'admin') {
+		return res.status(403).json("Admin can't break safe");
+	}
+
+	// Needed Data to break safe and etc...
+	const userId = user.userId;
+	const safeName = req.safe.safeName;
+
+	// Diffrent handle for admin safe
+	const isAdminSafe = safe.user.userType === 'admin';
+
+	const { classInfo: classInfoSafe } = safe.classIn[0];
+	const { classInfo: classInfoUser } = req.classIn[0];
+	const safePath = isAdminSafe
+		? path.resolve(`${__dirname}\\..\\public\\safes\\admin\\${safeName}`)
+		: path.resolve(
+				`${__dirname}\\..\\public\\safes\\${classInfoSafe.className}\\${classInfoSafe.classNumber}\\${safeName}`
+		  );
+
+	const keyPath = path.resolve(
+		`${__dirname}\\..\\public\\keys\\${classInfoUser.className}\\${classInfoUser.classNumber}\\${userId}\\${safeName}_key.asm`
+	);
+
 	// Make sure safe exists, if not create
 	if (!fs.existsSync(safePath)) {
 		const isCompiled = nasmCompile(path.resolve(`${safePath}_safe.asm`, safePath));
