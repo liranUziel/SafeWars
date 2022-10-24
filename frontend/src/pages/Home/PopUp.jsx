@@ -27,13 +27,6 @@ const PopUp = ({closeOverlay,handleSubmit,popupActive}) => {
                         >
                             {progress > 1 ? 'V' : '1'}
                         </div>
-                        <div
-                            className={`safe_popup__body__progress_bar_item ${progress > 2 ? 'done' : ''} ${
-                                progress === 2 ? 'current' : ''
-                            }`}
-                        >
-                            {progress > 2 ? 'V' : '2'}
-                        </div>
                     </div>
                 </div>
                 <PopUpStage stage={progress} setProgress={setProgress} safeId={safeId} setSafeId={setSafeId}/>

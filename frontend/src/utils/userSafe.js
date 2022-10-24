@@ -17,7 +17,6 @@ const postSafe = async (userData, file) => {
 const postKey = async (userData, safeId, file) => {
 	const formData = new FormData();
 	formData.append('key', file);
-	console.log('safe id = '+ safeId);
 	const response = await axios.post(API_URL_SAFES+'/break', formData, {
 		headers: {
 			Authorization: `Bearer ${userData.token}`,

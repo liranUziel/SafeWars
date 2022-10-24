@@ -80,7 +80,6 @@ const HomeSafeZone = () => {
 	
 	useEffect(() => {
 		setSafe({ ...safeInfo, solved: false });
-		console.log(safeInfo.safeName);
 	}, [safeInfo]);
 
 
@@ -94,7 +93,6 @@ const HomeSafeZone = () => {
 			draggable: true,
 			progress: undefined,
 		});
-		console.log(`reupload safe`);
 		e.preventDefault();
 		setSafe({});
 		dispatch(removeSafe());
@@ -111,9 +109,7 @@ const HomeSafeZone = () => {
 		setProgress(0);
 		setPopupActive(true);
 		// setUploadingStatus("idel");
-		// console.log(`stage 0: status ${uploadingStatus}`);
 		// setUploadingStatus("idel");
-		console.log(`stage 0: status ${uploadingStatus}`);
 	};
 
 	const getKey = async (e) => {

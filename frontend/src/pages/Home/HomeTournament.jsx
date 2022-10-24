@@ -23,7 +23,6 @@ const HomeTournament = () => {
     },[tournamentInfo])
       useEffect(()=>{
         setSafes(tournamentSafes);
-        console.log(safes);
     },[tournamentSafes])
         if(isLoading)    {
         return <div><Spinner/></div>

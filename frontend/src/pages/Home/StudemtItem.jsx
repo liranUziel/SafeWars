@@ -7,7 +7,7 @@ const StudemtItem = ({student,index,removeStudent}) => {
         <td>{student.name}</td>
         <td>{student.hasSubmitedSafe?'V':''}</td>
         <td>{student.score}</td>
-        <td><button id={student._id} value={student._id} onClick={removeStudent}>X</button></td>
+        <td><button className="StudentList_remove_btn"  value={student.id} onClick={removeStudent}>X</button></td>
     </tr>
   )
 }

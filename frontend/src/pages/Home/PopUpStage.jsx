@@ -6,7 +6,7 @@ import safesService from '../../utils/userSafe';
 
 const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
     
-    const [file, setFile] = useState({});
+    const [file, setFile] = useState();
     const [stageName,setSatgeName] = useState('idel');
     const { user } = useSelector((state) => state.auth);
     const handleFileChanged = (e) => {
@@ -20,7 +20,6 @@ const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
             const uploadcContainer =  document.getElementsByClassName('upload_container__input')[0];
             if(uploadcContainer)
                 inputContainer.removeChild(uploadcContainer);
-            
             const inputElement = document.createElement('input');
             inputElement.type = 'file';
             inputElement.classList.add('upload_container__input');
@@ -32,9 +31,11 @@ const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
     const handelSafeSubmit = async (e) => {
         e.preventDefault();
         setSatgeName('safe');
-        console.log(`progress [${stage+1}\\3]: safe upload file ${file.name}`);
         setSatgeName('uploading');
         const response = await safesService.postSafe(user, file);
+        //* if safe is exicting use can resend file and overwtie
+        //? ('user param &O=true')?
+        setFile(undefined);
         setSafeId(response.safeId);
         restoreInput();
         setProgress(stage+1);
@@ -42,18 +43,27 @@ const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
     };
     const handelKeySubmit = async (e) => {
         e.preventDefault();
-        console.log(`progress [${stage+1}\\3]: key upload file ${file.name}`);
         setSatgeName('uploading');
         const response = await safesService.postKey(user, safeId, file);
-        console.log(response);
         setProgress(stage+1);
         setSatgeName('test');
         handelTestSubmit();
     };
     const handelTestSubmit = () => {
-        console.log(`progress [${stage+1}\\3]: testing safe`);
         // setProgress(stage+1);
     };
+
+    const changeStage = (e) =>{
+        e.preventDefault();
+        if(file){
+            setFile(undefined);
+            restoreInput();
+        }else if(stage===1){
+            setProgress(stage-1);
+        }else{
+            console.log('close?');
+        }
+    }
 
     const dragHaverOn = (e) =>{
         e.preventDefault();
@@ -107,7 +117,10 @@ const PopUpStage = ({stage,setProgress,safeId,setSafeId}) => {
                         </div>
                         <div className='upload_form_container__input'>
                             <input id='fileInput' type='file' className='upload_container__input' name='safe' onChange={handleFileChanged}/>
-                            <button type='submit' className='upload_form_container__button'>
+                            <button className={(!file && stage === 0)?`upload_form_container__button disable`:`upload_form_container__button`} onClick={changeStage} disabled={!file && stage === 0}>
+                                {file?'Remove':'Back'}
+                            </button>
+                            <button type='submit' className={file?`upload_form_container__button`:`upload_form_container__button disable`} disabled={!file}>
                                 Upload
                             </button>
                         </div>
