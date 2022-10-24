@@ -58,17 +58,22 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	const { classInfo } = req.safe.classIn; //student [0] teacher [0,1] admin [0,1,2,...]
 	let safePath =
 		safe.user.userType === 'admin'
-			? `${__dirname}/../public/safes/admin/${req.safe.safeName}_safe.asm`
-			: `${__dirname}/../public/safes/${classInfo.className}/${classInfo.classNumber}/${req.safe.safeName}_safe.asm`;
+			? `${__dirname}/../public/safes/admin/${req.safe.safeName}`
+			: `${__dirname}/../public/safes/${classInfo.className}/${classInfo.classNumber}/${req.safe.safeName}`;
 	let keyPath = `${__dirname}/../public/keys/${classInfo.className}/${classInfo.classNumber}/${user.userName}/${req.safe.safeName}_key.asm`;
-	// Nedded Data ro break
+	// Needed Data to break
 	userId = user.userId;
 	safeName = req.safe.safeName;
 	safePath = path.resolve(safePath);
 	keyPath = path.resolve(keyPath);
+	// Make sure safe exists, if not create
+	if (!fs.existsSync(safePath)) {
+		const isCompiled = nasmCompile(path.resolve(`${safePath}_safe.asm`, safePath));
+		if (!isCompiled) return res.status(400).json('Some error happend while breaking safe.');
+	}
 	// Break the safe and hope for the best
 	const result = getBreakResults(userId, safeName, safePath, keyPath);
-	if (!result) return res.status(400).json('Some error happend while breaking safe');
+	if (!result) return res.status(400).json('Some error happend while breaking safe!');
 
 	console.log(result);
 
@@ -114,9 +119,16 @@ const downloadSafe = asyncHandler(async (req, res) => {
 });
 
 const getBreakResults = async (userId, safeName, safePath, keyPath) => {
-	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\breakSafeWithKey.py`);
+	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
 	// Run the script and try to break the safe
-	const { status, output, error } = await spawn('python3', [pathToScript, userId, safeName, safePath, keyPath]);
+	const { status, output, error } = await spawn('python3', [
+		pathToScript,
+		'break',
+		userId,
+		safeName,
+		safePath,
+		keyPath,
+	]);
 
 	// Check no errors happened
 	if (status !== 0 || error) {
@@ -160,9 +172,9 @@ const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 };
 
 const nasmCompile = async (srcPath, dstPath) => {
-	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\nasmCompile.py`);
+	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
 	// Run the script and try to break the safe
-	const { status, output, error } = await spawn('python3', [pathToScript, srcPath, dstPath]);
+	const { status, output, error } = await spawn('python3', [pathToScript, 'compile', srcPath, dstPath]);
 	console.log('compileFile output:', output);
 
 	// Check no errors happened

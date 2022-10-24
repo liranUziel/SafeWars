@@ -29,8 +29,8 @@
 ###################################################################################
 
 import platform
-if tuple(map(int, platform.python_version_tuple())) < (3, 7):
-    input("Needs minimum version 3.7")
+if tuple(map(int, platform.python_version_tuple())) < (3, 10):
+    input("Needs minimum version 3.10")
     exit(1)
 
 import os
@@ -85,10 +85,25 @@ async def nasm_compile(src: str, dst: str) -> bool:
 
 
 def check_argv():
+    # 1: main.py compile src_path dst_path
+    # 2: main.py break userId safe_name safe_path(bin) key_path(asm)
     """If there are less than 4 arguments stop running."""
-    if(len(sys.argv) < 5):  # 4 wanted + 1 generated
+    argv_len = len(sys.argv)
+
+    # Check validation
+    if(argv_len < 2):  # main.py [compile/break]
         sys.exit(
-            "Missing arguments. Run like this: breakSafeWithKey.py userId safe_name safe_path key_path")
+            "Missing arguments. Use like this: main.py [compile|break] [arguments...]")
+    command_type = sys.argv[1]
+    if("compile" != command_type and "break" != command_type):
+        sys.exit(
+            "Wrong command. Use like this: main.py [compile|break] [arguments...]")
+    if("compile" == command_type and argv_len != 4):
+        sys.exit(
+            "Use like this: main.py compile src_path dst_path")
+    if("compile" == command_type and argv_len != 6):
+        sys.exit(
+            "Use like this: main.py break userId safe_name safe_path(bin) key_path(asm)")
 
 
 async def compile_empty_key():
@@ -139,20 +154,13 @@ async def process_student_run(student_id: str, run_name: str, key_safe) -> typin
     prepare_dirs(runs_dir)
 
     # Compile key and safe
-    nasm_tasks = []
-    for typename, file_type in (('key', 0), ('safe', 1)):
-        # Create key, than safe
-        dst = sep_join(runs_dir, 'survivors', typename)
-        if key_safe[file_type]:
-            nasm_tasks.append(nasm_compile(key_safe[file_type], dst))
-        else:
-            print(
-                f'{student_id}/{run_name}: missing {typename} for name "{run_name}"')
-            return (run_name, None, None)
-    # make sure all compiled
-    if sum(await asyncio.gather(*nasm_tasks)) != len(nasm_tasks):
-        print(f'{student_id}/{run_name}: Failed NASM compile')
-        return (run_name, None, None)
+    # Create Key
+    dst = sep_join(runs_dir, 'survivors', 'key')
+    await nasm_compile(key_safe[0], dst)  # key_safe[0] = key_path
+    # Create safe
+    dst = sep_join(runs_dir, 'survivors', 'safe')
+    # key_safe[1] = safe_path
+    copyfile(key_safe[1], sep_join(runs_dir, 'survivors', 'safe'))
 
     # Here I break safe
     java_tasks = [java_run(student_id, run_name)]
@@ -179,14 +187,22 @@ async def get_result(user_id, safe_name, safe_path, key_path):
     return await process_student_run(user_id, safe_name, [safe_path, key_path])
 
 
-def main():
-    check_argv()
-    _, user_id, safe_name, safe_path, key_path = sys.argv
+async def compile_file(src_path, dst_path):
+    if not await nasm_compile(src_path, dst_path):
+        err_msg = 'Unable to compile' + " " + src_path
+        sys.exit(err_msg)
+
+
+def compileCase():
+    _, _, src_path, dst_path = sys.argv
+    asyncio.run(compile_file(src_path, dst_path))
+
+
+def breakCase():
+    _, _, user_id, safe_name, safe_path, key_path = sys.argv
     # Create temp_run folder in the same folder, if exist ignore and do nothing
     os.makedirs(sep_join(SCRIPT_PATH, 'temp_run'), exist_ok=True)
-    # IDK
-    if platform.system() == "Windows":
-        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
     # Break the safe
     # result = (safe_name, key_score, safe_score, empty_key_score/builtin)
     res = asyncio.run(get_result(user_id, safe_name, safe_path, key_path))
@@ -195,6 +211,22 @@ def main():
     print(json.dumps(results))
 
 
+def main():
+    check_argv()
+    # IDK
+    if platform.system() == "Windows":
+        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+
+    match sys.argv[1]:
+        case "compile":
+            compileCase()
+        case "break":
+            breakCase()
+        case _:
+            print("How did you get here?")
+
+
 if __name__ == '__main__':
+    # 1: main.py compile src_path dst_path
+    # 2: main.py break userId safe_name safe_path(bin) key_path(asm)
     main()
-    #input('Press Enter to close')
