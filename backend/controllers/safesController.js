@@ -21,7 +21,7 @@ const uploadSafe = asyncHandler(async (req, res) => {
 	// Check if safe exists, if so delete it
 	const oldSafe = await Safe.findOne({ user: req.user._id });
 	if (oldSafe) {
-		Safe.findByIdAndDelete(oldSafe._id);
+		await Safe.findByIdAndDelete(oldSafe._id);
 	}
 
 	// Create new safe
@@ -83,7 +83,8 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	if (hasBeenBroken) {
 		// Verification
 		// If the user breaks it's own safe verify it
-		if (safe.user._id.equals(user._id)) {
+		const isOwnSafe = safe.user._id.equals(user._id);
+		if (isOwnSafe) {
 			await Safe.findByIdAndUpdate(safe._id, { isVerified: true });
 		}
 
@@ -91,12 +92,18 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 		let solvedSafes = user.solved;
 		// If safe not in solved of the user, add it and update score for users
 		if (!solvedSafes.includes(safe._id)) {
+			// Calculate points
+			const increaseBy = isOwnSafe ? 0 : 100;
+			const decreaseBy = isOwnSafe ? 0 : 30;
 			// Add to broken safes of breaking user
-			await User.findByIdAndUpdate(user._id, { solved: [...solvedSafes, safe._id], score: user.score + 100 });
+			await User.findByIdAndUpdate(user._id, {
+				solved: [...solvedSafes, safe._id],
+				score: user.score + increaseBy,
+			});
 			console.log('MAKE SURE NOT UNDEFINED NEXT PRINT');
 			console.log(safe.user._id);
 			// Decrease from the user who uploaded the safe
-			await User.findByIdAndUpdate(safe.user._id, { score: safe.user.score - 30 });
+			await User.findByIdAndUpdate(safe.user._id, { score: safe.user.score - decreaseBy });
 		}
 	}
 
