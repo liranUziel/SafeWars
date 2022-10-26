@@ -67,7 +67,10 @@ const createTournamnet = asyncHandler(async (req, res) => {
 // @access private
 
 const updateTournamnet = asyncHandler(async (req, res) => {
-	res.status(200).json('TODO: UPDATE TOURNAMENTCool Info');
+	const { classId, showScore, deadline } = req.body;
+	if (!classId || !showScore || !deadline) return res.status(400).json('Missing data.');
+	const updated = await Tournament.findOneAndUpdate({ class: classId }, { showScore, deadline });
+	res.status(200).json(updated);
 });
 
 // @desc get all tournament safes
