@@ -43,11 +43,14 @@ const usersRoute = require('./routes/users');
 const tournamentRoute = require('./routes/tournament');
 const classRoute = require('./routes/class');
 const safesRoute = require('./routes/safes');
+const adminRoute = require('./routes/admin');
 
 app.use('/users', usersRoute);
 app.use('/tournament', tournamentRoute);
 app.use('/class', classRoute);
 app.use('/safes', safesRoute);
+//
+app.use('/admin', adminRoute);
 
 //defult route
 

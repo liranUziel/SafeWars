@@ -53,4 +53,11 @@ const tournamentNotStarted = asyncHandler(async (req, res, next) => {
 	next();
 });
 
-module.exports = { protect, authorizedProtect, mustHaveClass, tournamentNotStarted };
+const makeSureAdmin = asyncHandler(async (req, res, next) => {
+	if ('admin' === req.user.userType) {
+		return next();
+	}
+	res.status(401).json('Only the mighty admin can do this!');
+});
+
+module.exports = { protect, authorizedProtect, mustHaveClass, tournamentNotStarted, makeSureAdmin };
