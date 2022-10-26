@@ -29,16 +29,9 @@ const addUploadSafe = asyncHandler(async (req, res, next) => {
 	next();
 });
 
-const notHasSafe = asyncHandler(async (req, res, next) => {
-	// Extract the Id of the user
-	const safe = await Safe.findOne({ user: req.user._id });
-	if (!safe) return next();
-	res.status(400).json('You have safe already.');
-});
-
 const addClassDataToSafe = asyncHandler(async (req, res, next) => {
 	// Extract the Id of the user
-	let classIn = {}
+	let classIn = {};
 	const userId = req.safe.user._id;
 	if (req.safe.user.userType === 'student') {
 		classIn = await Class.findOne({ studentIds: userId });
@@ -49,4 +42,4 @@ const addClassDataToSafe = asyncHandler(async (req, res, next) => {
 	next();
 });
 
-module.exports = { addClassData, addSafeData, addUploadSafe, notHasSafe, addClassDataToSafe };
+module.exports = { addClassData, addSafeData, addUploadSafe, addClassDataToSafe };

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
+const Tournament = require('../models/Tournament');
 
 const allowedPersonel = ['instructor', 'admin'];
 
@@ -40,4 +41,16 @@ const mustHaveClass = asyncHandler(async (req, res, next) => {
 	res.status(401).json('You are not in a class, why even bother upload safe!');
 });
 
-module.exports = { protect, authorizedProtect, mustHaveClass };
+const tournamentNotStarted = asyncHandler(async (req, res, next) => {
+	let tournaments = await Promise.all(
+		await req.classIn.map(async (currClass) => {
+			return Tournament.findOne({ class: currClass._id });
+		})
+	);
+	if (tournaments?.length > 0) {
+		return res.status(400).json('Tournament already started. Check with administration');
+	}
+	next();
+});
+
+module.exports = { protect, authorizedProtect, mustHaveClass, tournamentNotStarted };
