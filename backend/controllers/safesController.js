@@ -17,35 +17,14 @@ const getUserSafe = asyncHandler(async (req, res) => {
 	res.status(200).json(safe);
 });
 
-const updateSafe = asyncHandler(async (req, res) => {
-	return res.status(609).json('Have to implement');
-
-	const safe = await Safe.findById(req.params.id);
-	if (!safe) {
-		res.status(400);
-		throw new Error('Safe not found');
-	}
-
-	//Check for user
-	const user = await User.findById(req.user.id);
-	if (!user) {
-		res.status(401);
-		throw new Error('User not found');
-	}
-
-	//Make sure the logged in user matches the safe user
-	if (safe.user.toString() !== user.id) {
-		res.status(401);
-		throw new Error('User not authorized');
-	}
-
-	const updatedSafe = await Safe.findByIdAndUpdate(req.params.id, req.body, {
-		new: true,
-	});
-	res.status(200).json(updatedSafe);
-});
-
 const uploadSafe = asyncHandler(async (req, res) => {
+	// Check if safe exists, if so delete it
+	const oldSafe = await Safe.findOne({ user: req.user._id });
+	if (oldSafe) {
+		Safe.findByIdAndDelete(oldSafe._id);
+	}
+
+	// Create new safe
 	const newSafe = await Safe.create({
 		user: req.user._id,
 		safeName: req.safe.safeName,
@@ -67,17 +46,23 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	// Diffrent handle for admin safe
 	const isAdminSafe = safe.user.userType === 'admin';
 
+	// Get class info of class the the safe is uploaded to (if there is)
 	let classInfoSafe = undefined;
-	if (safe.classIn !== undefined && safe.classIn.length > 0) {
+	if (safe.classIn?.length > 0) {
 		classInfoSafe = safe.classIn[0].classInfo;
 	}
+
+	// Get class info of class the user who tries to break
 	const { classInfo: classInfoUser } = req.classIn[0];
+
+	// Get the safe path
 	const safePath = isAdminSafe
 		? path.resolve(`${__dirname}\\..\\public\\safes\\admin\\${safeName}`)
 		: path.resolve(
 				`${__dirname}\\..\\public\\safes\\${classInfoSafe.className}\\${classInfoSafe.classNumber}\\${safeName}`
 		  );
 
+	// Get the key path
 	const keyPath = path.resolve(
 		`${__dirname}\\..\\public\\keys\\${classInfoUser.className}\\${classInfoUser.classNumber}\\${userId}\\${safeName}_key.asm`
 	);
@@ -91,15 +76,30 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	const result = await getBreakResults(userId, safeName, safePath, keyPath);
 	if (!result) return res.status(400).json('Some error happend while breaking safe!');
 
-	console.log(result);
-
+	// This checks if safe has been broken
 	const hasBeenBroken = result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
 
-	// If the user breaks it's own safe verify it
-	if (safe.user._id.equals(user._id)) {
-		await Safe.findByIdAndUpdate(safe._id, { isVerified: true });
-		console.log('SELF BREAK');
+	// Some cases if safe was broken
+	if (hasBeenBroken) {
+		// Verification
+		// If the user breaks it's own safe verify it
+		if (safe.user._id.equals(user._id)) {
+			await Safe.findByIdAndUpdate(safe._id, { isVerified: true });
+		}
+
+		// Get users solved safes array
+		let solvedSafes = user.solved;
+		// If safe not in solved of the user, add it and update score for users
+		if (!solvedSafes.includes(safe._id)) {
+			// Add to broken safes of breaking user
+			await User.findByIdAndUpdate(user._id, { solved: [...solvedSafes, safe._id], score: user.score + 100 });
+			console.log('MAKE SURE NOT UNDEFINED NEXT PRINT');
+			console.log(safe.user._id);
+			// Decrease from the user who uploaded the safe
+			await User.findByIdAndUpdate(safe.user._id, { score: safe.user.score - 30 });
+		}
 	}
+
 	res.status(201).json({ hasBeenBroken });
 });
 

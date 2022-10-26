@@ -28,6 +28,10 @@ const UserSchema = mongoose.Schema(
 			required: true,
 			unique: true,
 		},
+		score: {
+			type: Number,
+			default: 0,
+		},
 		solvedSafes: [
 			{
 				type: mongoose.Schema.Types.ObjectId,

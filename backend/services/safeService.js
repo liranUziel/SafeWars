@@ -9,9 +9,12 @@ const safeStorage = multer.diskStorage({
 		const classIn = req.classIn;
 		classIn.forEach((currClass) => {
 			const { classInfo } = currClass;
-			let path = `${__dirname}/../public/safes/${classInfo.className}/${classInfo.classNumber}`;
-			fs.mkdirsSync(path);
-			callback(null, path);
+			let safePath = path.resolve(
+				`${__dirname}\\..\\public\\safes\\${classInfo.className}\\${classInfo.classNumber}`
+			);
+			// Make sure folder exists and content empty
+			fs.emptyDirSync(safePath);
+			callback(null, safePath);
 		});
 	},
 	filename: (req, file, callback) => {
@@ -31,7 +34,8 @@ const keyStorage = multer.diskStorage({
 			const keyPath = path.resolve(
 				`${__dirname}\\..\\public\\keys\\${classInfo.className}\\${classInfo.classNumber}\\${user.userId}`
 			);
-			fs.mkdirsSync(keyPath);
+			// Make sure folder exists and content empty
+			fs.emptyDirSync(safePath);
 			callback(null, keyPath);
 			//
 		});
