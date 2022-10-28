@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
-import Spinner from '../../companents/Spinner';
+import Spinner from '../../components/Spinner';
 
 // Interact with storage
 import { useSelector, useDispatch } from 'react-redux';

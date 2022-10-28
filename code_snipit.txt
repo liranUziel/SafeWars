@@ -1,4 +1,0 @@
-forgot password
---> /r/:hash | hash is username+time as hash 256
---> add the hash to user db as "password-change-request":hash
---> send email to user with this url

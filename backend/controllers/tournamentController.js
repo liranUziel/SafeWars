@@ -18,11 +18,11 @@ const getTournament = asyncHandler(async (req, res) => {
 			return Tournament.findOne({ class: currClass._id });
 		})
 	);
-	if (tournaments.length === 0) {
+	if (tournaments.length === 0 || tournaments[0] === null) {
 		return res.status(400).json('No tournament available.');
 	}
 	if (req.user.userType === 'student') {
-		return res.status(200).json({ deadline: tournaments[0].deadline });
+		return res.status(200).json({ deadline: tournaments[0]?.deadline });
 	}
 	if (req.user.userType === 'instructor') {
 		return res.status(200).json(tournaments);
@@ -84,10 +84,9 @@ const getTournamentSafes = asyncHandler(async (req, res) => {
 			return Tournament.findOne({ class: currClass._id });
 		})
 	);
-	console.log(tournaments);
 	// Get all related tournaments to user
 	const safes = tournaments.map((currTournament) => {
-		return currTournament.safes;
+		return currTournament?.safes;
 	});
 	res.status(200).json(safes[0]);
 });

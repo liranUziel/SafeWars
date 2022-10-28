@@ -206,7 +206,6 @@ const nasmCompile = async (srcPath, dstPath) => {
 
 module.exports = {
 	getUserSafe,
-	updateSafe,
 	uploadSafe,
 	downloadSafe,
 	uploadKeyAndBreak,
