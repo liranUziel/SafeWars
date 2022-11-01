@@ -1,4 +1,9 @@
 node_modules
 .env
-public
 workspace/temp_run
+
+# Make sure to include the admin safes
+public/*
+!public/safes/
+public/safes/*
+!public/safes/admin
