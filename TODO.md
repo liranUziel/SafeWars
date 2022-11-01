@@ -3,15 +3,15 @@
 
 
 #####TODO:
-* [ ] Add class model.
-* [ ] Connect class to users.
+* [x] Add class model.
+* [x] Connect class to users.
 * [x] Add file upload.
 * [x] Front-end (login,signup).
 * [x] Front-end nav bar (class,leader-board,
 my-safe,SafeWars).
-* [ ] aplly desing for nav-bar
-* [ ] Front-end display only public safes in class and private safe in my-safe.
-* [ ] Back-end SafeWars model.
+* [x] aplly desing for nav-bar
+* [x] Front-end display only public safes in class and private safe in my-safe.
+* [x] Back-end SafeWars model.
 
 
 SafeWars algo:
