@@ -67,3 +67,5 @@ app.listen(PORT, () => {
 	// Upload safe just erases old one, make sure can't upload if tournamnet started
 	console.log('Check Debug(server.js: line 63)');
 });
+
+// IDK
