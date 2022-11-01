@@ -14,9 +14,17 @@ const getTournamentSafe = async (userData) =>{
     return response.data;
 }
 
+const createTournamentSafe = async (userData,classId,showScore,deadLine) =>{
+    console.log(`tournamentService.js: creating tournament for class ${classId}`);
+    const response = await axios.post(API_URL_TOURNAMENT_SAFES,{headers:{Authorization:`Bearer ${userData.token}`}},classId,showScore,deadLine);
+    return response.data;
+}
+
+
 const tournamentService = {
     getTournamentInfo,
     getTournamentSafe,
+    createTournamentSafe,
 };
 
 

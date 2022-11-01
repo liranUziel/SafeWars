@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector ,useDispatch} from 'react-redux';
 import {getClassStudents} from '../../features/class/classSlice';
 import StudentsList from "./StudentsList";
+import { createTournamentSafes } from '../../features/tournament/tournamentSlice';
 import '../../styles/dashboard.css';
 
 const Dashboard = () => {
@@ -9,6 +10,9 @@ const Dashboard = () => {
 
     const {user} = useSelector((state)=> state.auth);
     const {classInfo, classStudents} = useSelector((state)=> state.class);
+    const { tournamentInfo} = useSelector(
+		(state) => state.tournament
+	);
     // const classes = [{name:'Emek',_id:123,students:[{_id:1,id:30257,name:'liran',Submited:true,Score:0},{_id:2,id:30168,name:'moshe',Submited:true,Score:0}]},{name:'Karmiel',_id:13,students:[{_id:3,id:20145,name:'gavriel',Submited:true,Score:0},{_id:4,id:20256,name:'david',Submited:false,Score:0},{_id:5,id:20367,name:'ron',Submited:true,Score:0}]}];
     const [classArray,setCalssArray] = useState([]);
     const [selection,setSelection] = useState(0);
@@ -22,7 +26,9 @@ const Dashboard = () => {
     }
     const createTournament = (e) => {
         e.preventDefault();
-        console.log(`Create tournament for class ${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber} ${showScore?'and show score':''}`);
+        console.log('creating');
+      createTournamentSafes(user,classArray[selection]._id,false,undefined);
+        // console.log(`Create tournament for class ${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber} ${showScore?'and show score':''}`);
 
     }
     useEffect(()=>{
@@ -73,7 +79,7 @@ const Dashboard = () => {
                 
                     </div>
                     <div>
-                        <button type="submit">create tournament</button>
+                        <button className="bg-green-500" type="submit">create tournament</button>
                         <label>show score board  </label>
                         <input type="checkbox" value={showScore} onChange={setShowScore}></input>
                     </div>

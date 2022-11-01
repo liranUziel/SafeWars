@@ -29,6 +29,18 @@ export const getTournamentSafes = createAsyncThunk('tournament/getTournamentSafe
 }); 
 
 
+export const createTournamentSafes = createAsyncThunk('tournament/createTournamentSafes',async (user,classId,showScore,deadLine,thunkAPI) =>{
+    try {
+        console.log(`tournamentSlice.js: creating tournament for class ${classId}`);
+        return await tournamentService.createTournamentSafe(user,classId,showScore,deadLine);
+    } catch (error) {
+        const message = ((error.response && error.response.data && error.response.data.message) || error.message || error.toString() );
+        return thunkAPI.rejectWithValue(message) ;
+        
+    }
+}); 
+
+
 // The initial state
 const initialState = {
     tournamentInfo:[],
@@ -74,6 +86,21 @@ export const classSlice = createSlice({
             state.message = action.payload;
             state.tournamentSafes = [];
         })
+        .addCase(createTournamentSafes.pending,(state)=>{
+            state.isLoading = true;
+        })
+        .addCase(createTournamentSafes.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.tournamentInfo = action.payload;
+        })
+        .addCase(createTournamentSafes.rejected,(state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload;
+            state.tournamentInfo = [];
+        })
+        
     }
 })
 
