@@ -11,7 +11,7 @@ const { getClassById, getClassesdByStudentId, getClassesdByInstructorId } = requ
 // @access private
 
 const getClass = aysncHanler(async (req, res) => {
-	const { _id: id, userType } = req.user;
+	const { id, userType } = req.user;
 	classIn = [];
 	if (userType === 'student') {
 		classId = await getClassesdByStudentId(id);
@@ -24,19 +24,19 @@ const getClass = aysncHanler(async (req, res) => {
 
 const getAdminSafes = aysncHanler(async (req, res) => {
 	//load public safe
-	const admin = await User.findOne({ userType: 'admin' });
-	const safe = await Safe.find({ user: admin._id });
+	const admin = await getAdmin();
+	const safes = await getSafesByUserId(admin.id);
 
-	res.status(200).json(safe);
+	res.status(200).json(safes);
 });
 
 const getStudentsInClass = aysncHanler(async (req, res) => {
 	const { classId } = req.query;
-	const classIn = await Class.findById(classId).populate('studentIds');
+	const classIn = await getPopulatedClassById(classId);
 
 	let studentList = await Promise.all(
 		await classIn.studentIds.map(async (student) => {
-			const currSafe = await Safe.findOne({ user: student._id });
+			const currSafe = await getSafeByStudentId(student.id);
 			return {
 				id: student.userName,
 				name: student.realName,
