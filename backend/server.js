@@ -19,7 +19,7 @@ app.use(errorHandler);
 app.use(cors());
 
 //==== DB ====
-const connectDB = require('./database/db');
+const { connectDB } = require('./database/db');
 connectDB();
 
 //==== ROUTES ====

@@ -4,21 +4,19 @@ const Class = require('../models/Class');
 const Safe = require('../models/Safe');
 const User = require('../models/User');
 
+const { getClassById, getClassesdByStudentId, getClassesdByInstructorId } = require('../services/classesService');
+
 // @desc get class info
 // @route GET /class/
 // @access private
 
 const getClass = aysncHanler(async (req, res) => {
 	const { _id: id, userType } = req.user;
-	classIn = {};
+	classIn = [];
 	if (userType === 'student') {
-		classIn = await Class.find({ studentIds: id }).select({
-			classInfo: 1,
-		});
+		classId = await getClassesdByStudentId(id);
 	} else if (userType === 'instructor' || userType === 'admin') {
-		classIn = await Class.find({ instructorId: id }).select({
-			classInfo: 1,
-		});
+		classIn = await getClassesdByInstructorId(id);
 	}
 
 	res.status(200).json(classIn);
