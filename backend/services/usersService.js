@@ -24,9 +24,19 @@ const createUser = async ({ realName, userName, email, password, userId }) => {
 	return user;
 };
 
+const updateUserScore = async (userId, score) => {
+	await User.findByIdAndUpdate(userId, { score });
+};
+
+const updateUserSolvedSafes = async (userId, safeId) => {
+	await User.findByIdAndUpdate(userId, { $push: { solved: safeId } });
+};
+
 module.exports = {
 	getUserById,
 	createUser,
 	getUserByUserName,
 	getAdmin,
+	updateUserScore,
+	updateUserSolvedSafes,
 };

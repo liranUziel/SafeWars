@@ -1,14 +1,12 @@
 //wrap async and then we don't have to use try catch
 const aysncHanler = require('express-async-handler');
-const Class = require('../models/Class');
-const Safe = require('../models/Safe');
-const User = require('../models/User');
-
-const { getClassById, getClassesdByStudentId, getClassesdByInstructorId } = require('../services/classesService');
-
-// @desc get class info
-// @route GET /class/
-// @access private
+const {
+	getClassesdByStudentId,
+	getClassesdByInstructorId,
+	getPopulatedClassById,
+} = require('../services/classesService');
+const { getAdmin } = require('../services/usersService');
+const { getSafesByUserId, getSafeByStudentId } = require('../services/safesService');
 
 const getClass = aysncHanler(async (req, res) => {
 	const { id, userType } = req.user;

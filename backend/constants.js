@@ -3,3 +3,5 @@ export const USER_TYPES = {
 	INSTRUCTOR: 'instructor',
 	STUDENT: 'student',
 };
+
+export const ALLOWED_PERSONAL = [USER_TYPES.INSTRUCTOR, USER_TYPES.ADMIN];

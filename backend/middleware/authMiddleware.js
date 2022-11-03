@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const Tournament = require('../models/Tournament');
-
-const allowedPersonel = ['instructor', 'admin'];
+const { USER_TYPES } = require('../constants');
+const { getUserById } = require('../services/usersService');
 
 const authorizedProtect = asyncHandler(async (req, res, next) => {
 	if (allowedPersonel.includes(req.user.userType)) {
@@ -12,8 +12,8 @@ const authorizedProtect = asyncHandler(async (req, res, next) => {
 	res.status(401).json('You shall not pass!');
 });
 
-const protect = asyncHandler(async (req, res, next) => {
-	let token;
+const verifyToken = asyncHandler(async (req, res, next) => {
+	let token = undefined;
 	if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
 		try {
 			//Get toke from header
@@ -22,7 +22,7 @@ const protect = asyncHandler(async (req, res, next) => {
 			//Verfiy token
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
 			//get user from token
-			req.user = await User.findById(decoded.id).select('-password');
+			req.user = await getUserById(decoded.id);
 			next();
 		} catch (err) {
 			console.log(err);
@@ -54,10 +54,10 @@ const tournamentNotStarted = asyncHandler(async (req, res, next) => {
 });
 
 const makeSureAdmin = asyncHandler(async (req, res, next) => {
-	if ('admin' === req.user.userType) {
+	if (USER_TYPES.ADMIN === req.user.userType) {
 		return next();
 	}
 	res.status(401).json('Only the mighty admin can do this!');
 });
 
-module.exports = { protect, authorizedProtect, mustHaveClass, tournamentNotStarted, makeSureAdmin };
+module.exports = { verifyToken, authorizedProtect, mustHaveClass, tournamentNotStarted, makeSureAdmin };

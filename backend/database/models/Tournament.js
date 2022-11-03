@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const tournamentSchema = mongoose.Schema({
-	class: {
+	classRelated: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
 		ref: 'class',
@@ -23,7 +23,7 @@ const tournamentSchema = mongoose.Schema({
 				required: true,
 				ref: 'safe',
 			},
-			secretName: {
+			displayName: {
 				type: String,
 				required: true,
 			},

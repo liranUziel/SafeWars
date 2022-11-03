@@ -41,8 +41,10 @@ const registerUser = aysncHandler(async (req, res) => {
 	if (user) {
 		res.status(201).json({
 			id: user.id,
-			name: user.realName,
+			userName: user.userName,
 			email: user.email,
+			safesSolved: user.solvedSafes,
+			userType: user.userType,
 			token: TokenGenertor(user.id),
 		});
 	} else {
@@ -62,7 +64,7 @@ const loginUser = aysncHandler(async (req, res) => {
 	if (user && (await bcrypt.compare(password, user.password))) {
 		res.status(200).json({
 			id: user.id,
-			name: user.realName,
+			userName: user.userName,
 			email: user.email,
 			safesSolved: user.solvedSafes,
 			userType: user.userType,

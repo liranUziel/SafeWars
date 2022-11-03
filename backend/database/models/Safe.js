@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const safeSchema = mongoose.Schema(
 	{
-		user: {
+		ownerId: {
 			type: mongoose.Schema.Types.ObjectId,
 			required: true,
 			ref: 'user',
@@ -14,6 +14,10 @@ const safeSchema = mongoose.Schema(
 		isVerified: {
 			type: Boolean,
 			default: false,
+		},
+		path: {
+			type: String,
+			required: true,
 		},
 	},
 	{

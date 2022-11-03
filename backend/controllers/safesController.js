@@ -1,16 +1,15 @@
 //wrap async and then we don't have to use try catch
 const asyncHandler = require('express-async-handler');
-const Safe = require('../models/Safe');
-const User = require('../models/User');
-const Tournament = require('../models/Tournament');
-const Class = require('../models/Class');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
+const { getSafesByUserId, getSafeById } = require('../services/safesService');
+const { updateUserScore, updateUserSolvedSafes, getUserById } = require('../services/usersService');
+const { getClassesdByStudentId } = require('../services/classesService');
 
 const getUserSafe = asyncHandler(async (req, res) => {
 	//load user safe
-	const safe = await Safe.find({ user: req.user.id }).select('safeName _id isVerified');
+	const safe = await getSafesByUserId(req.user.id);
 	if (safe.length === 0) {
 		return res.status(400).json('Upload at first a safe');
 	}
@@ -19,17 +18,14 @@ const getUserSafe = asyncHandler(async (req, res) => {
 
 const uploadSafe = asyncHandler(async (req, res) => {
 	// Check if safe exists, if so delete it
-	const oldSafe = await Safe.findOne({ user: req.user._id });
+	const oldSafe = await getSafesByUserId(req.user.id);
 	if (oldSafe) {
-		await Safe.findByIdAndDelete(oldSafe._id);
+		await findByIdAndDelete(oldSafe.id);
 	}
 
 	// Create new safe
-	const newSafe = await Safe.create({
-		user: req.user._id,
-		safeName: req.safe.safeName,
-	});
-	res.status(201).json({ safeId: newSafe._id });
+	const newSafe = await createSafe(req.user._id, req.safe.safeName, req.safe.path);
+	res.status(201).json({ safeId: newSafe.id });
 });
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
@@ -41,21 +37,16 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 
 	// Needed Data to break safe and etc...
 	const userId = user.userId;
-	const safeName = req.safe.safeName;
+	const safeToBreak = req.safe;
 
 	// Diffrent handle for admin safe
 	const isAdminSafe = safe.user.userType === 'admin';
 
-	// Get class info of class the the safe is uploaded to (if there is)
-	let classInfoSafe = undefined;
-	if (safe.classIn?.length > 0) {
-		classInfoSafe = safe.classIn[0].classInfo;
-	}
-
 	// Get class info of class the user who tries to break
-	const { classInfo: classInfoUser } = req.classIn[0];
 
 	// Get the safe path
+	const finalSafePath = path.resolve(`${__dirname}\\..\\public\\safes\\${safe.path}\\${safeName}`);
+	const finalKeyPath = path.resolve(`${__dirname}\\..\\public\\keys\\${safe.path}${userId}\\${safeName}_key.asm`);
 	const safePath = isAdminSafe
 		? path.resolve(`${__dirname}\\..\\public\\safes\\admin\\${safeName}`)
 		: path.resolve(
@@ -83,27 +74,23 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	if (hasBeenBroken) {
 		// Verification
 		// If the user breaks it's own safe verify it
-		const isOwnSafe = safe.user._id.equals(user._id);
+		const isOwnSafe = safe.user.id.equals(user.id);
 		if (isOwnSafe) {
-			await Safe.findByIdAndUpdate(safe._id, { isVerified: true });
+			await verifySafe(safe.id);
 		}
 
 		// Get users solved safes array
 		let solvedSafes = user.solved;
 		// If safe not in solved of the user, add it and update score for users
-		if (!solvedSafes.includes(safe._id)) {
+		if (!solvedSafes.includes(safe.id)) {
 			// Calculate points
 			const increaseBy = isOwnSafe ? 0 : 100;
 			const decreaseBy = isOwnSafe ? 0 : 30;
 			// Add to broken safes of breaking user
-			await User.findByIdAndUpdate(user._id, {
-				solved: [...solvedSafes, safe._id],
-				score: user.score + increaseBy,
-			});
-			console.log('MAKE SURE NOT UNDEFINED NEXT PRINT');
-			console.log(safe.user._id);
+			await updateUserScore(user.id, user.score + increaseBy);
+			await updateUserSolvedSafes(user.id, safe.id);
 			// Decrease from the user who uploaded the safe
-			await User.findByIdAndUpdate(safe.user._id, { score: safe.user.score - decreaseBy });
+			await updateUserScore(safe.user.id, safe.user.score - decreaseBy);
 		}
 	}
 
@@ -113,15 +100,16 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 const downloadSafe = asyncHandler(async (req, res) => {
 	// Extract the Id of the user
 	const safeId = req.query.safeId;
-	//load safe na
-	const safe = await Safe.findById(safeId);
+	//load safe name
+	const safe = await getSafeById(safeId);
 	if (!safe) {
 		return res.status(400).json('No such safe!');
 	}
 	// Find the data about the user that holds the safe
-	const user = await User.findById(safe.user);
+	const safeOwner = await getUserById(safe.user.id);
 	// Find the class where the user is in
-	const classOfUser = await Class.findOne({ studentIds: user._id });
+	const classesOfUser = await getClassesdByStudentId(user.id);
+	const classOfUser = classesOfUser[0]; // get the first option
 	// Get all related paths
 	let filePath =
 		user.userType === 'admin'
