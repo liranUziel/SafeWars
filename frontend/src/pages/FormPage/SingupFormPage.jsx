@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-// import {FaUser} from 'react-icons/fa';
-
 import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
@@ -97,6 +95,7 @@ const LandingPageSingup = () => {
 					required=''
 					placeholder='please enter your user name'
 					onChange={onChange}
+					disabled
 				/>
 				<label>email</label>
 				<input

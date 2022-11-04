@@ -29,7 +29,7 @@ export const getTournamentSafes = createAsyncThunk('tournament/getTournamentSafe
 }); 
 
 
-export const createTournamentSafes = createAsyncThunk('tournament/createTournamentSafes',async (user,classId,showScore,deadLine,thunkAPI) =>{
+export const createTournamentSafes = createAsyncThunk('tournament/createTournamentSafes',async ({user,classId,showScore,deadLine},thunkAPI) =>{
     try {
         console.log(`tournamentSlice.js: creating tournament for class ${classId}`);
         return await tournamentService.createTournamentSafe(user,classId,showScore,deadLine);

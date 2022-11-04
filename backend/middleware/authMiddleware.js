@@ -14,11 +14,13 @@ const authorizedProtect = asyncHandler(async (req, res, next) => {
 
 const protect = asyncHandler(async (req, res, next) => {
 	let token;
+	console.log('autoMiddleware.js: hreaders',req.headers);
 	if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
 		try {
 			//Get toke from header
 			//token format: 'Bearer token' => split(' ') [Bearer,token]
 			token = req.headers.authorization.split(' ')[1];
+			console.log(`autoMiddleware.js: token is ${token}`);
 			//Verfiy token
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
 			//get user from token

@@ -10,9 +10,7 @@ const Dashboard = () => {
 
     const {user} = useSelector((state)=> state.auth);
     const {classInfo, classStudents} = useSelector((state)=> state.class);
-    const { tournamentInfo} = useSelector(
-		(state) => state.tournament
-	);
+    // const { tournamentInfo} = useSelector((state) => state.tournament);
     // const classes = [{name:'Emek',_id:123,students:[{_id:1,id:30257,name:'liran',Submited:true,Score:0},{_id:2,id:30168,name:'moshe',Submited:true,Score:0}]},{name:'Karmiel',_id:13,students:[{_id:3,id:20145,name:'gavriel',Submited:true,Score:0},{_id:4,id:20256,name:'david',Submited:false,Score:0},{_id:5,id:20367,name:'ron',Submited:true,Score:0}]}];
     const [classArray,setCalssArray] = useState([]);
     const [selection,setSelection] = useState(0);
@@ -26,10 +24,9 @@ const Dashboard = () => {
     }
     const createTournament = (e) => {
         e.preventDefault();
-        console.log('creating');
-      createTournamentSafes(user,classArray[selection]._id,false,undefined);
-        // console.log(`Create tournament for class ${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber} ${showScore?'and show score':''}`);
-
+        console.log(`Dashboard.jsx: User ${user.name} creating tournament for class ${classArray[selection]._id} ${showScore?'and show score':''}`);
+    
+        dispatch(createTournamentSafes({user,classId:classArray[selection]._id,showScore:false,deadline:undefined}));
     }
     useEffect(()=>{
         if(classInfo){

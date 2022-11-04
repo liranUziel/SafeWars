@@ -39,6 +39,7 @@ const createTournamnet = asyncHandler(async (req, res) => {
 	if (!classId) {
 		return res.status(400).json('Missing classId!');
 	}
+	console.log('tournamnetCopnto.js ', classId)
 	const tournament = await Tournament.findOne({ class: classId });
 	if (tournament) return res.status(400).json('Why create again if you have already?');
 	// Get the students in the class
@@ -51,6 +52,7 @@ const createTournamnet = asyncHandler(async (req, res) => {
 		return { safeName: `safe_${numWords(index)}`, _id: safe._id };
 	});
 
+	console.log('tournamnetController.js'.blue)
 	// Get all safes of the student and
 	const justCreated = await Tournament.create({
 		class: classId,

@@ -15,10 +15,15 @@ const getTournamentSafe = async (userData) =>{
 }
 
 const createTournamentSafe = async (userData,classId,showScore,deadLine) =>{
-    console.log(`tournamentService.js: creating tournament for class ${classId}`);
-    const response = await axios.post(API_URL_TOURNAMENT_SAFES,{headers:{Authorization:`Bearer ${userData.token}`}},classId,showScore,deadLine);
+    console.log('tournamentService.js: creating tournament for class ',classId,userData.token);
+    const response = await axios.post(API_URL_TOURNAMENT,
+        {classId,showScore,deadLine}, {
+		headers: { Authorization: `Bearer ${userData.token}`}
+	});
+    //const response = await axios.post(API_URL_TOURNAMENT,{headers:{Authorization:`Bearer ${userData.token}`}});
+    //const response = await axios.post(API_URL_TOURNAMENT,{headers:{Authorization:`Bearer ${userData.token}`}});
     return response.data;
-}
+} 
 
 
 const tournamentService = {

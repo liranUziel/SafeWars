@@ -1,15 +1,20 @@
 import { Routes, Route } from 'react-router-dom';
-
+//===== PAGES ======
 import FormPage from './pages/FormPage/FormPage';
+//===== Home ======
 import Home from './pages/Home/Home';
+//subhome pages
 import Class from './pages/Home/HomeClass';
 import HomeSafeZone from './pages/Home/HomeSafeZone';
 import Tournament from './pages/Home/HomeTournament';
-import PageNotFound from './components/PageNotFound';
-import Defult from './pages/Home/Defult';
 import HomeScoreBoard from './pages/Home/HomeScoreBoard';
+// defult home page (if no subpage were selected)
+import Defult from './pages/Home/Defult';
+//==== (Only) Instructor and above =====
 import Dashboard from './pages/Home/Dashboard';
 
+//=== 404
+import PageNotFound from './components/PageNotFound';
 const App = () => {
 	return (
 		<>

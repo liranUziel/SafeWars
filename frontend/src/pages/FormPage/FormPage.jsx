@@ -2,11 +2,6 @@ import '../../styles/LoginSignup.css';
 import safeboxIcon from '../../Images/safebox.svg';
 //State
 import {useState} from 'react';
-// import {useEffect} from 'react';
-//Storage
-// import {useSelector,useDispatch} from 'react-redux';
-//Navigation
-// import {useNavigate} from 'react-router-dom';
 
 import SigninFormPage from './SigninFormPage';
 import SingupFormPage from './SingupFormPage';
@@ -14,6 +9,7 @@ import SingupFormPage from './SingupFormPage';
 function LogingAndSignup() {
     //Hold the signup-signin toggle state
     const [isHidden,setisHidden] = useState(true);
+    
     const signinToggle = (e) =>{
         const signinToggleBtn = document.getElementById("signin-toggle");
         const signupToggleBtn = document.getElementById("signup-toggle");

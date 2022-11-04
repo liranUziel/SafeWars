@@ -1,8 +1,9 @@
+//change to tailwind
 import '../../styles/LoginSignup.css';
-import {useState,useEffect} from 'react';
-import {FaSignInAlt} from 'react-icons/fa';
-// import {FaUser} from 'react-icons/fa';
 
+import {useState,useEffect} from 'react';
+
+// display Error on login or signup;
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 
