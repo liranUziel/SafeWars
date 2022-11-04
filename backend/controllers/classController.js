@@ -8,16 +8,16 @@ const {
 const { getAdmin } = require('../services/usersService');
 const { getSafesByUserId, getSafeByStudentId } = require('../services/safesService');
 
-const getClass = aysncHanler(async (req, res) => {
+const getClasses = aysncHanler(async (req, res) => {
 	const { id, userType } = req.user;
-	classIn = [];
+	classesIn = [];
 	if (userType === 'student') {
-		classId = await getClassesdByStudentId(id);
+		classesIn = await getClassesdByStudentId(id);
 	} else if (userType === 'instructor' || userType === 'admin') {
-		classIn = await getClassesdByInstructorId(id);
+		classesIn = await getClassesdByInstructorId(id);
 	}
 
-	res.status(200).json(classIn);
+	res.status(200).json(classesIn);
 });
 
 const getAdminSafes = aysncHanler(async (req, res) => {
@@ -25,30 +25,31 @@ const getAdminSafes = aysncHanler(async (req, res) => {
 	const admin = await getAdmin();
 	const safes = await getSafesByUserId(admin.id);
 
-	res.status(200).json(safes);
+	res.status(200).json({ safes });
 });
 
 const getStudentsInClass = aysncHanler(async (req, res) => {
 	const { classId } = req.query;
 	const classIn = await getPopulatedClassById(classId);
 
-	let studentList = await Promise.all(
+	let students = await Promise.all(
 		await classIn.studentIds.map(async (student) => {
 			const currSafe = await getSafeByStudentId(student.id);
 			return {
-				id: student.userName,
-				name: student.realName,
+				id: student.id,
+				userId: student.userId,
 				hasSubmitedSafe: currSafe !== undefined,
-				score: 'No Score Available!',
+				isSafeVerified: currSafe.isVerified,
+				score: student.score,
 			};
 		})
 	);
 
-	res.status(200).json(studentList);
+	res.status(200).json({ students });
 });
 
 module.exports = {
 	getAdminSafes,
-	getClass,
+	getClasses,
 	getStudentsInClass,
 };

@@ -31,9 +31,9 @@ const safesRoute = require('./routes/safes');
 const adminRoute = require('./routes/admin');
 
 app.use('/users', usersRoute);
-app.use('/tournament', tournamentRoute);
-app.use('/class', classRoute);
+app.use('/classes', classRoute);
 app.use('/safes', safesRoute);
+app.use('/tournaments', tournamentRoute);
 app.use('/admin', adminRoute);
 
 //defult route

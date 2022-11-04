@@ -3,29 +3,27 @@ const asyncHandler = require('express-async-handler');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
-const { getSafesByUserId, getSafeById } = require('../services/safesService');
+const { getSafesByUserId, getSafeById, createSafe } = require('../services/safesService');
 const { updateUserScore, updateUserSolvedSafes, getUserById } = require('../services/usersService');
 const { getClassesdByStudentId } = require('../services/classesService');
 
-const getUserSafe = asyncHandler(async (req, res) => {
+const getUserSafes = asyncHandler(async (req, res) => {
 	//load user safe
-	const safe = await getSafesByUserId(req.user.id);
-	if (safe.length === 0) {
+	const safes = await getSafesByUserId(req.user.id);
+	if (safes.length === 0) {
 		return res.status(400).json('Upload at first a safe');
 	}
-	res.status(200).json(safe);
+	res.status(200).json({ safes });
 });
 
 const uploadSafe = asyncHandler(async (req, res) => {
-	// Check if safe exists, if so delete it
-	const oldSafe = await getSafesByUserId(req.user.id);
-	if (oldSafe) {
-		await findByIdAndDelete(oldSafe.id);
-	}
-
-	// Create new safe
-	const newSafe = await createSafe(req.user._id, req.safe.safeName, req.safe.path);
-	res.status(201).json({ safeId: newSafe.id });
+	// Create new safes
+	const newSafes = await Promise.all(
+		req.relativeSafePaths.map(async (relPath) => {
+			return await createSafe(req.user.id, req.safeName, relPath);
+		})
+	);
+	res.status(201).json({ newSafes });
 });
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
@@ -193,7 +191,7 @@ const nasmCompile = async (srcPath, dstPath) => {
 };
 
 module.exports = {
-	getUserSafe,
+	getUserSafes,
 	uploadSafe,
 	downloadSafe,
 	uploadKeyAndBreak,

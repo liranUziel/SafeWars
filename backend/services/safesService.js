@@ -5,19 +5,23 @@ const getSafeById = async (safeId) => {
 };
 
 const getSafesByUserId = async (userId) => {
-	return await Safe.find({ user: userId });
+	return await Safe.find({ ownerId: userId });
 };
 
 const getSafeByStudentId = async (studentId) => {
-	return await Safe.findOne({ user: studentId });
+	return await Safe.findOne({ ownerId: studentId });
+};
+
+const getSafesByUserIdAndRelPath = async (ownerId, relPath) => {
+	return await Safe.find({ ownerId, relPath });
 };
 
 const findByIdAndDelete = async (safeId) => {
 	return await Safe.findByIdAndDelete(safeId);
 };
 
-const createSafe = async (userId, safeName, path) => {
-	return await Safe.create({ user: userId, safeName, path });
+const createSafe = async (userId, safeName, relPath) => {
+	return await Safe.create({ ownerId: userId, safeName, relPath });
 };
 
 const verifySafe = async (safeId) => {
@@ -31,4 +35,5 @@ module.exports = {
 	findByIdAndDelete,
 	createSafe,
 	verifySafe,
+	getSafesByUserIdAndRelPath,
 };

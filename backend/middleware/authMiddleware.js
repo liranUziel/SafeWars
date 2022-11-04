@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const Tournament = require('../models/Tournament');
-const { USER_TYPES } = require('../constants');
+const { USER_TYPES, ALLOWED_PERSONAL } = require('../constants');
 const { getUserById } = require('../services/usersService');
 
 const authorizedProtect = asyncHandler(async (req, res, next) => {
-	if (allowedPersonel.includes(req.user.userType)) {
+	if (ALLOWED_PERSONAL.includes(req.user.userType)) {
 		return next();
 	}
 	res.status(401).json('You shall not pass!');

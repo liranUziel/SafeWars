@@ -1,29 +1,35 @@
 const express = require('express');
-const { protect, mustHaveClass, tournamentNotStarted } = require('../middleware/authMiddleware');
-const { mUploadSafe, mUploadKey } = require('../services/safeService');
+const { verifyToken, mustHaveClass, tournamentNotStarted } = require('../middleware/authMiddleware');
+const { mUploadSafe, mUploadKey } = require('../services/multerService');
 const { downloadSafe, uploadSafe, uploadKeyAndBreak } = require('../controllers/safesController');
-const { addClassData, addSafeData, addUploadSafe, addClassDataToSafe } = require('../middleware/dataMiddleware');
+const {
+	addClassData,
+	addSafeData,
+	addClassDataToSafe,
+	prepareUploadSafeData,
+	addSafeDataAfterUplaod,
+	clearStudentUploadSafe,
+} = require('../middleware/dataMiddleware');
 const router = express.Router();
 
-// Download Safe
-// /safes?safeId=this_is_the_id
-router.get('/', protect, addClassData, mustHaveClass, downloadSafe);
 // /safes
 router.post(
 	'/',
-	protect,
-	addClassData,
-	mustHaveClass,
-	tournamentNotStarted,
+	verifyToken,
+	prepareUploadSafeData,
 	mUploadSafe.single('safe'),
-	addUploadSafe,
+	addSafeDataAfterUplaod,
+	clearStudentUploadSafe,
 	uploadSafe
 );
+// Download Safe
+// /safes?safeId=this_is_the_id
+router.get('/', verifyToken, addClassData, mustHaveClass, downloadSafe);
 
 // /safes/break?safeId=this_is_the_id
 router.post(
 	'/break',
-	protect,
+	verifyToken,
 	addClassData,
 	mustHaveClass,
 	addSafeData,

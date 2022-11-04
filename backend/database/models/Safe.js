@@ -15,7 +15,7 @@ const safeSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		path: {
+		relPath: {
 			type: String,
 			required: true,
 		},
