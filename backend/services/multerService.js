@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const multer = require('multer');
 const path = require('path');
-const { createSafeName, getAbsouluteSafePath } = require('../constants');
+const { createSafeName, getAbsouluteSafePath, extractAbsoulteKeyPath } = require('../constants');
 
 // This is for the safes
 
@@ -16,7 +16,7 @@ const safeStorage = multer.diskStorage({
 		});
 	},
 	filename: (req, file, callback) => {
-		//originalname is the uploaded file's name with extn
+		//create the safe name
 		const safeName = createSafeName(req.user.userId, file);
 		callback(null, `${safeName}.asm`);
 	},
@@ -26,21 +26,14 @@ const safeStorage = multer.diskStorage({
 
 const keyStorage = multer.diskStorage({
 	destination: (req, file, callback) => {
-		const { classIn, user, safe } = req;
-		classIn.forEach((currClass) => {
-			const { classInfo } = currClass;
-			const keyPath = path.resolve(
-				`${__dirname}\\..\\public\\keys\\${classInfo.className}\\${classInfo.classNumber}\\${user.userId}`
-			);
-			// Make sure folder exists and content empty
-			fs.emptyDirSync(safePath);
-			callback(null, keyPath);
-			//
-		});
+		const { user, safeToBreak } = req;
+		const keyPath = extractAbsoulteKeyPath(user.userId, safeToBreak);
+		fs.ensureDirSync(keyPath);
+		callback(null, keyPath);
 	},
 	filename: (req, file, callback) => {
-		//originalname is the uploaded file's name with extn
-		callback(null, `${req.safe.safeName}_key.asm`);
+		//create the fitting key name
+		callback(null, `${req.safeToBreak.safeName}.asm`);
 	},
 });
 

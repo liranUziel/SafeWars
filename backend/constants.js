@@ -25,6 +25,17 @@ export const extractAbsoulteSafePathWithName = (relativePath, safeName) => {
 	return resolve(`${__dirname}\\public\\safes\\${relativePath}\\${safeName}`);
 };
 
+export const extractAbsoulteKeyPath = (userId, safe) => {
+	return resolve(`${__dirname}\\public\\keys\\${safe.relPath}\\${userId}`);
+};
+export const extractAbsoulteKeyPathWithName = (userId, safe) => {
+	return resolve(`${__dirname}\\public\\keys\\${safe.relPath}\\${userId}\\${safe.safeName}`);
+};
+
 export const createSafeName = ({ userId, file }) => {
 	return userId + '_' + parse(file.originalname).name;
+};
+
+export const hasBrokenSafe = (result) => {
+	return result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
 };

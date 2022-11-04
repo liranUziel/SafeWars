@@ -3,7 +3,7 @@ const { remove } = require('fs-extra');
 const path = require('path');
 const { ALLOWED_PERSONAL, getRelativeSafePath, extractAbsoulteSafePathWithName } = require('../constants');
 const { getClassById } = require('../services/classesService');
-const { getSafesByUserId, findByIdAndDelete } = require('../services/safesService');
+const { getSafesByUserId, findByIdAndDelete, getSafeById } = require('../services/safesService');
 
 const addClassData = asyncHandler(async (req, res, next) => {
 	const { _id: id, userType } = req.user;
@@ -89,6 +89,16 @@ const clearStudentUploadSafe = asyncHandler(async (req, res, next) => {
 	next();
 });
 
+const prepareUploadKeyData = asyncHandler(async (req, res, next) => {
+	const { safeId } = req.body;
+	const safeToBreak = await getSafeById(safeId);
+	if (!safeToBreak) {
+		return res.status(400).json('Safe not exist!');
+	}
+	req.safeToBrek = safeToBreak;
+	next();
+});
+
 module.exports = {
 	addClassData,
 	addSafeData,
@@ -97,4 +107,5 @@ module.exports = {
 	prepareUploadSafeData,
 	addSafeDataAfterUplaod,
 	clearStudentUploadSafe,
+	prepareUploadKeyData,
 };
