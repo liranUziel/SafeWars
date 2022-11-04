@@ -1,41 +1,57 @@
-import { resolve, parse } from 'path';
-export const USER_TYPES = {
+const { resolve, parse } = require('path');
+const USER_TYPES = {
 	ADMIN: 'admin',
 	INSTRUCTOR: 'instructor',
 	STUDENT: 'student',
 };
 
-export const ALLOWED_PERSONAL = [USER_TYPES.INSTRUCTOR, USER_TYPES.ADMIN];
+const ALLOWED_PERSONAL = [USER_TYPES.INSTRUCTOR, USER_TYPES.ADMIN];
 
-export const getRelativeSafePath = ({ className, classNumber }) => {
-	console.log('MAKE SURE THIS IS CORRECT PATH'.bgGreen);
+const getRelativeSafePath = ({ className, classNumber }) => {
+	console.log('MAKE SURE THIS IS CORRECT PATH'.bgGreen, `${className}\\${classNumber}`.bgGreen);
 	return resolve(`${className}\\${classNumber}`);
 };
 
-export const getAbsouluteSafePath = ({ className, classNumber }) => {
-	console.log('MAKE SURE THIS IS CORRECT PATH'.bgYellow);
+const getAbsouluteSafePath = ({ className, classNumber }) => {
+	console.log(
+		'MAKE SURE THIS IS CORRECT PATH'.bgYellow,
+		`${__dirname}\\public\\safes\\${className}\\${classNumber}`.bgYellow
+	);
 	return resolve(`${__dirname}\\public\\safes\\${className}\\${classNumber}`);
 };
 
-export const extractAbsoulteSafePath = (relativePath) => {
+const extractAbsoulteSafePath = (relativePath) => {
 	return resolve(`${__dirname}\\public\\safes\\${relativePath}`);
 };
 
-export const extractAbsoulteSafePathWithName = (relativePath, safeName) => {
+const extractAbsoulteSafePathWithName = (relativePath, safeName) => {
 	return resolve(`${__dirname}\\public\\safes\\${relativePath}\\${safeName}`);
 };
 
-export const extractAbsoulteKeyPath = (userId, safe) => {
+const extractAbsoulteKeyPath = (userId, safe) => {
 	return resolve(`${__dirname}\\public\\keys\\${safe.relPath}\\${userId}`);
 };
-export const extractAbsoulteKeyPathWithName = (userId, safe) => {
+const extractAbsoulteKeyPathWithName = (userId, safe) => {
 	return resolve(`${__dirname}\\public\\keys\\${safe.relPath}\\${userId}\\${safe.safeName}`);
 };
 
-export const createSafeName = ({ userId, file }) => {
+const createSafeName = ({ userId, file }) => {
 	return userId + '_' + parse(file.originalname).name;
 };
 
-export const hasBrokenSafe = (result) => {
+const hasBrokenSafe = (result) => {
 	return result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
+};
+
+module.exports = {
+	USER_TYPES,
+	ALLOWED_PERSONAL,
+	getRelativeSafePath,
+	getAbsouluteSafePath,
+	extractAbsoulteSafePath,
+	extractAbsoulteSafePathWithName,
+	extractAbsoulteKeyPath,
+	extractAbsoulteKeyPathWithName,
+	createSafeName,
+	hasBrokenSafe,
 };

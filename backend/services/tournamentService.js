@@ -1,7 +1,5 @@
 const Tournament = require('../database/models/Tournament');
 const numWords = require('num-words');
-const { getPopulatedClassById, getClassById } = require('./classesService');
-const { getTournamentSafes } = require('./safesService');
 const { getRelativeSafePath } = require('../constants');
 
 const getTournamentById = async (tournamentId) => {
@@ -12,10 +10,10 @@ const getTournamentByClass = async (classId) => {
 	return await Tournament.findOne({ classRelated: classId });
 };
 
-const createTournamnet = async ({ classRelatedId, showScore, deadline }) => {
+const createTournamnet = async ({ instructorId, classRelatedId, showScore, deadline }) => {
 	// Get the students in the class
 	const { studentIds, classInfo } = await getClassById(classRelatedId);
-	const relatedIds = [...studentIds, req.user.id];
+	const relatedIds = [...studentIds, instructorId];
 	// Get tournamnt safes
 	const safes = await getTournamentSafes(relatedIds, getRelativeSafePath(classInfo));
 	const tournamentSafes = safes.map((safe, index) => {
@@ -24,7 +22,7 @@ const createTournamnet = async ({ classRelatedId, showScore, deadline }) => {
 
 	// Get all safes of the student and
 	const justCreated = await Tournament.create({
-		classRelated: classId,
+		classRelated: classRelatedId,
 		showScore,
 		deadline,
 		safes: tournamentSafes,
@@ -37,3 +35,6 @@ const updateTournamnet = async ({ classId, showScore, deadline }) => {
 };
 
 module.exports = { getTournamentById, getTournamentByClass, createTournamnet, updateTournamnet };
+
+const { getClassById } = require('./classesService');
+const { getTournamentSafes } = require('./safesService');

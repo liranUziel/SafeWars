@@ -21,7 +21,12 @@ const createTournamnetHandler = asyncHandler(async (req, res) => {
 	}
 	const oldTournament = await getTournamentByClass(classId);
 	if (oldTournament) return res.status(400).json('Why create again if you have already?');
-	const newTournament = await createTournamnet({ classRelatedId: classId, showScore, deadline });
+	const newTournament = await createTournamnet({
+		instructorId: req.user.id,
+		classRelatedId: classId,
+		showScore,
+		deadline,
+	});
 
 	res.status(200).json({ newTournament });
 });

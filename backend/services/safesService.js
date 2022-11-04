@@ -1,5 +1,4 @@
 const Safe = require('../database/models/Safe');
-const { getTournamentById } = require('./tournamentService');
 
 const getSafeById = async (safeId) => {
 	return await Safe.findById(safeId);
@@ -49,3 +48,5 @@ module.exports = {
 	getTournamentSafes,
 	getTournamentSafesById,
 };
+
+const { getTournamentById } = require('./tournamentService');
