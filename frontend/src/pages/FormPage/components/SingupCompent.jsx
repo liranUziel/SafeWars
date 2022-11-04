@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { toast } from 'react-toastify';
-import Spinner from '../../components/Spinner';
+import Spinner from '../../../components/Spinner';
 
 // Interact with storage
 import { useSelector, useDispatch } from 'react-redux';
-import { register, reset } from '../../features/auth/authSlice';
+import { register, reset } from '../../../features/auth/authSlice';
 
-import '../../styles/LoginSignup.css';
 
 const LandingPageSingup = () => {
 	const [formData, setFormData] = useState({
@@ -29,6 +28,7 @@ const LandingPageSingup = () => {
 		setFormData((prevState) => ({
 			...prevState,
 			[e.target.name]: e.target.value,
+			userName:`s${userID}`,
 		}));
 	};
 	useEffect(() => {

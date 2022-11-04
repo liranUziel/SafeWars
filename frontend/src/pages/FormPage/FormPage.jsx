@@ -1,18 +1,20 @@
-import '../../styles/LoginSignup.css';
+// import '../../styles/LoginSignup.css';
 import safeboxIcon from '../../Images/safebox.svg';
 //State
 import {useState} from 'react';
 
-import SigninFormPage from './SigninFormPage';
-import SingupFormPage from './SingupFormPage';
+import SigninCompent from './components/SigninCompent';
+import SingupCompent from './components/SingupCompent';
 
 function LogingAndSignup() {
     //Hold the signup-signin toggle state
     const [isHidden,setisHidden] = useState(true);
-    
+
+    const signinToggleBtn = document.getElementById("signin-toggle");
+    const signupToggleBtn = document.getElementById("signup-toggle");
+
     const signinToggle = (e) =>{
-        const signinToggleBtn = document.getElementById("signin-toggle");
-        const signupToggleBtn = document.getElementById("signup-toggle");
+    //Can be better with if statment
         if(isHidden){
             signinToggleBtn.classList.remove("toggled");
 			signupToggleBtn.classList.add("toggled");
@@ -35,13 +37,12 @@ function LogingAndSignup() {
                         </div>
                     </div>
                     <div className="">
-                        {isHidden?<SigninFormPage/>:null}
-                        {isHidden?null:<SingupFormPage/>}    
+                        {isHidden?<SigninCompent/>:<SingupCompent/>}
                     </div>
                 </div>
-                <div className="form_main__img">
+                {/* <div className="form_main__img">
                     <img src={safeboxIcon} className="form_main__img__svg"/>
-                </div>
+                </div> */}
             </main>
         </>
     )
