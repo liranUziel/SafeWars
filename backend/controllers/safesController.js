@@ -1,136 +1,98 @@
 //wrap async and then we don't have to use try catch
 const asyncHandler = require('express-async-handler');
-const Safe = require('../models/Safe');
-const User = require('../models/User');
-const Tournament = require('../models/Tournament');
-const Class = require('../models/Class');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
+const { getSafesByUserId, getSafeById, createSafe } = require('../services/safesService');
+const { updateUserScore, updateUserSolvedSafes, getUserById } = require('../services/usersService');
+const { getClassesdByStudentId } = require('../services/classesService');
+const {
+	extractAbsoulteSafePathWithName,
+	USER_TYPES,
+	extractAbsoulteKeyPathWithName,
+	hasBrokenSafe,
+} = require('../constants');
 
-const getUserSafe = asyncHandler(async (req, res) => {
+const getUserSafes = asyncHandler(async (req, res) => {
 	//load user safe
-	const safe = await Safe.find({ user: req.user.id }).select('safeName _id isVerified');
-	if (safe.length === 0) {
+	const safes = await getSafesByUserId(req.user.id);
+	if (safes.length === 0) {
 		return res.status(400).json('Upload at first a safe');
 	}
-	res.status(200).json(safe);
+	res.status(200).json({ safes });
 });
 
 const uploadSafe = asyncHandler(async (req, res) => {
-	// Check if safe exists, if so delete it
-	const oldSafe = await Safe.findOne({ user: req.user._id });
-	if (oldSafe) {
-		await Safe.findByIdAndDelete(oldSafe._id);
-	}
-
-	// Create new safe
-	const newSafe = await Safe.create({
-		user: req.user._id,
-		safeName: req.safe.safeName,
-	});
-	res.status(201).json({ safeId: newSafe._id });
+	// Create new safes
+	const newSafes = await Promise.all(
+		await req.relativeSafePaths.map(async (relPath) => {
+			return await createSafe(req.user.id, req.safeName, relPath);
+		})
+	);
+	res.status(201).json({ newSafes });
 });
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
-	const { user, safe } = req;
-	// Admin can't break
-	if (user.userType === 'admin') {
-		return res.status(403).json("Admin can't break safe");
-	}
-
-	// Needed Data to break safe and etc...
-	const userId = user.userId;
-	const safeName = req.safe.safeName;
+	const { user, safeToBrek } = req;
 
 	// Diffrent handle for admin safe
-	const isAdminSafe = safe.user.userType === 'admin';
+	const safeOwner = await getUserById(safeToBrek.ownerId);
+	const isAdminSafe = safeOwner.userType === USER_TYPES.ADMIN;
 
-	// Get class info of class the the safe is uploaded to (if there is)
-	let classInfoSafe = undefined;
-	if (safe.classIn?.length > 0) {
-		classInfoSafe = safe.classIn[0].classInfo;
-	}
-
-	// Get class info of class the user who tries to break
-	const { classInfo: classInfoUser } = req.classIn[0];
-
-	// Get the safe path
-	const safePath = isAdminSafe
-		? path.resolve(`${__dirname}\\..\\public\\safes\\admin\\${safeName}`)
-		: path.resolve(
-				`${__dirname}\\..\\public\\safes\\${classInfoSafe.className}\\${classInfoSafe.classNumber}\\${safeName}`
-		  );
-
-	// Get the key path
-	const keyPath = path.resolve(
-		`${__dirname}\\..\\public\\keys\\${classInfoUser.className}\\${classInfoUser.classNumber}\\${userId}\\${safeName}_key.asm`
-	);
+	// Get the paths
+	const safePath = extractAbsoulteSafePathWithName(safeToBrek.relPath, safeToBrek.safeName);
+	const keyPath = extractAbsoulteKeyPathWithName(user.userId, safeToBrek) + '.asm';
 
 	// Make sure safe exists, if not create
 	if (!fs.existsSync(safePath)) {
-		const isCompiled = await nasmCompile(path.resolve(`${safePath}_safe.asm`, safePath));
-		if (!isCompiled) return res.status(400).json('Some error happend while breaking safe.');
+		const isCompiled = await nasmCompile(path.resolve(`${safePath}.asm`, safePath));
+		if (!isCompiled) return res.status(400).json('Some error happend while compiling safe.');
 	}
 	// Break the safe and hope for the best
-	const result = await getBreakResults(userId, safeName, safePath, keyPath);
+	const result = await getBreakResults(userId, safeToBrek.safeName, safePath, keyPath);
 	if (!result) return res.status(400).json('Some error happend while breaking safe!');
 
 	// This checks if safe has been broken
-	const hasBeenBroken = result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
+	const isSucceeded = hasBrokenSafe(result);
 
 	// Some cases if safe was broken
-	if (hasBeenBroken) {
+	if (isSucceeded) {
 		// Verification
 		// If the user breaks it's own safe verify it
-		const isOwnSafe = safe.user._id.equals(user._id);
+		const isOwnSafe = safeOwner.id === user.id;
 		if (isOwnSafe) {
-			await Safe.findByIdAndUpdate(safe._id, { isVerified: true });
+			await verifySafe(safeToBrek.id);
 		}
 
 		// Get users solved safes array
-		let solvedSafes = user.solved;
+		let solvedSafes = user.solvedsSafes;
 		// If safe not in solved of the user, add it and update score for users
-		if (!solvedSafes.includes(safe._id)) {
+		if (!solvedSafes.includes(safeToBrek.id)) {
 			// Calculate points
-			const increaseBy = isOwnSafe ? 0 : 100;
-			const decreaseBy = isOwnSafe ? 0 : 30;
+			const increaseBy = isOwnSafe || isAdminSafe ? 0 : 100;
+			const decreaseBy = isOwnSafe || isAdminSafe ? 0 : 30;
 			// Add to broken safes of breaking user
-			await User.findByIdAndUpdate(user._id, {
-				solved: [...solvedSafes, safe._id],
-				score: user.score + increaseBy,
-			});
-			console.log('MAKE SURE NOT UNDEFINED NEXT PRINT');
-			console.log(safe.user._id);
+			await updateUserScore(user.id, user.score + increaseBy);
+			await updateUserSolvedSafes(user.id, safeToBrek.id);
 			// Decrease from the user who uploaded the safe
-			await User.findByIdAndUpdate(safe.user._id, { score: safe.user.score - decreaseBy });
+			await updateUserScore(safeOwner.id, safeOwner.score - decreaseBy);
 		}
 	}
 
-	res.status(201).json({ hasBeenBroken });
+	res.status(201).json({ isSucceeded });
 });
 
 const downloadSafe = asyncHandler(async (req, res) => {
 	// Extract the Id of the user
 	const safeId = req.query.safeId;
-	//load safe na
-	const safe = await Safe.findById(safeId);
+	//load safe name
+	const safe = await getSafeById(safeId);
 	if (!safe) {
 		return res.status(400).json('No such safe!');
 	}
-	// Find the data about the user that holds the safe
-	const user = await User.findById(safe.user);
-	// Find the class where the user is in
-	const classOfUser = await Class.findOne({ studentIds: user._id });
-	// Get all related paths
-	let filePath =
-		user.userType === 'admin'
-			? `${__dirname}/../public/safes/admin`
-			: `${__dirname}/../public/safes/${classOfUser.classInfo.className}/${classOfUser.classInfo.classNumber}`;
-	filePath = path.resolve(filePath);
 	// Get paths,  dst-safe(bin), src-safe(asm)
-	dstFile = path.resolve(`${filePath}\\${safe.safeName}`);
-	srcFile = path.resolve(`${filePath}\\${safe.safeName}.asm`);
+	dstFile = extractAbsoulteSafePathWithName(safe.relPath, safe.safeName);
+	srcFile = extractAbsoulteSafePathWithName(safe.relPath, safe.safeName) + '.asm';
 
 	// Check if file exist, if not create one
 	if (!fs.existsSync(dstFile)) {
@@ -205,7 +167,7 @@ const nasmCompile = async (srcPath, dstPath) => {
 };
 
 module.exports = {
-	getUserSafe,
+	getUserSafes,
 	uploadSafe,
 	downloadSafe,
 	uploadKeyAndBreak,

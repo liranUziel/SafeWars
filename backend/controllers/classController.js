@@ -1,58 +1,55 @@
 //wrap async and then we don't have to use try catch
 const aysncHanler = require('express-async-handler');
-const Class = require('../models/Class');
-const Safe = require('../models/Safe');
-const User = require('../models/User');
+const {
+	getClassesdByStudentId,
+	getClassesdByInstructorId,
+	getPopulatedClassById,
+} = require('../services/classesService');
+const { getAdmin } = require('../services/usersService');
+const { getSafesByUserId, getSafeByStudentId } = require('../services/safesService');
 
-// @desc get class info
-// @route GET /class/
-// @access private
-
-const getClass = aysncHanler(async (req, res) => {
-	const { _id: id, userType } = req.user;
-	classIn = {};
+const getClasses = aysncHanler(async (req, res) => {
+	const { id, userType } = req.user;
+	classesIn = [];
 	if (userType === 'student') {
-		classIn = await Class.find({ studentIds: id }).select({
-			classInfo: 1,
-		});
+		classesIn = await getClassesdByStudentId(id);
 	} else if (userType === 'instructor' || userType === 'admin') {
-		classIn = await Class.find({ instructorId: id }).select({
-			classInfo: 1,
-		});
+		classesIn = await getClassesdByInstructorId(id);
 	}
 
-	res.status(200).json(classIn);
+	res.status(200).json(classesIn);
 });
 
 const getAdminSafes = aysncHanler(async (req, res) => {
 	//load public safe
-	const admin = await User.findOne({ userType: 'admin' });
-	const safe = await Safe.find({ user: admin._id });
+	const admin = await getAdmin();
+	const safes = await getSafesByUserId(admin.id);
 
-	res.status(200).json(safe);
+	res.status(200).json({ safes });
 });
 
 const getStudentsInClass = aysncHanler(async (req, res) => {
 	const { classId } = req.query;
-	const classIn = await Class.findById(classId).populate('studentIds');
+	const classIn = await getPopulatedClassById(classId);
 
-	let studentList = await Promise.all(
+	let students = await Promise.all(
 		await classIn.studentIds.map(async (student) => {
-			const currSafe = await Safe.findOne({ user: student._id });
+			const currSafe = await getSafeByStudentId(student.id);
 			return {
-				id: student.userName,
-				name: student.realName,
+				id: student.id,
+				userId: student.userId,
 				hasSubmitedSafe: currSafe !== undefined,
-				score: 'No Score Available!',
+				isSafeVerified: currSafe.isVerified,
+				score: student.score,
 			};
 		})
 	);
 
-	res.status(200).json(studentList);
+	res.status(200).json({ students });
 });
 
 module.exports = {
 	getAdminSafes,
-	getClass,
+	getClasses,
 	getStudentsInClass,
 };

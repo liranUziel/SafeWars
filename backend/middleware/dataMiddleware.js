@@ -1,45 +1,73 @@
 const asyncHandler = require('express-async-handler');
+const { remove } = require('fs-extra');
 const path = require('path');
-const Class = require('../models/Class');
-const Safe = require('../models/Safe');
+const { ALLOWED_PERSONAL, getRelativeSafePath, extractAbsoulteSafePathWithName } = require('../constants');
+const { getClassById, getClassesdByStudentId, getClassesdByInstructorId } = require('../services/classesService');
+const { getSafesByUserId, findByIdAndDelete, getSafeById } = require('../services/safesService');
 
-const addClassData = asyncHandler(async (req, res, next) => {
-	const { _id: id, userType } = req.user;
-	let classIn = {};
-	if (userType === 'student') {
-		classIn = await Class.find({ studentIds: id });
-	} else if (userType === 'instructor') {
-		classIn = await Class.find({ instructorId: id });
+const prepareUploadSafeData = asyncHandler(async (req, res, next) => {
+	const { classesToAdd } = req.body;
+	if (classesToAdd.length === 0) return res.status(400).json('Must add to at least 1 class.');
+	// Get class instaces
+	req.classesInfo = await Promise.all(
+		await classesToAdd.map(async (currClassId) => {
+			const classObj = await getClassById(currClassId);
+			return { classId: currClassId, ...classObj.classInfo };
+		})
+	);
+	// req.classesInfo = [{classId, className, classNumber}]
+	next();
+});
+
+const addSafeDataAfterUplaod = asyncHandler(async (req, res, next) => {
+	// Extract the Id of the user
+	req.safeName = createSafeName(req.user.userId, file);
+	req.relativeSafePaths = req.classesInfo.map((currClass) => {
+		return getRelativeSafePath(currClass);
+	});
+	next();
+});
+
+// student can upload only one safe for class
+const clearStudentUploadSafe = asyncHandler(async (req, res, next) => {
+	// if user is instructor or admin skip this part
+	if (ALLOWED_PERSONAL.includes(req.user.userType)) return next();
+	// Get safes of student
+	const existingSafes = await getSafesByUserId(req.user.id);
+	for (const safe of existingSafes) {
+		// If safe exist in same place override it
+		// Remove from db and file
+		if (req.relativeSafePaths.includes(safe.relPath)) {
+			// Remove compiled and uncompiled safe
+			await remove(extractAbsoulteSafePathWithName(safe.relPath, safe.safeName));
+			await remove(extractAbsoulteSafePathWithName(safe.relPath, safe.safeName) + '.asm');
+			await findByIdAndDelete(safe.id);
+		}
 	}
-	req.classIn = classIn;
 	next();
 });
 
-const addSafeData = asyncHandler(async (req, res, next) => {
-	// Extract the Id of the user
-	const safeId = req.query.safeId;
-	const safe = await Safe.findById(safeId).populate('user');
-	req.safe = safe;
-	next();
-});
-
-const addUploadSafe = asyncHandler(async (req, res, next) => {
-	// Extract the Id of the user
-	req.safe = { safeName: req.user.userId + '_' + path.parse(req.file.originalname).name };
-	next();
-});
-
-const addClassDataToSafe = asyncHandler(async (req, res, next) => {
-	// Extract the Id of the user
-	let classIn = {};
-	const userId = req.safe.user._id;
-	if (req.safe.user.userType === 'student') {
-		classIn = await Class.findOne({ studentIds: userId });
-	} else if (req.safe.user.userType === 'instructor') {
-		classIn = await Class.findOne({ instructorId: userId });
+const prepareUploadKeyData = asyncHandler(async (req, res, next) => {
+	const { safeId } = req.body;
+	const safeToBreak = await getSafeById(safeId);
+	if (!safeToBreak) {
+		return res.status(400).json('Safe not exist!');
 	}
-	req.safe.classIn = classIn;
+	req.safeToBrek = safeToBreak;
 	next();
 });
 
-module.exports = { addClassData, addSafeData, addUploadSafe, addClassDataToSafe };
+const addRegisteredClasses = asyncHandler(async (req, res, next) => {
+	let classesAsStudent = await getClassesdByStudentId(req.user.id);
+	let classesAsInstructor = await getClassesdByInstructorId(req.user.id);
+	req.registeredClasses = [...classesAsStudent, ...classesAsInstructor];
+	next();
+});
+
+module.exports = {
+	prepareUploadSafeData,
+	addSafeDataAfterUplaod,
+	clearStudentUploadSafe,
+	prepareUploadKeyData,
+	addRegisteredClasses,
+};

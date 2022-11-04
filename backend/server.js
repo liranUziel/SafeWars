@@ -19,7 +19,7 @@ app.use(errorHandler);
 app.use(cors());
 
 //==== DB ====
-const connectDB = require('./database/db');
+const { connectDB } = require('./database/db');
 connectDB();
 
 //==== ROUTES ====
@@ -31,9 +31,9 @@ const safesRoute = require('./routes/safes');
 const adminRoute = require('./routes/admin');
 
 app.use('/users', usersRoute);
-app.use('/tournament', tournamentRoute);
-app.use('/class', classRoute);
+app.use('/classes', classRoute);
 app.use('/safes', safesRoute);
+app.use('/tournaments', tournamentRoute);
 app.use('/admin', adminRoute);
 
 //defult route
