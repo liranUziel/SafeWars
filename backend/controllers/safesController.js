@@ -25,7 +25,7 @@ const getUserSafes = asyncHandler(async (req, res) => {
 const uploadSafe = asyncHandler(async (req, res) => {
 	// Create new safes
 	const newSafes = await Promise.all(
-		req.relativeSafePaths.map(async (relPath) => {
+		await req.relativeSafePaths.map(async (relPath) => {
 			return await createSafe(req.user.id, req.safeName, relPath);
 		})
 	);

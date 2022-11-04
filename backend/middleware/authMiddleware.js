@@ -1,16 +1,7 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
-const User = require('../models/User');
-const Tournament = require('../models/Tournament');
 const { USER_TYPES, ALLOWED_PERSONAL } = require('../constants');
 const { getUserById } = require('../services/usersService');
-
-const authorizedProtect = asyncHandler(async (req, res, next) => {
-	if (ALLOWED_PERSONAL.includes(req.user.userType)) {
-		return next();
-	}
-	res.status(401).json('You shall not pass!');
-});
 
 const verifyToken = asyncHandler(async (req, res, next) => {
 	let token = undefined;
@@ -34,23 +25,11 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 	}
 });
 
-const mustHaveClass = asyncHandler(async (req, res, next) => {
-	if (req.classIn.length > 0) {
+const authorizedProtect = asyncHandler(async (req, res, next) => {
+	if (ALLOWED_PERSONAL.includes(req.user.userType)) {
 		return next();
 	}
-	res.status(401).json('You are not in a class, why even bother upload safe!');
-});
-
-const tournamentNotStarted = asyncHandler(async (req, res, next) => {
-	let tournaments = await Promise.all(
-		await req.classIn.map(async (currClass) => {
-			return Tournament.findOne({ class: currClass._id });
-		})
-	);
-	if (tournaments?.length > 0) {
-		return res.status(400).json('Tournament already started. Check with administration');
-	}
-	next();
+	res.status(401).json('You shall not pass!');
 });
 
 const makeSureAdmin = asyncHandler(async (req, res, next) => {
@@ -60,4 +39,4 @@ const makeSureAdmin = asyncHandler(async (req, res, next) => {
 	res.status(401).json('Only the mighty admin can do this!');
 });
 
-module.exports = { verifyToken, authorizedProtect, mustHaveClass, tournamentNotStarted, makeSureAdmin };
+module.exports = { verifyToken, authorizedProtect, makeSureAdmin };

@@ -1,7 +1,8 @@
 const Safe = require('../database/models/Safe');
+const { getTournamentById } = require('./tournamentService');
 
 const getSafeById = async (safeId) => {
-	return await User.findById(safeId);
+	return await Safe.findById(safeId);
 };
 
 const getSafesByUserId = async (userId) => {
@@ -28,6 +29,15 @@ const verifySafe = async (safeId) => {
 	await Safe.findByIdAndUpdate(safeId, { isVerified: true });
 };
 
+const getTournamentSafes = async (relatedIds, relPath) => {
+	return await Safe.find({ ownerId: relatedIds, isVerified: true, relPath });
+};
+
+const getTournamentSafesById = async (tournamentId) => {
+	const { safes } = await getTournamentById(tournamentId);
+	return safes;
+};
+
 module.exports = {
 	getSafeById,
 	getSafesByUserId,
@@ -36,4 +46,6 @@ module.exports = {
 	createSafe,
 	verifySafe,
 	getSafesByUserIdAndRelPath,
+	getTournamentSafes,
+	getTournamentSafesById,
 };

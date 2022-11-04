@@ -10,7 +10,6 @@ const {
 } = require('../middleware/dataMiddleware');
 const router = express.Router();
 
-// /safes
 router.post(
 	'/',
 	verifyToken,
@@ -20,11 +19,7 @@ router.post(
 	clearStudentUploadSafe,
 	uploadSafe
 );
-// Download Safe
-// /safes?safeId=this_is_the_id
 router.get('/', verifyToken, downloadSafe);
-
-// /safes/break?safeId=this_is_the_id
 router.post('/break', verifyToken, prepareUploadKeyData, mUploadKey.single('key'), uploadKeyAndBreak);
 
 module.exports = router;

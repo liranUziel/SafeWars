@@ -1,23 +1,19 @@
-const express = require("express");
+const express = require('express');
 
 const {
-  getTournament,
-  createTournamnet,
-  updateTournamnet,
-  getTournamentSafes,
-} = require("../controllers/tournamentController");
+	getTournaments,
+	createTournamnetHandler,
+	updateTournamnetHandler,
+	getTournamentSafesHandler,
+} = require('../controllers/tournamentController');
+const { verifyToken, authorizedProtect } = require('../middleware/authMiddleware');
+const { addRegisteredClasses } = require('../middleware/dataMiddleware');
 const router = express.Router();
 
-const { addClassData } = require("../middleware/dataMiddleware");
-//Auth
-const { protect, authorizedProtect } = require("../middleware/authMiddleware");
-
-router.get("/", protect, addClassData, getTournament);
-
-router.post("/", protect, authorizedProtect, createTournamnet);
-
-router.put("/", protect, authorizedProtect, addClassData, updateTournamnet);
-
-router.get("/safes", protect, addClassData, getTournamentSafes);
+router.get('/', verifyToken, addRegisteredClasses, getTournaments);
+router.get('/safes', verifyToken, addRegisteredClasses, getTournamentSafesHandler);
+// Authorized protect
+router.post('/', verifyToken, authorizedProtect, createTournamnetHandler);
+router.put('/', verifyToken, authorizedProtect, addRegisteredClasses, updateTournamnetHandler);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Class = require('../database/models/Class');
+const User = require('../database/models/User');
 
 const getClassById = async (classId) => {
 	return await Class.findById(classId);
@@ -15,7 +16,6 @@ const getClassesdByInstructorId = async (instructorId) => {
 const getPopulatedClassById = async (classId) => {
 	return await Class.findById(classId).populate('studentIds');
 };
-
 module.exports = {
 	getClassById,
 	getClassesdByStudentId,
