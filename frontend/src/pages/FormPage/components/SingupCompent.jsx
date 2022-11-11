@@ -8,6 +8,7 @@ import Spinner from '../../../components/Spinner';
 import { useSelector, useDispatch } from 'react-redux';
 import { register, reset } from '../../../features/auth/authSlice';
 
+import { FormControl, FormLabel, FormErrorMessage, FormHelperText } from '@chakra-ui/react';
 
 const LandingPageSingup = () => {
 	const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const LandingPageSingup = () => {
 		setFormData((prevState) => ({
 			...prevState,
 			[e.target.name]: e.target.value,
-			userName:`s${userID}`,
+			userName: `s${userID}`,
 		}));
 	};
 	useEffect(() => {

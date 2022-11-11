@@ -6,7 +6,7 @@ import { removeSafe, getSafe } from '../../features/userSafe/userSafeSlice';
 import safesService from '../../utils/userSafe';
 import Safe from './Safe';
 import { toast } from 'react-toastify';
-import asmLogo from '../../Images/asm.svg';
+import asmLogo from '../../assets/Images/asm.svg';
 import React from 'react';
 import PopUp from './PopUp';
 
@@ -74,14 +74,11 @@ const HomeSafeZone = () => {
 	};
 	useEffect(() => {
 		dispatch(getSafe(user));
+	}, [dispatch, user]);
 
-	}, [dispatch,user]);
-
-	
 	useEffect(() => {
 		setSafe({ ...safeInfo, solved: false });
 	}, [safeInfo]);
-
 
 	const reuploadSafe = (e) => {
 		toast.warn('Warrning reuploading safe will remove the old one', {
@@ -129,8 +126,8 @@ const HomeSafeZone = () => {
 							upload safe
 						</button>
 					</div>
-					<PopUp popupActive={popupActive} closeOverlay={closeOverlay}/>
-				</div> 
+					<PopUp popupActive={popupActive} closeOverlay={closeOverlay} />
+				</div>
 			) : (
 				<>
 					<div className='user_safe_container'>

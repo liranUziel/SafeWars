@@ -19,6 +19,7 @@ const App = () => {
 	return (
 		<>
 			<Routes>
+				<Route path='/' element={<FormPage />} />
 				<Route path='home' element={<Home />}>
 					<Route path='' element={<Defult />} />
 					<Route path='class' element={<Class />} />
@@ -28,7 +29,6 @@ const App = () => {
 					<Route path='dashboard' element={<Dashboard />} />
 					<Route path='*' element={<PageNotFound />} />
 				</Route>
-				<Route path='/' element={<FormPage />} />
 			</Routes>
 		</>
 	);

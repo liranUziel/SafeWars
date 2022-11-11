@@ -7,26 +7,3 @@
 	margin: 0;
 	padding: 0;
 }
-
-:root {
-	--accent-color: #369993;
-	--light-accent-color: #7ceae2;
-	--light_gray: #a3a3a3;
-	--dark-color: #2e3448;
-	--mid-color: #40475c;
-	--mid-color-dark: #373e52;
-	--light-dark-color: #e5f6ff;
-}
-
-a {
-	text-decoration: none;
-	color: #000;
-}
-
-body {
-	height: 100vh;
-}
-
-#root {
-	height: 100%;
-}

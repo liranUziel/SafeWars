@@ -11,7 +11,7 @@ const Defult = () => {
 					Once you are ready you can upload your own safe and key and take part of SafeZone tournament.
 					{/* <button className="Defult__CTA">CTA button</button> */}
 				</div>
-				<img src={require('../../Images/safe_box_hello.png')} className='defult__content__text__img' />
+				<img src={require('../../assets/Images/safe_box_hello.png')} className='defult__content__text__img' />
 			</div>
 		</div>
 	);

@@ -47,7 +47,7 @@ const HomeTournament = () => {
 	else if (tournamentEnable) {
 		return (
 			<div className='empty_container'>
-				<img src={import('../../Images/safes_not_found.png')} className='page__not__found__img' />
+				<img src={import('../../assets/Images/safes_not_found.png')} className='page__not__found__img' />
 				Safes list is empty
 			</div>
 		);
