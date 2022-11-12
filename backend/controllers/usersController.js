@@ -12,7 +12,13 @@ const TokenGenertor = (id) => {
 const getUser = aysncHandler(async (req, res) => {
 	const user = await getUserById(req.user.id);
 	res.status(200).json({
-		...user,
+		id: user.id,
+		userName: user.userName,
+		email: user.email,
+		safesSolved: user.solvedSafes,
+		userType: user.userType,
+		realName: user.realName,
+		score: user.score,
 	});
 });
 
@@ -43,7 +49,13 @@ const registerUser = aysncHandler(async (req, res) => {
 	// Make sure the user created successfully
 	if (user) {
 		res.status(201).json({
-			...user,
+			id: user.id,
+			userName: user.userName,
+			email: user.email,
+			safesSolved: user.solvedSafes,
+			userType: user.userType,
+			realName: user.realName,
+			score: user.score,
 			token: TokenGenertor(user.id),
 		});
 	} else {
@@ -62,7 +74,13 @@ const loginUser = aysncHandler(async (req, res) => {
 	// Make sure password is correct
 	if (user && (await bcrypt.compare(password, user.password))) {
 		res.status(200).json({
-			...user,
+			id: user.id,
+			userName: user.userName,
+			email: user.email,
+			safesSolved: user.solvedSafes,
+			userType: user.userType,
+			realName: user.realName,
+			score: user.score,
 			token: TokenGenertor(user.id),
 		});
 	} else {
