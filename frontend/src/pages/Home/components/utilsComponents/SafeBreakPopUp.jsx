@@ -1,8 +1,8 @@
 // import PopUpStage from "./PopUpStage";
 import {useState} from "react";
 import { RiFileUploadLine } from 'react-icons/ri';
-import '../../styles/SafeBreak.css';
-import safesService from '../../utils/userSafe';
+// import '../../styles/SafeBreak.css';
+import safesService from '../../../../features/userSafe/userSafeServices';
 
 const SafeBreakPopUp = ({popupActive,closeOverlay,safeId,user}) => {
     const [file, setFile] = useState();

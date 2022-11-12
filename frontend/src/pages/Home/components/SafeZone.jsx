@@ -1,14 +1,14 @@
-import '../../styles/SafeZone.css';
+// import '../../styles/SafeZone.css';
 
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeSafe, getSafe } from '../../features/userSafe/userSafeSlice';
-import safesService from '../../utils/userSafe';
-import Safe from './Safe';
+import { removeSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
+import safesService from '../../../utils/userSafe';
+import Safe from './utilsComponents/Safe';
 import { toast } from 'react-toastify';
-import asmLogo from '../../assets/Images/asm.svg';
+// import asmLogo from '../../assets/Images/asm.svg';
 import React from 'react';
-import PopUp from './PopUp';
+import PopUp from './utilsComponents/PopUp';
 
 const HomeSafeZone = () => {
 	const dispatch = useDispatch();

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector ,useDispatch} from 'react-redux';
-import {getClassStudents} from '../../features/class/classSlice';
-import StudentsList from "./StudentsList";
-import { createTournamentSafes } from '../../features/tournament/tournamentSlice';
-import '../../styles/dashboard.css';
+import {getClassStudents} from '../../../features/class/classSlice';
+import StudentsList from "./utilsComponents/StudentsList";
+import { createTournamentSafes } from '../../../features/tournament/tournamentSlice';
+// import '../../styles/dashboard.css';
 
 const Dashboard = () => {
     //# Id Name Submited Safe Score 

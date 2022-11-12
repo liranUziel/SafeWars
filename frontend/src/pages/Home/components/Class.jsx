@@ -1,10 +1,10 @@
-import Safe from './Safe';
-import '../../styles/Safe.css';
-import Spinner from '../../components/Spinner';
-import PopUp from './PopUp';
+import Safe from './utilsComponents/Safe';
+// import '../../styles/Safe.css';
+import Spinner from '../../../components/Spinner';
+import PopUp from './utilsComponents/PopUp';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { clearClass, getClassInfo, getClassSafes } from '../../features/class/classSlice';
+import { clearClass, getClassInfo, getClassSafes } from '../../../features/class/classSlice';
 import { useEffect, useState } from 'react';
 
 const HomeClass = () => {
@@ -45,7 +45,7 @@ const HomeClass = () => {
 		return (
 			<div>
 				<div className='empty_container'>
-					<img src={require('../../assets/Images/safes_not_found.png')} className='page__not__found__img' />
+					<img src={require('../../../assets/Images/safes_not_found.png')} className='page__not__found__img' />
 					Safes list is empty
 				</div>
 			</div>

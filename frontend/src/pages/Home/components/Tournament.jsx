@@ -1,8 +1,8 @@
-import Safe from './Safe';
-import '../../styles/Safe.css';
-import Spinner from '../../components/Spinner';
+import Safe from './utilsComponents/Safe';
+// import '../../styles/Safe.css';
+import Spinner from '../../../components/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTournamentInfo, getTournamentSafes } from '../../features/tournament/tournamentSlice';
+import { getTournamentInfo, getTournamentSafes } from '../../../features/tournament/tournamentSlice';
 import { useEffect, useState } from 'react';
 
 const HomeTournament = () => {
@@ -47,7 +47,7 @@ const HomeTournament = () => {
 	else if (tournamentEnable) {
 		return (
 			<div className='empty_container'>
-				<img src={import('../../assets/Images/safes_not_found.png')} className='page__not__found__img' />
+				<img src={import('../../../assets/Images/safes_not_found.png')} className='page__not__found__img' />
 				Safes list is empty
 			</div>
 		);

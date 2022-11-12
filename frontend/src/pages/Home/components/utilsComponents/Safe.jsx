@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import {BsFillArrowDownCircleFill,BsFillArrowUpCircleFill,BsFillXCircleFill,BsSafe} from 'react-icons/bs'
 import {RiSafe2Fill} from 'react-icons/ri'
-import '../../styles/Safe.css'
+// import '../../styles/Safe.css'
 
-import {getSafe} from '../../utils/safes'
+import {getSafe} from '../../../../utils/safes'
 import fileDownload  from 'js-file-download' 
 import {useSelector} from 'react-redux';
 import SafeBreakPopUp from './SafeBreakPopUp'

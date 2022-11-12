@@ -4,14 +4,14 @@ import FormPage from './pages/FormPage/FormPage';
 //===== Home ======
 import Home from './pages/Home/Home';
 //subhome pages
-import Class from './pages/Home/HomeClass';
-import HomeSafeZone from './pages/Home/HomeSafeZone';
-import Tournament from './pages/Home/HomeTournament';
-import HomeScoreBoard from './pages/Home/HomeScoreBoard';
+import Class from './pages/Home/components/Class';
+import HomeSafeZone from './pages/Home/components/SafeZone';
+import Tournament from './pages/Home/components/Tournament';
+import HomeScoreBoard from './pages/Home/components/ScoreBoard';
 // defult home page (if no subpage were selected)
-import Defult from './pages/Home/Defult';
+import Defult from './pages/Home/components/Defult';
 //==== (Only) Instructor and above =====
-import Dashboard from './pages/Home/Dashboard';
+import Dashboard from './pages/Home/components/Dashboard';
 
 //=== 404
 import PageNotFound from './components/PageNotFound';
