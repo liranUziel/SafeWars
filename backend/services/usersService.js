@@ -13,7 +13,7 @@ const getAdmin = async () => {
 	return await User.findOne({ userType: USER_TYPES.ADMIN });
 };
 
-const createUser = async ({ realName, userName, email, password, userId }) => {
+const createUser = async (realName, userName, email, password, userId) => {
 	const user = await User.create({
 		realName,
 		userName,

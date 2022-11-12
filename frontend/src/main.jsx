@@ -13,7 +13,7 @@ import { extendTheme } from '@chakra-ui/react';
 // 2. Call `extendTheme` and pass your custom values
 const theme = extendTheme({
 	colors: {
-		'accent-color': '#369993',
+		accent_color: { 500: '#369993' },
 		'light-accent-color': '#7CEAE2',
 		'light-gray': '#A3A3A3',
 		'dark-color': ' #2E3448',

@@ -5,7 +5,7 @@ import { Tabs, TabList, Tab, TabPanels, TabPanel, Button } from '@chakra-ui/reac
 import { useState } from 'react';
 
 import SigninCompent from './components/SigninCompent';
-import SingupCompent from './components/SingupCompent';
+import SingupCompent from './components/SignupCompent';
 
 const signInSignUp = 'text-white w-20 h-7 border-none font-semibold';
 
@@ -30,10 +30,10 @@ function LogingAndSignup() {
 	return (
 		<div className='h-screen bg-accent-color'>
 			<main className='grid grid-cols-2'>
-				<div className='absolute right-0 bg-dark-color h-full w-1/2 shadow-2xl shadow-dark-color'>
+				<div className='absolute right-0 bg-dark-color h-screen w-1/2 shadow-2xl shadow-dark-color'>
 					<Tabs variant='soft-rounded' align='end'>
 						<TabList mb='1em' className='m-3'>
-							<Tab className={signInSignUp} _selected={{ bg: 'accent-color' }}>
+							<Tab className={signInSignUp} _selected={{ bg: 'accent-color.500' }}>
 								SignUp
 							</Tab>
 							<Tab className={signInSignUp} _selected={{ bg: 'accent-color' }}>

@@ -8,7 +8,7 @@ const UserSchema = mongoose.Schema(
 		},
 		userId: {
 			type: String,
-			required: [true, 'Please add a name'],
+			required: [true, 'Please add user ID'],
 		},
 		userName: {
 			type: String,

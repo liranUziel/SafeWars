@@ -19,11 +19,16 @@ const getUser = aysncHandler(async (req, res) => {
 });
 
 const registerUser = aysncHandler(async (req, res) => {
-	const { realName, userName, email, password, userId } = req.body;
+	const { realName, email, password, userId } = req.body;
 
-	if (!realName || !userName || !email || !password || !userId) {
+	console.log(req.body);
+
+	if (!realName || !email || !password || !userId) {
 		return res.status(400).json('Some fields are missing!');
 	}
+
+	const userName = 's' + userId;
+
 	//Check if user exist
 	const isUserExist = await getUserByUserName(userName);
 	if (isUserExist) {

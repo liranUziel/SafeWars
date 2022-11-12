@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 
 // display Error on login or signup;
-import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
 import { login, reset } from '../../../features/auth/authSlice';
 
-import { FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from '@chakra-ui/react';
+import { FormControl, FormLabel, Button, FormHelperText, Input, useToast } from '@chakra-ui/react';
 
 const LandingPageSignin = ({ isHidden }) => {
+	const toast = useToast();
+
 	const [formData, setFormData] = useState({
 		userName: '',
 		password: '',
@@ -28,7 +29,10 @@ const LandingPageSignin = ({ isHidden }) => {
 
 	useEffect(() => {
 		if (isError) {
-			toast.error(message);
+			toast({
+				title: message,
+				status: 'error',
+			});
 		}
 		if (isSuccess || user) {
 			navigate('/home');
@@ -45,17 +49,20 @@ const LandingPageSignin = ({ isHidden }) => {
 		dispatch(login(userData));
 	};
 	return (
-		<>
+		<form onSubmit={onSubmit}>
 			<FormControl className='text-light-dark-color'>
 				<FormLabel>User Name</FormLabel>
-				<Input type='text'></Input>
+				<Input type='text' name='userName' value={userName} onChange={onChange}></Input>
 				<FormHelperText>Please enter your User Name</FormHelperText>
 
 				<FormLabel>Password</FormLabel>
-				<Input type='password'></Input>
+				<Input type='password' name='password' value={password} onChange={onChange}></Input>
 				<FormHelperText>Please enter your Password</FormHelperText>
+				<Button type='submit' colorScheme='accent_color'>
+					Sign Me Up
+				</Button>
 			</FormControl>
-		</>
+		</form>
 		// <div id='signin-from'>
 		// 	<form action='#' className='signin-signup-form' onSubmit={onSubmit}>
 		// 		<label>user name</label>
