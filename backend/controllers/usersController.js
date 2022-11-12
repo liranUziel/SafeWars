@@ -50,6 +50,7 @@ const registerUser = aysncHandler(async (req, res) => {
 			email: user.email,
 			safesSolved: user.solvedSafes,
 			userType: user.userType,
+			realName: user.realName,
 			token: TokenGenertor(user.id),
 		});
 	} else {
@@ -73,6 +74,7 @@ const loginUser = aysncHandler(async (req, res) => {
 			email: user.email,
 			safesSolved: user.solvedSafes,
 			userType: user.userType,
+			realName: user.realName,
 			token: TokenGenertor(user.id),
 		});
 	} else {
