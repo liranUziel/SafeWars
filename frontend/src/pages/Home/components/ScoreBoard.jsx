@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import { useToast } from '@chakra-ui/react';
+import Safe from './utilsComponents/Safe';
 
 //get user name and use useState
 const HomeScoreBoard = () => {
@@ -29,12 +30,14 @@ const HomeScoreBoard = () => {
 
 
   return (
-    <div className="flex w-1/2 flex-col items-center m-10 p-2 gap-2">
+    <div className="flex flex-col items-center m-10 p-2 gap-2">
       <Avatar name={realName} src={userImg} /> 
       <span>You Score is: {score}</span>
       <Button colorScheme='teal'>show leader board</Button>
       {/* <input type="file" onChange={thereIsChange}/> */}
       {/* <div id="text"></div> */}
+
+      <Safe safe={{solved:false}}/>
     </div>
   )
 }

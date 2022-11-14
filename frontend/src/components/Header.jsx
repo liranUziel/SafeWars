@@ -26,10 +26,12 @@ const Header = () => {
     const [className,setClassName] = useState('');
     const [realName,setUsername] = useState("");
     const [userImg,setUserImg] = useState("");
+    const [score,setScore] = useState(0);
 
     useEffect(()=>{
         setUsername(user.realName);
         setUserImg('');
+        setScore(user.score);
       },[user]);
 
     useEffect(() =>{
@@ -107,7 +109,10 @@ const Header = () => {
                         <li id="" className="text-white hover:text-green-400">
                             <button className="header__list__item_btn" onClick={GotoScoreBoard}>
                                 <BsFillBarChartFill/>
-                                Score Borad <span className="header_item__score">1124</span>
+                                Score Borad
+                                <span class="inline-flex justify-center items-center ml-2 w-4 h-4 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full">
+                                    {score}
+                                </span>
                             </button>
                         </li>
                         {user.userType === "student" ? (

@@ -44,6 +44,8 @@ const Safe = ({safe:_safe,type,action}) => {
         setUploadingStatus({status:'idel'});
         setPopupActive(false);*/
     }
+
+    
     return (
         <div className={safe.solved ? "safe solved ":"safe"} id={safe._id}>
             <div className={safe.solved ? "safe__frame solved ":"safe__frame"}>
