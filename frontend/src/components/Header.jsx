@@ -2,48 +2,45 @@
 
 import { ReactComponent as Logo } from '../assets/Images/light_logo.svg';
 
-import {FaUser,FaChalkboardTeacher,FaChessKing} from 'react-icons/fa';
-import {BsSafeFill,BsFillBarChartFill} from 'react-icons/bs';
-import { Avatar } from '@chakra-ui/react'
-import {RiAdminFill} from 'react-icons/ri';
+import { FaUser, FaChalkboardTeacher, FaChessKing } from 'react-icons/fa';
+import { BsSafeFill, BsFillBarChartFill } from 'react-icons/bs';
+import { Avatar } from '@chakra-ui/react';
+import { RiAdminFill } from 'react-icons/ri';
 
-import {useNavigate,Link} from 'react-router-dom';
-import {useEffect,useState} from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-import { useSelector ,useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { logout,reset } from '../features/auth/authSlice';
-import {removeSafe,getSafe} from '../features/userSafe/userSafeSlice';
+import { logout, reset } from '../features/auth/authSlice';
+import { removeSafe, getSafe } from '../features/userSafe/userSafeSlice';
 
-
-import {clearClass,getClassInfo,getClassSafes} from '../features/class/classSlice';
+import { clearClass, getClassInfo, getClassSafes } from '../features/class/classSlice';
 
 const Header = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const {user} = useSelector((state)=> state.auth);
-    const {classInfo,isLoading,isError,isSuccess,message} = useSelector((state)=> state.class);
-    const [className,setClassName] = useState('');
-    const [realName,setUsername] = useState("");
-    const [userImg,setUserImg] = useState("");
-    const [score,setScore] = useState(0);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { user } = useSelector((state) => state.auth);
+	const { classInfo, isLoading, isError, isSuccess, message } = useSelector((state) => state.class);
+	const [className, setClassName] = useState('');
+	const [realName, setUsername] = useState('');
+	const [userImg, setUserImg] = useState('');
+	const [score, setScore] = useState(0);
 
-    useEffect(()=>{
-        setUsername(user.realName);
-        setUserImg('');
-        setScore(user.score);
-      },[user]);
+	useEffect(() => {
+		setUsername(user.realName);
+		setUserImg('');
+		setScore(user.score);
+	}, [user]);
 
-    useEffect(() =>{
-        if(classInfo.length === 1)
-        {
-            const {className,classNumber} = classInfo[0]["classInfo"];
-            setClassName(`${className} ${classNumber}`);
-        }
-        else{
-            setClassName('');
-        }
-    },[classInfo]); 
+	useEffect(() => {
+		if (classInfo.length === 1) {
+			const { className, classNumber } = classInfo[0]['classInfo'];
+			setClassName(`${className} ${classNumber}`);
+		} else {
+			setClassName('');
+		}
+	}, [classInfo]);
 
     useEffect(() =>{
         dispatch(getClassInfo(user));
@@ -144,7 +141,4 @@ const Header = () => {
             </div>
         </nav>
 
-    )
-}
-
-export default Header
+export default Header;
