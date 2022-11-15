@@ -16,7 +16,6 @@ const getClasses = aysncHanler(async (req, res) => {
 	} else if (userType === 'instructor' || userType === 'admin') {
 		classesIn = await getClassesdByInstructorId(id);
 	}
-
 	res.status(200).json(classesIn);
 });
 

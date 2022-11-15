@@ -31,7 +31,7 @@ function LogingAndSignup() {
 		<div className='h-screen bg-accent-color'>
 			<main className='grid grid-cols-2'>
 				<div className='absolute right-0 bg-dark-color h-screen w-1/2 shadow-2xl shadow-dark-color'>
-					<Tabs variant='soft-rounded' align='end'>
+					<Tabs variant='soft-rounded' align='end' defaultIndex={1}>
 						<TabList mb='1em' className='m-3'>
 							<Tab className={signInSignUp} _selected={{ bg: 'accent-color.500' }}>
 								SignUp

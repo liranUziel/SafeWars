@@ -1,11 +1,11 @@
-import Safe from './utilsComponents/Safe';
-// import '../../styles/Safe.css';
+// import Safe from './utilsComponents/Safe';
 import Spinner from '../../../components/Spinner';
-import PopUp from './utilsComponents/PopUp';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { clearClass, getClassInfo, getClassSafes } from '../../../features/class/classSlice';
+import { getClassSafes } from '../../../features/class/classSlice';
 import { useEffect, useState } from 'react';
+
+import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 
 const HomeClass = () => {
 	const dispatch = useDispatch();
@@ -13,17 +13,16 @@ const HomeClass = () => {
 	const { classSafes, isLoading, isError, isSuccess, message } = useSelector((state) => state.class);
 	const [safes, setSafes] = useState([]);
 	const [popupActive, setPopupActive] = useState(false);
+
 	useEffect(() => {
 		dispatch(getClassSafes(user));
-	}, [dispatch]);
+	}, []);
 
 	useEffect(() => {
 		setSafes(classSafes);
 	}, [classSafes]);
-	const closeOverlay = (e) => {
-		setPopupActive(false);
-		// restoreform();
-	};
+
+	// While loading page load Spinner
 	if (isLoading) {
 		return (
 			<div>
@@ -31,30 +30,38 @@ const HomeClass = () => {
 			</div>
 		);
 	}
-	if (safes.length !== 0)
+
+	if (isError) {
 		return (
-			<div className='safe_container'>
-				{safes.map((safe) => {
-					safe = { ...safe, solved: user.safesSolved.includes(safe._id) };
-					return <Safe key={safe._id} safe={safe} type='public' setPopupActive={setPopupActive}></Safe>;
-				})}
-				{/* <PopUp popupActive={popupActive} closeOverlay={closeOverlay} type='public' /> */}
-			</div>
+			<Alert status='error'>
+				<AlertIcon />
+				<AlertDescription>{message}</AlertDescription>
+			</Alert>
 		);
-	else {
+	}
+
+	// If no safes where found
+	if (safes.length === 0) {
 		return (
-			<div>
-				<h1 className='h-1 w-1 bg-red-500'>IDK</h1>
-				<div className='empty_container'>
-					<img
-						src={require('../../../assets/Images/safes_not_found.png')}
-						className='page__not__found__img'
-					/>
-					Safes list is empty
-				</div>
+			<div className='flex flex-col items-center m-4 p-4'>
+				<img src={require('../../../assets/Images/safes_not_found.png')} className='h-40' />
+				<div className='text-lg font-bold'>No safes where found!</div>
 			</div>
 		);
 	}
+
+	return (
+		<div className='flex flex-wrap m-4 gap-4'>
+			{safes.map((safe) => {
+				safe = { ...safe, solved: user.safesSolved.includes(safe._id) };
+				return <Safe key={safe._id} safe={safe} type='public' setPopupActive={setPopupActive}></Safe>;
+			})}
+		</div>
+	);
+};
+
+const Safe = ({ safe }) => {
+	return <div className='h-52 w-52 border bg-accent-color rounded-md'>{safe.safeName}</div>;
 };
 
 export default HomeClass;

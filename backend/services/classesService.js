@@ -1,11 +1,12 @@
 const Class = require('../database/models/Class');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const getClassById = async (classId) => {
 	return await Class.findById(classId);
 };
 
 const getClassesdByStudentId = async (studentId) => {
-	return await Class.find({ studendIds: studentId });
+	return await Class.find({ studentIds: studentId });
 };
 
 const getClassesdByInstructorId = async (instructorId) => {

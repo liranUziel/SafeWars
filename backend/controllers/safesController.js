@@ -5,7 +5,6 @@ const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
 const { getSafesByUserId, getSafeById, createSafe } = require('../services/safesService');
 const { updateUserScore, updateUserSolvedSafes, getUserById } = require('../services/usersService');
-const { getClassesdByStudentId } = require('../services/classesService');
 const {
 	extractAbsoulteSafePathWithName,
 	USER_TYPES,

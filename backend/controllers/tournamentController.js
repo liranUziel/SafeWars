@@ -40,6 +40,9 @@ const updateTournamnetHandler = asyncHandler(async (req, res) => {
 
 const getTournamentSafesHandler = asyncHandler(async (req, res) => {
 	const { tournamentId } = req.body;
+	if (!tournamentId) {
+		return res.status(400).json('Missing tournament id');
+	}
 	const safes = await getTournamentSafesById(tournamentId);
 	res.status(200).json({ safes });
 });

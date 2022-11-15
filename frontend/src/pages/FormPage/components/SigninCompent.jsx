@@ -58,8 +58,8 @@ const LandingPageSignin = ({ isHidden }) => {
 				<FormLabel>Password</FormLabel>
 				<Input type='password' name='password' value={password} onChange={onChange}></Input>
 				<FormHelperText>Please enter your Password</FormHelperText>
-				<Button type='submit' colorScheme='accent_color'>
-					Sign Me Up
+				<Button className='mt-2' type='submit' colorScheme='accent_color'>
+					Let's Go!
 				</Button>
 			</FormControl>
 		</form>

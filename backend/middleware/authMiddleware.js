@@ -10,7 +10,6 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 			//Get toke from header
 			//token format: 'Bearer token' => split(' ') [Bearer,token]
 			token = req.headers.authorization.split(' ')[1];
-			console.log(`autoMiddleware.js: token is ${token}`);
 			//Verfiy token
 			const decoded = jwt.verify(token, process.env.JWT_SECRET);
 			//get user from token
