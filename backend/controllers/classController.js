@@ -38,7 +38,7 @@ const getStudentsInClass = aysncHanler(async (req, res) => {
 				id: student.id,
 				userId: student.userId,
 				hasSubmitedSafe: currSafe !== undefined,
-				isSafeVerified: currSafe.isVerified,
+				isSafeVerified: currSafe?.isVerified,
 				score: student.score,
 			};
 		})
