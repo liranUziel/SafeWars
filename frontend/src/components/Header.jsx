@@ -73,7 +73,7 @@ const Header = () => {
 	const user_type = 'teacher';
 	return (
 		<nav class='bg-accent-color px-2 sm:px-4 py-1 dark:bg-gray-900'>
-			<div class='container flex  justify-between items-center'>
+			<div class='container flex justify-between items-center'>
 				<a href='/home' class='flex items-center'>
 					<Logo />
 				</a>

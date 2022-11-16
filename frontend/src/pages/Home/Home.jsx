@@ -9,10 +9,8 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 const Home = () => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
-	useEffect(() => {}, [user, isError, isSuccess, message, navigate, dispatch]);
+	const { user, isLoading } = useSelector((state) => state.auth);
+
 	if (isLoading) {
 		return (
 			<div>
@@ -20,18 +18,20 @@ const Home = () => {
 			</div>
 		);
 	}
-	return user ? (
-		<>
-			<div className='container__home'>
-				<Header />
+
+	if (!user) {
+		return <Navigate to='/' />;
+	}
+
+	return (
+		<div className='flex flex-col justify-between h-screen'>
+			<Header />
+			<main className='grow'>
 				<Outlet />
-				<Footer className='home_footer' />
-			</div>
-		</>
-	) : (
-		<Navigate to='/' />
+			</main>
+			<Footer />
+		</div>
 	);
-	// (user) ? <Outlet/> : <Navigate to='/log'/>
 };
 
 export default Home;

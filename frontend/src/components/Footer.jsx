@@ -1,20 +1,9 @@
-import '../styles/Compannets/Footer.css';
-import { BsFillShieldFill, BsSafeFill, BsFillBarChartFill } from 'react-icons/bs';
 const Footer = () => {
 	return (
-		<footer className='footer_container'>
-			<span className='footer__shield'>
-				<BsFillShieldFill />
+		<footer className='flex bg-accent-color p-6 w-full'>
+			<span class='block text-sm font-bold text-white'>
+				© 2022 Liran Uziel && Gabriel Milshtein. All Rights Reserved.
 			</span>
-			<div className='line'></div>
-			<div className='footer_info'>
-				<div className='footer'>This website create by:</div>
-				<div>Liran</div>
-				<div>Gabriel</div>
-				powerd by "sdaasd"
-				<div>creade by:</div>
-				<div>Artur</div>
-			</div>
 		</footer>
 	);
 };
