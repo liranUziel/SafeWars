@@ -1,7 +1,13 @@
 //wrap async and then we don't have to use try catch
 const asyncHandler = require('express-async-handler');
+const { getPopulatedClassById } = require('../services/classesService');
 const { getTournamentSafesById } = require('../services/safesService');
-const { getTournamentByClass, createTournamnet, updateTournamnet } = require('../services/tournamentService');
+const {
+	getTournamentByClass,
+	createTournamnet,
+	updateTournamnet,
+	getTournamentById,
+} = require('../services/tournamentService');
 
 const getTournaments = asyncHandler(async (req, res) => {
 	await getTournamentByClass;
@@ -47,9 +53,27 @@ const getTournamentSafesHandler = asyncHandler(async (req, res) => {
 	res.status(200).json({ safes });
 });
 
+const getScoreBoardHandler = asyncHandler(async (req, res) => {
+	const { tournamentId } = req.body;
+	if (!tournamentId) {
+		return res.status(400).json('Missing tournament id');
+	}
+	const tournament = await getTournamentById(tournamentId);
+	if (!tournament.showScore) {
+		return res.status(400).json('Show Score is disabled!');
+	}
+	const tournamentClass = await getPopulatedClassById(tournament.classRelated);
+	const scores = tournamentClass.studentIds.map((user) => {
+		return { realName: user.realName, score: user.score };
+	});
+	scores.sort((a, b) => a.score - b.score);
+	res.status(200).json({ scores });
+});
+
 module.exports = {
 	getTournaments,
 	createTournamnetHandler,
 	updateTournamnetHandler,
 	getTournamentSafesHandler,
+	getScoreBoardHandler,
 };

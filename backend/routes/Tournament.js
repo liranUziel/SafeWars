@@ -5,6 +5,7 @@ const {
 	createTournamnetHandler,
 	updateTournamnetHandler,
 	getTournamentSafesHandler,
+	getScoreBoardHandler,
 } = require('../controllers/tournamentController');
 const { verifyToken, authorizedProtect } = require('../middleware/authMiddleware');
 const { addRegisteredClasses } = require('../middleware/dataMiddleware');
@@ -15,5 +16,6 @@ router.get('/safes', verifyToken, addRegisteredClasses, getTournamentSafesHandle
 // Authorized protect
 router.post('/', verifyToken, authorizedProtect, createTournamnetHandler);
 router.put('/', verifyToken, authorizedProtect, addRegisteredClasses, updateTournamnetHandler);
+router.get('/scores', verifyToken, getScoreBoardHandler);
 
 module.exports = router;
