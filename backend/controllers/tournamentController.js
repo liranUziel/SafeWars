@@ -16,6 +16,8 @@ const getTournaments = asyncHandler(async (req, res) => {
 			return await getTournamentByClass(currClass.id);
 		})
 	);
+
+	tournaments = tournaments.filter((curr) => curr);
 	return res.status(200).json({ tournaments });
 });
 
