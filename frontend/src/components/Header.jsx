@@ -1,6 +1,6 @@
 // import '../styles/Header.css'
 
-import { ReactComponent as Logo } from '../assets/Images/light_logo.svg';
+import { ReactComponent as Logo } from '../assets/Images/dark_logo.svg';
 
 import { FaUser, FaChalkboardTeacher, FaChessKing } from 'react-icons/fa';
 import { BsSafeFill, BsFillBarChartFill } from 'react-icons/bs';
@@ -72,7 +72,7 @@ const Header = () => {
 	};
 	const user_type = 'teacher';
 	return (
-		<nav class='bg-accent-color px-2 sm:px-4 py-1 dark:bg-gray-900'>
+		<nav class='bg-accent-color px-2 sm:px-4 py-1 dark:bg-dark-accent-color'>
 			<div class='container flex justify-between items-center'>
 				<a href='/home' class='flex items-center'>
 					<Logo />
@@ -100,7 +100,7 @@ const Header = () => {
 					</svg>
 				</button>
 				<div class='hidden w-full md:block md:w-auto' id='navbar-default'>
-					<ul class='flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-accent-color dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700'>
+					<ul class='flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-accent-color dark:bg-dark-accent-color md:dark:bg-dark-accent-color dark:border-gray-700'>
 						<li id='' className='bg'>
 							<button className='text-white hover:text-green-400' onClick={GotoSafe}>
 								<BsSafeFill />
@@ -141,11 +141,11 @@ const Header = () => {
 						)}
 					</ul>
 				</div>
-				<div className='user'>
+				<div className='user hidden w-full md:block'>
 					<Avatar name={realName} src={userImg} />
 					<span className='text-white'>{user.realName}</span>
 				</div>
-				<div className='logout'>
+				<div className='logout hidden w-full md:block'>
 					<button className='text-white hover:text-green-400' onClick={onLogout}>
 						Logout
 						<i className='fa-solid fa-right-from-bracket'></i>

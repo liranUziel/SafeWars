@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
 import safesService from '../../../utils/userSafe';
+
+import {  Modal,ModalOverlay,ModalContent,ModalHeader,ModalFooter,ModalBody,ModalCloseButton,} from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react'
+
 import Safe from './utilsComponents/Safe';
 import { toast } from 'react-toastify';
 // import asmLogo from '../../assets/Images/asm.svg';
