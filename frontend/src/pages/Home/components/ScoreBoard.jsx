@@ -38,8 +38,7 @@ const HomeScoreBoard = () => {
       <Button colorScheme='teal' onClick={onOpen}>show leader board</Button>
       {/* <input type="file" onChange={thereIsChange}/> */}
       {/* <div id="text"></div> */}
-
-      <Safe safe={{solved:false}}/>
+      <Safe safe={{solved:false}} type={'private'}/>
       <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}  motionPreset='scale'>
         <ModalOverlay />
         <ModalContent>

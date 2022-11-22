@@ -9,7 +9,8 @@ import {useSelector} from 'react-redux';
 import SafeBreakPopUp from './SafeBreakPopUp'
 
 
-const Safe = ({safe:_safe,type,action}) => {
+const Safe = ({safe:_safe,type}) => { 
+    //{safe:_safe,type,action}
     const {user} = useSelector((state)=> state.auth);
     const [safe, setSafe] = useState({});
     const [safeId,setSafeId] = useState("");
@@ -22,7 +23,6 @@ const Safe = ({safe:_safe,type,action}) => {
     } 
     const closeOverlay = (e) => {
 		setPopupActive(false);
-        console.log(`WTF?`);
 		// restoreform();
 	};
     useEffect(()=>{
@@ -31,8 +31,9 @@ const Safe = ({safe:_safe,type,action}) => {
         
     },[_safe]) 
     const downloadSafe = async (e) => {
-        const response = await getSafe(user, safe._id);
-        fileDownload(response.data, safe.safeName);
+        // const response = await getSafe(user, safe._id);
+        // fileDownload(response.data, safe.safeName);
+        console.log(`donwload safe`)
     }
     //! reuplaoding
     const uploadSafe = (e) =>{
@@ -47,11 +48,28 @@ const Safe = ({safe:_safe,type,action}) => {
 
     
     return (
-        <div className={safe.solved ? "safe solved ":"safe"} id={safe._id}>
+        <div className={`flex flex-col dark:text-white bg-gray-700 p-5 w-fit boder rounded ${safe.solved?"border-green-600":"border-gray-500"}`} id="safe">
+            <div className={`flex justify-end gap-2`} id="header">
+                {safe.solved?"":<BsFillArrowDownCircleFill onClick={downloadSafe} className={`hover:text-green-600`}/>}
+                {type==='private'?<BsFillArrowUpCircleFill className={`hover:text-green-600`}/>:<></> }
+            </div>
+            <div className={`flex justify-center my-5 items-center`} id="main">
+                {safe.solved ? 
+                    <RiSafe2Fill className={`text-7xl z-0`}/> 
+                :
+                    <BsSafe className={`text-7xl z-0`}/>
+                }
+                <button className="z-10 text-xl font-semibold p-2 bg-green-500 rounded w-fit h-9" id={safe._id} onClick={breakSafe}>BREAK</button>    
+            </div>
+            <div id="footer">
+                <h3 className="">file name: <span className="">{name}</span></h3>
+                <span className="">date: 15/8/2022 17:11 pm</span>
+            </div>
+        {/*             
             <div className={safe.solved ? "safe__frame solved ":"safe__frame"}>
                 <div className="btn-array">
-                    <BsFillArrowDownCircleFill onClick={downloadSafe} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>
-                    {type==='private'?<BsFillArrowUpCircleFill onClick={action} className={safe.solved ? "btn-array__btn":"btn-array__btn solved"}/>:<></> }
+                    
+                    
                 </div>
                 <div className="icon">
                     {safe.solved ? 
@@ -60,16 +78,15 @@ const Safe = ({safe:_safe,type,action}) => {
                     {safe.solved || type==='private'? 
                     <></>:
                     <div className="btnCA">
-                        <button className="breakBtn" id={safe._id} onClick={breakSafe}>BREAK</button>
+                        
                     </div>
                     } 
                 </div>
             </div>
             <div className="info">
-                <h3 className="safeName">file name: <span className="fileName">{name}</span></h3>
-                <span className="safeUploadDate">date: 15/8/2022 17:11 pm</span>
+                
             </div>
-            <SafeBreakPopUp popupActive={popupActive} closeOverlay={closeOverlay} safeId={safeId} user={user}/>
+            <SafeBreakPopUp popupActive={popupActive} closeOverlay={closeOverlay} safeId={safeId} user={user}/> */}
         </div>
     )
 }
