@@ -7,6 +7,8 @@ import { useState } from 'react';
 import SigninCompent from './components/SigninCompent';
 import SingupCompent from './components/SignupCompent';
 
+import ColorModeToggle from '../../components/ColorModeToggle';
+
 const signInSignUp = 'text-white w-20 h-7 border-none font-semibold';
 
 function LogingAndSignup() {
@@ -39,6 +41,7 @@ function LogingAndSignup() {
 							<Tab className={signInSignUp} _selected={{ bg: 'accent-color' }}>
 								SignIn
 							</Tab>
+							<ColorModeToggle />
 						</TabList>
 						<TabPanels>
 							<TabPanel>
@@ -50,19 +53,6 @@ function LogingAndSignup() {
 						</TabPanels>
 					</Tabs>
 				</div>
-				{/* <div className='absolute right-0 bg-dark-color h-full w-1/2 shadow-2xl shadow-dark-color'>
-					<div className='toggle-container'>
-						<div className='signin-login-toggle'>
-							<button id='signup-toggle' className={signInSignUp} onClick={signinToggle}>
-								Signup
-							</button>
-							<button id='signin-toggle' className={signInSignUp} onClick={signinToggle}>
-								Login
-							</button>
-						</div>
-					</div>
-					<div className=''>{isHidden ? <SigninCompent /> : <SingupCompent />}</div>
-				</div> */}
 				<div>
 					<SafeBox className='h-[36rem] fill-mid-color translate-x-5' />
 				</div>

@@ -1,6 +1,7 @@
 // import '../styles/Header.css'
 
-import { ReactComponent as Logo } from '../assets/Images/dark_logo.svg';
+import { ReactComponent as DarkLogo } from '../assets/Images/dark_logo.svg';
+import { ReactComponent as LightLogo } from '../assets/Images/light_logo.svg';
 
 import { FaUser, FaChalkboardTeacher, FaChessKing } from 'react-icons/fa';
 import { BsSafeFill, BsFillBarChartFill } from 'react-icons/bs';
@@ -16,6 +17,12 @@ import { logout, reset } from '../features/auth/authSlice';
 import { removeSafe, getSafe } from '../features/userSafe/userSafeSlice';
 
 import { clearClass, getClassInfo, getClassSafes } from '../features/class/classSlice';
+
+import { Navbar, Dropdown } from 'flowbite-react';
+
+import ColorModeToggle from './ColorModeToggle';
+import 'flowbite';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -71,88 +78,95 @@ const Header = () => {
 		navigate('/home/dashboard');
 	};
 	const user_type = 'teacher';
+
+	const routes = [
+		{
+			path: '/home/safezone',
+			display: (
+				<>
+					<BsSafeFill /> My Safe
+				</>
+			),
+		},
+		{
+			path: '/home/class',
+			display: (
+				<>
+					<FaChalkboardTeacher /> Class
+				</>
+			),
+		},
+
+		{
+			path: '/home/tournament',
+			display: (
+				<>
+					<FaChessKing /> Tournament
+				</>
+			),
+		},
+		{
+			path: '/home/scoreboard',
+			display: (
+				<>
+					<BsFillBarChartFill /> Score Board
+				</>
+			),
+		},
+		{
+			path: '/home/dashboard',
+			display: (
+				<>
+					<RiAdminFill /> Managment
+				</>
+			),
+			isAuthorized: true,
+		},
+	];
+
 	return (
-		<nav class='bg-accent-color px-2 sm:px-4 py-1 dark:bg-dark-accent-color'>
-			<div class='container flex justify-between items-center'>
-				<a href='/home' class='flex items-center'>
-					<Logo />
-				</a>
-				<button
-					data-collapse-toggle='navbar-default'
-					type='button'
-					class='inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600'
-					aria-controls='navbar-default'
-					aria-expanded='false'
-				>
-					<span class='sr-only'>Open main menu</span>
-					<svg
-						class='w-6 h-6'
-						aria-hidden='true'
-						fill='currentColor'
-						viewBox='0 0 20 20'
-						xmlns='http://www.w3.org/2000/svg'
+		<header>
+			<Navbar fluid={true} className='bg-[#4DAFC5]'>
+				{/* This is for the Logo */}
+				<Navbar.Brand className='cursor-pointer'>
+					<Link to='/home'>
+						<LightLogo className='h-12 sm:h-16 w-fit block dark:hidden' />
+						<DarkLogo className='h-12 sm:h-16 w-fit hidden dark:block' />
+					</Link>
+				</Navbar.Brand>
+				<ColorModeToggle />
+
+				{/* This div is for the avatar */}
+				<div className='flex md:order-2'>
+					<Dropdown
+						arrowIcon={false}
+						inline={true}
+						label={<Avatar alt='User settings' name={user.realName} rounded='full' />}
 					>
-						<path
-							fill-rule='evenodd'
-							d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
-							clip-rule='evenodd'
-						></path>
-					</svg>
-				</button>
-				<div class='hidden w-full md:block md:w-auto' id='navbar-default'>
-					<ul class='flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-accent-color dark:bg-dark-accent-color md:dark:bg-dark-accent-color dark:border-gray-700'>
-						<li id='' className='bg'>
-							<button className='text-white hover:text-green-400' onClick={GotoSafe}>
-								<BsSafeFill />
-								My safe
-							</button>
-						</li>
-						<li id='' className='header__list__item'>
-							<button className='text-white hover:text-green-400' onClick={GotoClass}>
-								<FaChalkboardTeacher />
-								Class <span className='class_name'>{className}</span>
-							</button>
-						</li>
-						<li id='' className='text-white hover:text-green-400'>
-							<Link to='/home'></Link>
-							<button className='text-white hover:text-green-400' onClick={GotoTournament}>
-								<FaChessKing />
-								Tournament
-							</button>
-						</li>
-						<li id='' className='text-white hover:text-green-400'>
-							<button className='header__list__item_btn' onClick={GotoScoreBoard}>
-								<BsFillBarChartFill />
-								Score Borad
-								<span class='inline-flex justify-center items-center ml-2 w-4 h-4 text-xs font-semibold text-blue-800 bg-blue-200 rounded-full'>
-									{score}
-								</span>
-							</button>
-						</li>
-						{user.userType === 'student' ? (
-							<></>
+						<Dropdown.Header>
+							<span className='block text-sm'>{user.realName}</span>
+							<span className='block truncate text-sm font-medium'>{user.email}</span>
+						</Dropdown.Header>
+						<Dropdown.Divider />
+						<Dropdown.Item onClick={onLogout}>Sign out</Dropdown.Item>
+					</Dropdown>
+					<Navbar.Toggle />
+				</div>
+				{/* Here I Create all the links */}
+				<Navbar.Collapse>
+					{routes.map((curr, index) => {
+						return curr?.isAuthorized === undefined ||
+							(curr.isAuthorized && user.userType !== 'student') ? (
+							<Navbar.Link className='cursor-pointer' key={index}>
+								<Link to={curr.path}>{curr.display}</Link>
+							</Navbar.Link>
 						) : (
-							<li id='' className='text-white hover:text-green-400'>
-								<button className='header__list__item_btn' onClick={GotoDashboard}>
-									<RiAdminFill />
-									Mangement
-								</button>
-							</li>
-						)}
-					</ul>
-				</div>
-				<div className='user hidden w-full md:block'>
-					<Avatar name={realName} src={userImg} />
-					<span className='text-white'>{user.realName}</span>
-				</div>
-				<div className='logout hidden w-full md:block'>
-					<button className='text-white hover:text-green-400' onClick={onLogout}>
-						Logout
-						<i className='fa-solid fa-right-from-bracket'></i>
-					</button>
-				</div>
-			</div>
-		</nav>
+							<></>
+						);
+					})}
+				</Navbar.Collapse>
+			</Navbar>
+		</header>
 	);
 };
 
