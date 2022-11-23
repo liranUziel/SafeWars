@@ -126,7 +126,7 @@ const Header = () => {
 
 	return (
 		<header>
-			<Navbar fluid={true} className='bg-[#4DAFC5]'>
+			<Navbar fluid={true} className='bg-cyan-500'>
 				{/* This is for the Logo */}
 				<Navbar.Brand className='cursor-pointer'>
 					<Link to='/home'>

@@ -130,11 +130,11 @@ const HomeSafeZone = () => {
 		<>
 			{safeInfo.safeName === undefined ? (
 				<div>
-					<div className='empty_container'>
+					<div className='empty_container text-black dark:text-white'>
 						You have not safe, please click on upload safe to uplaod one, you can only have one safe at any
 						time.
 						<br />
-						<button onClick={openPopup} className='safe_upload_button'>
+						<button onClick={openPopup} className='safe_upload_button text-black dark:text-white'>
 							upload safe
 						</button>
 					</div>
@@ -142,7 +142,7 @@ const HomeSafeZone = () => {
 				</div>
 			) : (
 				<>
-					<div className='user_safe_container'>
+					<div className='user_safe_container text-black dark:text-white'>
 						<Safe safe={safe} action={reuploadSafe} type='private' />
 					</div>
 				</>
