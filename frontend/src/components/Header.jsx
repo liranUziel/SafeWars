@@ -22,7 +22,6 @@ import { Navbar, Dropdown } from 'flowbite-react';
 
 import ColorModeToggle from './ColorModeToggle';
 import 'flowbite';
-import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -157,9 +156,9 @@ const Header = () => {
 					{routes.map((curr, index) => {
 						return curr?.isAuthorized === undefined ||
 							(curr.isAuthorized && user.userType !== 'student') ? (
-							<Navbar.Link className='cursor-pointer' key={index}>
-								<Link to={curr.path}>{curr.display}</Link>
-							</Navbar.Link>
+							<Link to={curr.path} key={index}>
+								<span className='text-black dark:text-white'>{curr.display}</span>
+							</Link>
 						) : (
 							<></>
 						);

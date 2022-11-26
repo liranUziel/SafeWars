@@ -9,6 +9,7 @@ import './index.css';
 
 // 1. Import `extendTheme`
 import { extendTheme } from '@chakra-ui/react';
+import { StepsStyleConfig as Steps } from 'chakra-ui-steps';
 
 // 2. Call `extendTheme` and pass your custom values
 const theme = extendTheme({
@@ -20,6 +21,9 @@ const theme = extendTheme({
 		'mid-color': '#40475C',
 		'mid-color-dark': '#373E52',
 		'light-dark-color': '#E5F6FF',
+	},
+	components: {
+		Steps,
 	},
 });
 
