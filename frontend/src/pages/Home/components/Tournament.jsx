@@ -1,4 +1,4 @@
-// import Safe from './utilsComponents/Safe';
+import Safe from './utilsComponents/Safe';
 import Spinner from '../../../components/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTournamentInfo, getTournamentSafes } from '../../../features/tournament/tournamentSlice';
@@ -53,7 +53,7 @@ const HomeTournament = () => {
 	if (!tournamentEnable) {
 		return (
 			<div className='flex flex-col items-center m-4 p-4'>
-				<div className='text-lg font-bold'>
+				<div className='text-lg font-bold text-black dark:text-white'>
 					Tournament is not open at this moment, please contact your teacher.
 				</div>
 			</div>
@@ -88,7 +88,3 @@ const HomeTournament = () => {
 	);
 };
 export default HomeTournament;
-
-const Safe = ({ safe }) => {
-	return <div className='h-52 w-52 border bg-accent-color rounded-md'>{safe.safeName}</div>;
-};

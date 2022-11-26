@@ -1,4 +1,4 @@
-// import Safe from './utilsComponents/Safe';
+import Safe from './utilsComponents/Safe';
 import Spinner from '../../../components/Spinner';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,10 +58,6 @@ const HomeClass = () => {
 			})}
 		</div>
 	);
-};
-
-const Safe = ({ safe }) => {
-	return <div className='h-52 w-52 border bg-accent-color rounded-md'>{safe.safeName}</div>;
 };
 
 export default HomeClass;

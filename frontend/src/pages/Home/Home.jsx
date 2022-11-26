@@ -26,7 +26,7 @@ const Home = () => {
 	return (
 		<div className='flex flex-col justify-between h-screen'>
 			<Header />
-			<main className='grow dark:bg-dark-secondary-color'>
+			<main className='grow bg-white dark:bg-dark-secondary-color'>
 				<Outlet />
 			</main>
 			<Footer />
