@@ -1,24 +1,14 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-// import {toast} from 'react-toastify'
-import '../../styles/Home.css';
+import { useSelector } from 'react-redux';
+import { Navigate, Outlet } from 'react-router-dom';
 
-import Spinner from '../../components/Spinner';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 const Home = () => {
 	const { user, isLoading } = useSelector((state) => state.auth);
-
 	if (isLoading) {
-		return (
-			<div>
-				<Spinner />
-			</div>
-		);
+		return <>Trying to log in...</>;
 	}
-
 	if (!user) {
 		return <Navigate to='/' />;
 	}

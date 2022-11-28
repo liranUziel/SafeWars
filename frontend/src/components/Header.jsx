@@ -20,8 +20,7 @@ import { clearClass, getClassInfo, getClassSafes } from '../features/class/class
 
 import { Navbar, Dropdown } from 'flowbite-react';
 
-import ColorModeToggle from './ColorModeToggle';
-import 'flowbite';
+//import 'flowbite';
 
 const Header = () => {
 	const navigate = useNavigate();
@@ -59,24 +58,6 @@ const Header = () => {
 		dispatch(removeSafe());
 		navigate('/');
 	};
-	const GotoClass = () => {
-		// dispatch(getClassSafes(user));
-		navigate('/home/class');
-	};
-	const GotoSafe = () => {
-		//dispatch(getSafe(user));
-		navigate('/home/safezone');
-	};
-	const GotoTournament = () => {
-		navigate('/home/tournament');
-	};
-	const GotoScoreBoard = () => {
-		navigate('/home/scoreboard');
-	};
-	const GotoDashboard = () => {
-		navigate('/home/dashboard');
-	};
-	const user_type = 'teacher';
 
 	const routes = [
 		{
@@ -124,19 +105,16 @@ const Header = () => {
 	];
 
 	return (
-		<header>
-			<Navbar fluid={true} className='bg-cyan-500'>
+		<header className='w-full bg-accent-color dark:bg-dark-accent-color'>
+			<Navbar fluid={true} className='bg-inherit'>
 				{/* This is for the Logo */}
-				<Navbar.Brand className='cursor-pointer'>
-					<Link to='/home'>
-						<LightLogo className='h-12 sm:h-16 w-fit block dark:hidden' />
-						<DarkLogo className='h-12 sm:h-16 w-fit hidden dark:block' />
-					</Link>
-				</Navbar.Brand>
-				<ColorModeToggle />
+				<Link to='/home'>
+					<LightLogo className='h-12 sm:h-16 w-fit block dark:hidden' />
+					<DarkLogo className='h-12 sm:h-16 w-fit hidden dark:block' />
+				</Link>
 
 				{/* This div is for the avatar */}
-				<div className='flex md:order-2'>
+				<div className='flex md:order-2 px-6'>
 					<Dropdown
 						arrowIcon={false}
 						inline={true}
@@ -159,9 +137,7 @@ const Header = () => {
 							<Link to={curr.path} key={index}>
 								<span className='text-black dark:text-white'>{curr.display}</span>
 							</Link>
-						) : (
-							<></>
-						);
+						) : null;
 					})}
 				</Navbar.Collapse>
 			</Navbar>

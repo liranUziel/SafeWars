@@ -1,7 +1,14 @@
+import { useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const ColorModeToggle = () => {
 	const [storedValue, setValue] = useLocalStorage('color-theme', 'dark');
+
+	if (storedValue === 'dark') {
+		document.documentElement.classList.add('dark');
+	} else {
+		document.documentElement.classList.remove('dark');
+	}
 
 	return (
 		<button

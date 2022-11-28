@@ -11,5 +11,5 @@ module.exports = {
 		},
 	},
 	darkMode: 'class',
-	plugins: [require('flowbite/plugin')],
+	plugins: [require('flowbite-react')],
 };
