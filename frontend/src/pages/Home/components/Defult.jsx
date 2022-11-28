@@ -4,7 +4,7 @@ import Stepper from './utilsComponents/Stepper';
 const Defult = () => {
 	return (
 		<>
-			<div className='border m-5 h-fit w-96'>
+			<div className='border m-5 h-fit w-96 text-black dark:text-white'>
 				<Stepper />
 			</div>
 			<div className='defult_container'>
