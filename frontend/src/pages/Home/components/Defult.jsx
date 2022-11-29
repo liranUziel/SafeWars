@@ -4,9 +4,6 @@ import Stepper from './utilsComponents/Stepper';
 const Defult = () => {
 	return (
 		<>
-			<div className='border m-5 h-fit w-96 text-black dark:text-white'>
-				<Stepper />
-			</div>
 			<div className='defult_container'>
 				<div className='defult__content'>
 					<div className='defult__content__text text-black dark:text-white'>
