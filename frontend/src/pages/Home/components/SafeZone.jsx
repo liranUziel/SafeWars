@@ -132,11 +132,14 @@ const HomeSafeZone = () => {
 		<>
 			{safeInfo.safeName === undefined ? (
 				<div className='flex flex-col items-center justify-center h-full w-full m-10 p-2 gap-2'>
-					<div className='empty_container text-black dark:text-white'>
-						You have not safe, please click on upload safe to uplaod one, you can only have one safe at any
-						time.
+					<div className='container text-center text-black dark:text-white'>
+						You don't have a safe, please click on upload safe to uplaod one. you can only have one safe at
+						a time.
 						<br />
-						<button onClick={onOpen} className='safe_upload_button text-black dark:text-white'>
+						<button
+							onClick={onOpen}
+							className='border border-black rounded-md m-5 p-2 text-black dark:text-white'
+						>
 							upload safe
 						</button>
 					</div>
@@ -144,7 +147,10 @@ const HomeSafeZone = () => {
 						<ModalOverlay />
 						<ModalContent>
 							<ModalHeader>
-								<Stepper />
+								<Stepper
+									steps={[{ label: 'Upload Safe' }, { label: 'Upload Key' }]}
+									currStep={progress}
+								/>
 							</ModalHeader>
 							<ModalCloseButton />
 							<ModalBody>

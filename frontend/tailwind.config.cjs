@@ -10,6 +10,6 @@ module.exports = {
 			},
 		},
 	},
-	darkMode: 'class',
+	darkMode: ['class', '[data-theme="dark"]'],
 	plugins: [require('flowbite-react')],
 };
