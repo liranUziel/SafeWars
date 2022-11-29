@@ -6,7 +6,8 @@ const { getClassById, getClassesdByStudentId, getClassesdByInstructorId } = requ
 const { getSafesByUserId, findByIdAndDelete, getSafeById } = require('../services/safesService');
 
 const prepareUploadSafeData = asyncHandler(async (req, res, next) => {
-	const { classesToAdd } = req.body;
+	const { classesToAdd } = req.params;
+	console.log(req.params);
 	if (classesToAdd.length === 0) return res.status(400).json('Must add to at least 1 class.');
 	// Get class instaces
 	req.classesInfo = await Promise.all(
