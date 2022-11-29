@@ -13,25 +13,21 @@ import {
 	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
-	Input,
 } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
 
 import Safe from './utilsComponents/Safe';
 import { toast } from 'react-toastify';
-// import asmLogo from '../../assets/Images/asm.svg';
 import React from 'react';
 import { Button } from '@chakra-ui/react';
-// import DropZone from "./utilsComponents/DropZone";
 
 const HomeSafeZone = () => {
 	const dispatch = useDispatch();
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	//   const [popupActive, setPopupActive] = useState(false);
 	const { user } = useSelector((state) => state.auth);
 	const { safeInfo } = useSelector((state) => state.safe);
+	const { classInfo } = useSelector((state) => state.class);
 	const [progress, setProgress] = useState(0);
-	//   const [uploadingStatus, setUploadingStatus] = useState("idel");
 	const [safe, setSafe] = useState({});
 	const [file, setFile] = useState(undefined);
 
@@ -41,17 +37,17 @@ const HomeSafeZone = () => {
 
 	useEffect(() => {
 		//TODO:If fail handle
-		console.log('HERE');
 		console.log(safeInfo);
 		setSafe({ ...safeInfo, solved: false });
 	}, [safeInfo]);
 
 	const sendFile = () => {
-		console.log(file);
 		if (file) {
 			switch (progress) {
 				case 0: // Safe
-					dispatch(safesService.postSafe(user, [], file));
+					const classesId = classInfo.map((currClass) => currClass._id);
+					console.log(classesId);
+					dispatch(safesService.postSafe(user, classesId, file));
 					break;
 				case 1: // Key
 					//safesService.postKey(user, safeInfo._id, file);
@@ -88,7 +84,7 @@ const HomeSafeZone = () => {
 	};
 	return (
 		<>
-			{safeInfo.safeName === undefined ? (
+			{safeInfo?.safeName === undefined ? (
 				<div className='flex flex-col items-center justify-center h-full w-full m-10 p-2 gap-2'>
 					<div className='container text-center text-black dark:text-white'>
 						You don't have a safe, please click on upload safe to uplaod one. you can only have one safe at
@@ -174,9 +170,7 @@ const DropZone = ({ file, setFile }) => {
 					</p>
 					<p class='text-xs text-gray-500 dark:text-gray-400'>ASM</p>
 				</div>
-				<span id='inputContainer'>
-					<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
-				</span>
+				<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
 			</label>
 		</div>
 	);

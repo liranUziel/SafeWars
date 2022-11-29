@@ -11,9 +11,10 @@ const postSafe = async (userData, classesToAdd, file) => {
 			'Content-Type': 'multipart/form-data',
 		},
 		params: {
-			classesToAdd,
+			classesToAdd: JSON.stringify(classesToAdd),
 		},
 	});
+	console.log(response);
 	return response.data;
 };
 
@@ -29,6 +30,8 @@ const postKey = async (userData, safeId, file) => {
 			safeId,
 		},
 	});
+
+	console.log(response);
 	return response.data;
 };
 
