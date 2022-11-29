@@ -13,6 +13,7 @@ import {
 	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
+	Input,
 } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
 
@@ -33,69 +34,32 @@ const HomeSafeZone = () => {
 	//   const [uploadingStatus, setUploadingStatus] = useState("idel");
 	const [safe, setSafe] = useState({});
 	const [file, setFile] = useState(undefined);
-	const updateThumbnail = (e, file) => {
-		const popupBodyElement = document.getElementsByClassName('safe_popup__body')[0];
-		let thumbnailElement = popupBodyElement.querySelector('.upload_container__thumb');
-		// First time - remove the prompt
-		if (popupBodyElement.querySelector('.upload_container')) {
-			popupBodyElement.querySelector('.upload_container').remove();
-		}
-		// First time - there is no thumbnail element, so lets create it
-		if (!thumbnailElement) {
-			thumbnailElement = document.createElement('div');
-			thumbnailElement.classList.add('upload_container__thumb');
-			popupBodyElement.prepend(thumbnailElement);
-			const thumbnailImgElement = document.createElement('img');
-			thumbnailImgElement.src = asmLogo;
-			thumbnailImgElement.classList.add('upload_container__thumb__icon');
-			thumbnailElement.appendChild(thumbnailImgElement);
-			{
-				/* <img src={asmLogo} alt="asm Logo" className="page__not__found__img"/> */
-			}
-		}
 
-		thumbnailElement.dataset.label = file.name;
-	};
-
-	const restoreform = () => {
-		const popupBodyElement = document.getElementsByClassName('safe_popup__body')[0];
-		let thumbnailElement = popupBodyElement.querySelector('.upload_container__thumb');
-		const formElement = document.getElementsByClassName('upload_form_container')[0];
-		const inputContainer = document.getElementsByClassName('upload_form_container__input')[0];
-
-		popupBodyElement.appendChild(formElement);
-		if (thumbnailElement) {
-			thumbnailElement.remove();
-			const uploadContainer = document.createElement('div');
-			uploadContainer.classList.add('upload_container');
-			const promptContainer = document.createElement('div');
-			promptContainer.classList.add('upload_container__prompt__container');
-			const RiFileUploadLine = document.createElement('RiFileUploadLine');
-			RiFileUploadLine.classList.add('upload_container__upload_icon');
-			const uploadPrompt = document.createElement('div');
-			uploadPrompt.classList.add('upload_container__prompt');
-			uploadPrompt.innerHTML = 'Drag and Drop key file or click on upload';
-			promptContainer.appendChild(RiFileUploadLine);
-			promptContainer.appendChild(uploadPrompt);
-			uploadContainer.appendChild(promptContainer);
-			formElement.prepend(uploadContainer);
-			inputContainer.querySelector('.upload_container__input').remove();
-			const inputElement = document.createElement('input');
-			inputElement.type = 'file';
-			inputElement.classList.add('upload_container__input');
-			inputContainer.prepend(inputElement);
-		}
-	};
 	useEffect(() => {
 		dispatch(getSafe(user));
 	}, [dispatch, user]);
 
 	useEffect(() => {
+		//TODO:If fail handle
+		console.log('HERE');
+		console.log(safeInfo);
 		setSafe({ ...safeInfo, solved: false });
 	}, [safeInfo]);
 
 	const sendFile = () => {
+		console.log(file);
 		if (file) {
+			switch (progress) {
+				case 0: // Safe
+					dispatch(safesService.postSafe(user, [], file));
+					break;
+				case 1: // Key
+					//safesService.postKey(user, safeInfo._id, file);
+					break;
+
+				default:
+					break;
+			}
 			setProgress(progress + 1);
 			setFile(undefined);
 		}
@@ -117,14 +81,8 @@ const HomeSafeZone = () => {
 		openPopup(e);
 	};
 
-	const getKey = async (e) => {
-		setProgress(2);
-		setPopupActive(false);
-	};
-
 	const closeModal = () => {
 		setFile(undefined);
-
 		setProgress(0);
 		onClose();
 	};
@@ -186,7 +144,7 @@ const DropZone = ({ file, setFile }) => {
 	return (
 		<div class='flex items-center justify-center w-full'>
 			<label
-				for='dropzone-file'
+				htmlFor='dropzone-file'
 				class='flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 			>
 				<div class='flex flex-col items-center justify-center '>
@@ -216,7 +174,9 @@ const DropZone = ({ file, setFile }) => {
 					</p>
 					<p class='text-xs text-gray-500 dark:text-gray-400'>ASM</p>
 				</div>
-				<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
+				<span id='inputContainer'>
+					<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
+				</span>
 			</label>
 		</div>
 	);

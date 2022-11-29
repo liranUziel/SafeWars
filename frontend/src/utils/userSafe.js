@@ -2,13 +2,16 @@ import axios from 'axios';
 
 const API_URL_SAFES = 'http://localhost:8080/safes';
 
-const postSafe = async (userData, file) => {
+const postSafe = async (userData, classesToAdd, file) => {
 	const formData = new FormData();
 	formData.append('safe', file);
 	const response = await axios.post(API_URL_SAFES, formData, {
 		headers: {
 			Authorization: `Bearer ${userData.token}`,
 			'Content-Type': 'multipart/form-data',
+		},
+		params: {
+			classesToAdd,
 		},
 	});
 	return response.data;
@@ -17,7 +20,7 @@ const postSafe = async (userData, file) => {
 const postKey = async (userData, safeId, file) => {
 	const formData = new FormData();
 	formData.append('key', file);
-	const response = await axios.post(API_URL_SAFES+'/break', formData, {
+	const response = await axios.post(API_URL_SAFES + '/break', formData, {
 		headers: {
 			Authorization: `Bearer ${userData.token}`,
 			'Content-Type': 'multipart/form-data',
