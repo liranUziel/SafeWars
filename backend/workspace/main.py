@@ -101,7 +101,7 @@ def check_argv():
     if("compile" == command_type and argv_len != 4):
         sys.exit(
             "Use like this: main.py compile src_path dst_path")
-    if("compile" == command_type and argv_len != 6):
+    if("break" == command_type and argv_len != 6):
         sys.exit(
             "Use like this: main.py break userId safe_name safe_path(bin) key_path(asm)")
 
@@ -204,6 +204,7 @@ def breakCase():
 
     # Break the safe
     # result = (safe_name, key_score, safe_score, empty_key_score/builtin)
+
     res = asyncio.run(get_result(user_id, safe_name, safe_path, key_path))
     results = {'safeName': safe_name, 'keyScore': res[1],
                'safeScore': res[2], 'test': res[3]}

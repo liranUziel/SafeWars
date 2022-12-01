@@ -16,11 +16,13 @@ const safeStorage = multer.diskStorage({
 		});
 	},
 	filename: (req, file, callback) => {
-		console.log('filename');
-		console.log(file);
 		//create the safe name
 		const safeName = createSafeName(req.user.userId, file);
-		callback(null, `${safeName}.asm`);
+		console.log(safeName);
+
+		const temp = String(`${safeName}.asm`);
+
+		callback(null, temp);
 	},
 });
 

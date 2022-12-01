@@ -20,14 +20,11 @@ const prepareUploadSafeData = asyncHandler(async (req, res, next) => {
 			return { classId: currClassId, ...classObj.classInfo };
 		})
 	);
-	console.log(req.classesInfo);
 	// req.classesInfo = [{classId, className, classNumber}]
 	next();
 });
 
 const addSafeDataAfterUplaod = asyncHandler(async (req, res, next) => {
-	// Extract the Id of the user
-	req.safeName = createSafeName(req.user.userId, req.file);
 	req.relativeSafePaths = req.classesInfo.map((currClass) => {
 		return getRelativeSafePath(currClass);
 	});
@@ -54,12 +51,12 @@ const clearStudentUploadSafe = asyncHandler(async (req, res, next) => {
 });
 
 const prepareUploadKeyData = asyncHandler(async (req, res, next) => {
-	const { safeId } = req.body;
+	const { safeId } = req.query;
 	const safeToBreak = await getSafeById(safeId);
 	if (!safeToBreak) {
 		return res.status(400).json('Safe not exist!');
 	}
-	req.safeToBrek = safeToBreak;
+	req.safeToBreak = safeToBreak;
 	next();
 });
 

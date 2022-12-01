@@ -106,7 +106,7 @@ const Header = () => {
 
 	return (
 		<header className='w-full bg-accent-color dark:bg-dark-accent-color'>
-			<Navbar fluid={true} className='bg-inherit'>
+			<Navbar fluid={true} className='bg-inherit dark:bg-dark-accent-color'>
 				{/* This is for the Logo */}
 				<Link to='/home'>
 					<LightLogo className='h-12 sm:h-16 w-fit block dark:hidden' />
