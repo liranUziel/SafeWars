@@ -1,13 +1,17 @@
 const asyncHandler = require('express-async-handler');
 const { remove } = require('fs-extra');
 const path = require('path');
-const { ALLOWED_PERSONAL, getRelativeSafePath, extractAbsoulteSafePathWithName } = require('../constants');
+const {
+	ALLOWED_PERSONAL,
+	getRelativeSafePath,
+	extractAbsoulteSafePathWithName,
+	createSafeName,
+} = require('../constants');
 const { getClassById, getClassesdByStudentId, getClassesdByInstructorId } = require('../services/classesService');
 const { getSafesByUserId, findByIdAndDelete, getSafeById } = require('../services/safesService');
 
 const prepareUploadSafeData = asyncHandler(async (req, res, next) => {
-	const { classesToAdd } = req.params;
-	console.log(req.params);
+	const classesToAdd = JSON.parse(req.query.classesToAdd);
 	if (classesToAdd.length === 0) return res.status(400).json('Must add to at least 1 class.');
 	// Get class instaces
 	req.classesInfo = await Promise.all(
@@ -16,13 +20,14 @@ const prepareUploadSafeData = asyncHandler(async (req, res, next) => {
 			return { classId: currClassId, ...classObj.classInfo };
 		})
 	);
+	console.log(req.classesInfo);
 	// req.classesInfo = [{classId, className, classNumber}]
 	next();
 });
 
 const addSafeDataAfterUplaod = asyncHandler(async (req, res, next) => {
 	// Extract the Id of the user
-	req.safeName = createSafeName(req.user.userId, file);
+	req.safeName = createSafeName(req.user.userId, req.file);
 	req.relativeSafePaths = req.classesInfo.map((currClass) => {
 		return getRelativeSafePath(currClass);
 	});

@@ -35,7 +35,7 @@ const extractAbsoulteKeyPathWithName = (userId, safe) => {
 	return resolve(`${__dirname}\\public\\keys\\${safe.relPath}\\${userId}\\${safe.safeName}`);
 };
 
-const createSafeName = ({ userId, file }) => {
+const createSafeName = (userId, file) => {
 	return userId + '_' + parse(file.originalname).name;
 };
 
