@@ -1,20 +1,11 @@
 // import '../../styles/SafeZone.css';
-import Stepper from "./utilsComponents/Stepper";
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { removeSafe, getSafe } from "../../../features/userSafe/userSafeSlice";
-import safesService from "../../../utils/userSafe";
+import Stepper from './utilsComponents/Stepper';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
+import safesService from '../../../utils/userSafe';
 
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
-import { useDisclosure } from "@chakra-ui/react";
 	Modal,
 	ModalOverlay,
 	ModalContent,
@@ -43,15 +34,15 @@ const HomeSafeZone = () => {
 	const [file, setFile] = useState(undefined);
 	const [newSafes, setNewSafes] = useState([]);
 
-  useEffect(() => {
-    dispatch(getSafe(user));
-  }, [dispatch, user]);
+	useEffect(() => {
+		dispatch(getSafe(user));
+	}, [dispatch, user]);
 
-  useEffect(() => {
-    //TODO:If fail handle
-    console.log(safeInfo);
-    setSafe({ ...safeInfo, solved: false });
-  }, [safeInfo]);
+	useEffect(() => {
+		//TODO:If fail handle
+		console.log(safeInfo);
+		setSafe({ ...safeInfo, solved: false });
+	}, [safeInfo]);
 
 	const sendFile = async () => {
 		if (file) {
@@ -84,99 +75,89 @@ const HomeSafeZone = () => {
 					}
 					break;
 
-        default:
-          break;
-      }
-      setProgress(progress + 1);
-      setFile(undefined);
-    }
-  };
+				default:
+					break;
+			}
+			setProgress(progress + 1);
+			setFile(undefined);
+		}
+	};
 
-  const reuploadSafe = (e) => {
-    toast.warn("Warrning reuploading safe will remove the old one", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-    e.preventDefault();
-    setSafe({});
-    dispatch(removeSafe());
-    openPopup(e);
-  };
+	const reuploadSafe = (e) => {
+		toast.warn('Warrning reuploading safe will remove the old one', {
+			position: 'top-center',
+			autoClose: 5000,
+			hideProgressBar: true,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+		e.preventDefault();
+		setSafe({});
+		dispatch(removeSafe());
+		openPopup(e);
+	};
 
-  const closeModal = () => {
-    setFile(undefined);
-    setProgress(0);
-    onClose();
-  };
-  return (
-    <>
-      {safeInfo?.safeName === undefined ? (
-        <div className="flex flex-col items-center justify-center h-full w-full m-10 p-2 gap-2">
-          <div className="container text-center text-black dark:text-white">
-            You don't have a safe, please click on upload safe to uplaod one.
-            you can only have one safe at a time.
-            <br />
-            <button
-              onClick={onOpen}
-              className="border border-black rounded-md m-5 p-2 text-black dark:text-white"
-            >
-              upload safe
-            </button>
-          </div>
-          <Modal
-            isOpen={isOpen}
-            onClose={closeModal}
-            closeOnOverlayClick={false}
-            motionPreset="scale"
-          >
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>
-                <Stepper
-                  steps={[{ label: "Upload Safe" }, { label: "Upload Key" }]}
-                  currStep={progress}
-                />
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <div className="dropZone">
-                  <DropZone file={file} setFile={setFile} />
-                </div>
-              </ModalBody>
+	const closeModal = () => {
+		setFile(undefined);
+		setProgress(0);
+		onClose();
+	};
+	return (
+		<>
+			{safeInfo?.safeName === undefined ? (
+				<div className='flex flex-col items-center justify-center h-full w-full m-10 p-2 gap-2'>
+					<div className='container text-center text-black dark:text-white'>
+						You don't have a safe, please click on upload safe to uplaod one. you can only have one safe at
+						a time.
+						<br />
+						<button
+							onClick={onOpen}
+							className='border border-black rounded-md m-5 p-2 text-black dark:text-white'
+						>
+							upload safe
+						</button>
+					</div>
+					<Modal isOpen={isOpen} onClose={closeModal} closeOnOverlayClick={false} motionPreset='scale'>
+						<ModalOverlay />
+						<ModalContent>
+							<ModalHeader>
+								<Stepper
+									steps={[{ label: 'Upload Safe' }, { label: 'Upload Key' }]}
+									currStep={progress}
+								/>
+							</ModalHeader>
+							<ModalCloseButton />
+							<ModalBody>
+								<div className='dropZone'>
+									<DropZone file={file} setFile={setFile} />
+								</div>
+							</ModalBody>
 
-              <ModalFooter>
-                <Button
-                  colorScheme="teal"
-                  variant="outline"
-                  onClick={sendFile}
-                  disabled={!file}
-                >
-                  {progress == 0 ? "Next" : "Submit"}
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </div>
-      ) : (
-        <>
-          <div className="user_safe_container text-black dark:text-white">
-            <Safe safe={safe} action={reuploadSafe} type="private" />
-          </div>
-        </>
-      )}
-    </>
-  );
+							<ModalFooter>
+								<Button colorScheme='teal' variant='outline' onClick={sendFile} disabled={!file}>
+									{progress == 0 ? 'Next' : 'Submit'}
+								</Button>
+							</ModalFooter>
+						</ModalContent>
+					</Modal>
+				</div>
+			) : (
+				<>
+					<div className='user_safe_container text-black dark:text-white'>
+						<Safe safe={safe} action={reuploadSafe} type='private' />
+					</div>
+				</>
+			)}
+		</>
+	);
 };
 
 const DropZone = ({ file, setFile }) => {
-  const handleFileChanged = (e) => {
-    setFile(e.target.files[0]);
-  };
+	const handleFileChanged = (e) => {
+		setFile(e.target.files[0]);
+	};
 
 	return (
 		<div className='flex items-center justify-center w-full'>

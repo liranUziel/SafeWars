@@ -25,7 +25,7 @@ const createSafe = async (userId, safeName, relPath) => {
 };
 
 const verifySafe = async (safeId) => {
-	await Safe.findByIdAndUpdate(safeId, { isVerified: true });
+	return await Safe.findByIdAndUpdate(safeId, { isVerified: true });
 };
 
 const getTournamentSafes = async (relatedIds, relPath) => {
