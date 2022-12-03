@@ -11,11 +11,7 @@ export const Stepper = ({ steps, currStep }) => {
     <Flex flexDir="column" width="100%">
       <Steps activeStep={currStep}>
         {steps.map(({ label }) => {
-          return (
-            <Step label={label} key={label}>
-              A
-            </Step>
-          );
+          return <Step label={label} key={label}></Step>;
         })}
       </Steps>
       {currStep === steps.length ? (
