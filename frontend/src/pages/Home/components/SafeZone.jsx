@@ -2,7 +2,7 @@
 import Stepper from './utilsComponents/Stepper';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
+import { deleteSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
 import safesService from '../../../utils/userSafe';
 
 import {
@@ -27,7 +27,7 @@ const HomeSafeZone = () => {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { user } = useSelector((state) => state.auth);
-	const { safeInfo } = useSelector((state) => state.safe);
+	const { safes } = useSelector((state) => state.safe);
 	const { classInfo } = useSelector((state) => state.class);
 	const [progress, setProgress] = useState(0);
 	const [safe, setSafe] = useState({});
@@ -40,9 +40,9 @@ const HomeSafeZone = () => {
 
 	useEffect(() => {
 		//TODO:If fail handle
-		console.log(safeInfo);
-		setSafe({ ...safeInfo, solved: false });
-	}, [safeInfo]);
+		console.log(safes);
+		//setSafe({ ...safes[0], solved: false });
+	}, [safes]);
 
 	const sendFile = async () => {
 		if (file) {
@@ -72,6 +72,7 @@ const HomeSafeZone = () => {
 							title: 'Uploaded successufully.',
 							status: 'success',
 						});
+						dispatch(getSafe(user));
 					}
 					break;
 
@@ -83,22 +84,6 @@ const HomeSafeZone = () => {
 		}
 	};
 
-	const reuploadSafe = (e) => {
-		toast.warn('Warrning reuploading safe will remove the old one', {
-			position: 'top-center',
-			autoClose: 5000,
-			hideProgressBar: true,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true,
-			progress: undefined,
-		});
-		e.preventDefault();
-		setSafe({});
-		dispatch(removeSafe());
-		openPopup(e);
-	};
-
 	const closeModal = () => {
 		setFile(undefined);
 		setProgress(0);
@@ -106,7 +91,7 @@ const HomeSafeZone = () => {
 	};
 	return (
 		<>
-			{safeInfo?.safeName === undefined ? (
+			{safes.length <= 0 ? (
 				<div className='flex flex-col items-center justify-center h-full m-10 p-2 gap-2'>
 					<div className='container text-center text-black dark:text-white'>
 						You don't have a safe, please click on upload safe to uplaod one. you can only have one safe at
@@ -154,8 +139,10 @@ const HomeSafeZone = () => {
 				</div>
 			) : (
 				<>
-					<div className='user_safe_container text-black dark:text-white'>
-						<Safe safe={safe} action={reuploadSafe} type='private' />
+					<div className='flex flex-wrap m-4 gap-4 text-black dark:text-white'>
+						{safes.map((currSafe) => {
+							return <Safe key={currSafe._id} safe={currSafe} type='private' />;
+						})}
 					</div>
 				</>
 			)}

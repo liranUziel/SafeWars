@@ -22,6 +22,7 @@ login: POST /login ({userName, password})=> {id, userName, email, safesSolved, u
 #uploadSafe: POST / ({classesToAdd:[classId]} + FILE) => {newSafes:[Safe]}
 #downloadSafe: GET / ({safeId} => BIN_FILE
 #breakSafe: POST /break ({safeId} + FILE) => {isSucceeded}
+#deleteSafe: DELETE / ({safeId}) => {safes:[Safe]}
 
 /tournaments
 #getTournamentsData: GET / () => {tournaments:[Tournament]}

@@ -8,8 +8,18 @@ const getSafe = async (userData) => {
 	return response.data;
 };
 
+const deleteSafe = async (userData, safeId) => {
+	const response = await axios.delete(
+		API_URL_SAFE,
+		{ safeId },
+		{ headers: { Authorization: `Bearer ${userData.token}` } }
+	);
+	return response.data;
+};
+
 const userSafeService = {
 	getSafe,
+	deleteSafe,
 };
 
 export default userSafeService;

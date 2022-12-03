@@ -37,6 +37,10 @@ const getTournamentSafesById = async (tournamentId) => {
 	return safes;
 };
 
+const deleteSafeById = async (safeId) => {
+	await Safe.findByIdAndDelete(safeId);
+};
+
 module.exports = {
 	getSafeById,
 	getSafesByUserId,
@@ -47,6 +51,7 @@ module.exports = {
 	getSafesByUserIdAndRelPath,
 	getTournamentSafes,
 	getTournamentSafesById,
+	deleteSafeById,
 };
 
 const { getTournamentById } = require('./tournamentService');
