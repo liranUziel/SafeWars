@@ -6,83 +6,60 @@ import { removeSafe, getSafe } from "../../../features/userSafe/userSafeSlice";
 import safesService from "../../../utils/userSafe";
 
 import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalFooter,
-	ModalBody,
-	ModalCloseButton,
-} from '@chakra-ui/react';
-import { useDisclosure } from '@chakra-ui/react';
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 
-import Safe from './utilsComponents/Safe';
-import { toast } from 'react-toastify';
-import React from 'react';
-import { Button } from '@chakra-ui/react';
+import Safe from "./utilsComponents/Safe";
+import { toast } from "react-toastify";
+import React from "react";
+import { Button } from "@chakra-ui/react";
 
 const HomeSafeZone = () => {
-	const dispatch = useDispatch();
-	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { user } = useSelector((state) => state.auth);
-	const { safeInfo } = useSelector((state) => state.safe);
-	const { classInfo } = useSelector((state) => state.class);
-	const [progress, setProgress] = useState(0);
-	const [safe, setSafe] = useState({});
-	const [file, setFile] = useState(undefined);
+  const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useSelector((state) => state.auth);
+  const { safeInfo } = useSelector((state) => state.safe);
+  const { classInfo } = useSelector((state) => state.class);
+  const [progress, setProgress] = useState(0);
+  const [safe, setSafe] = useState({});
+  const [file, setFile] = useState(undefined);
 
-    popupBodyElement.appendChild(formElement);
-    if (thumbnailElement) {
-      thumbnailElement.remove();
-      const uploadContainer = document.createElement("div");
-      uploadContainer.classList.add("upload_container");
-      const promptContainer = document.createElement("div");
-      promptContainer.classList.add("upload_container__prompt__container");
-      const RiFileUploadLine = document.createElement("RiFileUploadLine");
-      RiFileUploadLine.classList.add("upload_container__upload_icon");
-      const uploadPrompt = document.createElement("div");
-      uploadPrompt.classList.add("upload_container__prompt");
-      uploadPrompt.innerHTML = "Drag and Drop key file or click on upload";
-      promptContainer.appendChild(RiFileUploadLine);
-      promptContainer.appendChild(uploadPrompt);
-      uploadContainer.appendChild(promptContainer);
-      formElement.prepend(uploadContainer);
-      inputContainer.querySelector(".upload_container__input").remove();
-      const inputElement = document.createElement("input");
-      inputElement.type = "file";
-      inputElement.classList.add("upload_container__input");
-      inputContainer.prepend(inputElement);
-    }
-  };
   useEffect(() => {
     dispatch(getSafe(user));
   }, [dispatch, user]);
 
-	useEffect(() => {
-		//TODO:If fail handle
-		console.log(safeInfo);
-		setSafe({ ...safeInfo, solved: false });
-	}, [safeInfo]);
+  useEffect(() => {
+    //TODO:If fail handle
+    console.log(safeInfo);
+    setSafe({ ...safeInfo, solved: false });
+  }, [safeInfo]);
 
-	const sendFile = () => {
-		if (file) {
-			switch (progress) {
-				case 0: // Safe
-					const classesId = classInfo.map((currClass) => currClass._id);
-					console.log(classesId);
-					dispatch(safesService.postSafe(user, classesId, file));
-					break;
-				case 1: // Key
-					//safesService.postKey(user, safeInfo._id, file);
-					break;
+  const sendFile = () => {
+    if (file) {
+      switch (progress) {
+        case 0: // Safe
+          const classesId = classInfo.map((currClass) => currClass._id);
+          console.log(classesId);
+          dispatch(safesService.postSafe(user, classesId, file));
+          break;
+        case 1: // Key
+          //safesService.postKey(user, safeInfo._id, file);
+          break;
 
-				default:
-					break;
-			}
-			setProgress(progress + 1);
-			setFile(undefined);
-		}
-	};
+        default:
+          break;
+      }
+      setProgress(progress + 1);
+      setFile(undefined);
+    }
+  };
 
   const reuploadSafe = (e) => {
     toast.warn("Warrning reuploading safe will remove the old one", {
@@ -100,41 +77,46 @@ const HomeSafeZone = () => {
     openPopup(e);
   };
 
-	const closeModal = () => {
-		setFile(undefined);
-		setProgress(0);
-		onClose();
-	};
-	return (
-		<>
-			{safeInfo?.safeName === undefined ? (
-				<div className='flex flex-col items-center justify-center h-full w-full m-10 p-2 gap-2'>
-					<div className='container text-center text-black dark:text-white'>
-						You don't have a safe, please click on upload safe to uplaod one. you can only have one safe at
-						a time.
-						<br />
-						<button
-							onClick={onOpen}
-							className='border border-black rounded-md m-5 p-2 text-black dark:text-white'
-						>
-							upload safe
-						</button>
-					</div>
-					<Modal isOpen={isOpen} onClose={closeModal} closeOnOverlayClick={false} motionPreset='scale'>
-						<ModalOverlay />
-						<ModalContent>
-							<ModalHeader>
-								<Stepper
-									steps={[{ label: 'Upload Safe' }, { label: 'Upload Key' }]}
-									currStep={progress}
-								/>
-							</ModalHeader>
-							<ModalCloseButton />
-							<ModalBody>
-								<div className='dropZone'>
-									<DropZone file={file} setFile={setFile} />
-								</div>
-							</ModalBody>
+  const closeModal = () => {
+    setFile(undefined);
+    setProgress(0);
+    onClose();
+  };
+  return (
+    <>
+      {safeInfo?.safeName === undefined ? (
+        <div className="flex flex-col items-center justify-center h-full w-full m-10 p-2 gap-2">
+          <div className="container text-center text-black dark:text-white">
+            You don't have a safe, please click on upload safe to uplaod one.
+            you can only have one safe at a time.
+            <br />
+            <button
+              onClick={onOpen}
+              className="border border-black rounded-md m-5 p-2 text-black dark:text-white"
+            >
+              upload safe
+            </button>
+          </div>
+          <Modal
+            isOpen={isOpen}
+            onClose={closeModal}
+            closeOnOverlayClick={false}
+            motionPreset="scale"
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                <Stepper
+                  steps={[{ label: "Upload Safe" }, { label: "Upload Key" }]}
+                  currStep={progress}
+                />
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <div className="dropZone">
+                  <DropZone file={file} setFile={setFile} />
+                </div>
+              </ModalBody>
 
               <ModalFooter>
                 <Button
@@ -165,43 +147,50 @@ const DropZone = ({ file, setFile }) => {
     setFile(e.target.files[0]);
   };
 
-	return (
-		<div class='flex items-center justify-center w-full'>
-			<label
-				htmlFor='dropzone-file'
-				class='flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
-			>
-				<div class='flex flex-col items-center justify-center '>
-					<svg
-						aria-hidden='true'
-						class='w-10 h-10 mb-3 text-gray-400'
-						fill='none'
-						stroke='currentColor'
-						viewBox='0 0 24 24'
-						xmlns='http://www.w3.org/2000/svg'
-					>
-						<path
-							stroke-linecap='round'
-							stroke-linejoin='round'
-							stroke-width='2'
-							d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
-						></path>
-					</svg>
-					<p class='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-						{file ? (
-							file['name']
-						) : (
-							<>
-								<span class='font-semibold'>Click to upload</span> or drag and drop
-							</>
-						)}
-					</p>
-					<p class='text-xs text-gray-500 dark:text-gray-400'>ASM</p>
-				</div>
-				<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
-			</label>
-		</div>
-	);
+  return (
+    <div class="flex items-center justify-center w-full">
+      <label
+        htmlFor="dropzone-file"
+        class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+      >
+        <div class="flex flex-col items-center justify-center ">
+          <svg
+            aria-hidden="true"
+            class="w-10 h-10 mb-3 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+            ></path>
+          </svg>
+          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+            {file ? (
+              file["name"]
+            ) : (
+              <>
+                <span class="font-semibold">Click to upload</span> or drag and
+                drop
+              </>
+            )}
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">ASM</p>
+        </div>
+        <input
+          id="dropzone-file"
+          type="file"
+          accept=".asm"
+          hidden
+          onChange={handleFileChanged}
+        />
+      </label>
+    </div>
+  );
 };
 
 export default HomeSafeZone;
