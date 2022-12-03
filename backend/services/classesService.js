@@ -16,9 +16,20 @@ const getClassesdByInstructorId = async (instructorId) => {
 const getPopulatedClassById = async (classId) => {
 	return await Class.findById(classId).populate('studentIds');
 };
+
+const createClass = async (className, classNumber, instructorId, district) => {
+	return await Class.create({ classInfo: { className, classNumber }, instructorId, district });
+};
+
+const addStudent = async (classId, studentId) => {
+	await Class.findByIdAndUpdate(classId, { $push: { studentIds: studentId } });
+};
+
 module.exports = {
 	getClassById,
 	getClassesdByStudentId,
 	getClassesdByInstructorId,
 	getPopulatedClassById,
+	createClass,
+	addStudent,
 };

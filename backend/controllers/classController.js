@@ -4,8 +4,10 @@ const {
 	getClassesdByStudentId,
 	getClassesdByInstructorId,
 	getPopulatedClassById,
+	addStudent,
+	getClassById,
 } = require('../services/classesService');
-const { getAdmin } = require('../services/usersService');
+const { getAdmin, getUserByUserName } = require('../services/usersService');
 const { getSafesByUserId, getSafeByStudentId } = require('../services/safesService');
 
 const getClasses = aysncHanler(async (req, res) => {
@@ -47,8 +49,24 @@ const getStudentsInClass = aysncHanler(async (req, res) => {
 	res.status(200).json({ students });
 });
 
+const addStudentToClass = aysncHanler(async (req, res) => {
+	const { classId, studentUserName } = req.body;
+	if (!studentUserName || !classId) {
+		return res.status(400).json('Missing fields');
+	}
+	const student = await getUserByUserName(studentUserName);
+	if (!student) {
+		return res.status(400).json('Missing student');
+	}
+
+	await addStudent(classId, student.id);
+	const updatedClass = await getClassById(classId);
+	res.status(200).json(updatedClass);
+});
+
 module.exports = {
 	getAdminSafes,
 	getClasses,
 	getStudentsInClass,
+	addStudentToClass,
 };

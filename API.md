@@ -16,6 +16,7 @@ login: POST /login ({userName, password})=> {id, userName, email, safesSolved, u
 #getClassesData: GET / () => {classesIn:[Class]}
 #getAdminSafesData: GET /safes () => {safes:[Safe]}
 #getStudentsInClass: GET /students ({classId}) => {students:[{id, userId, hasSubmitedSafe, isSafeVerified, score}]}
+#addStudentToClass: POST /students ({classId, studentUserName}) => {Class}
 
 /safes
 #uploadSafe: POST / ({classesToAdd:[classId]} + FILE) => {newSafes:[Safe]}
@@ -30,3 +31,5 @@ login: POST /login ({userName, password})=> {id, userName, email, safesSolved, u
 #getScoreBoard: GET /scores ({tournamentId}) => {scores:[{realName,score}]}
 
 /admin
+#addSafeToDB: POST /safes ({safeName}) => {Safe}
+#addClassToDB: POST /class ({className, classNumber, instructorUserName, district}) => {Class}
