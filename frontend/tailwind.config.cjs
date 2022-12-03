@@ -10,7 +10,7 @@ module.exports = {
       colors: {
         "dark-accenet": {
           100: "#4DAFC5",
-          200: "#6D738D",
+          200: "#454A5E",
           // ...
           800: "#3199AF",
           900: "#2B2E3D",
