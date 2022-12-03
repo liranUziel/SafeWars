@@ -47,6 +47,7 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	// Make sure safe exists, if not create
 	if (!fs.existsSync(safePath)) {
 		const isCompiled = await nasmCompile(`${safePath}.asm`, safePath);
+		console.log(`IsCompiled: ${isCompiled}`);
 		if (!isCompiled) return res.status(400).json('Some error happend while compiling safe.');
 	}
 	// Break the safe and hope for the best
@@ -174,8 +175,10 @@ const nasmCompile = async (srcPath, dstPath) => {
 		console.log("Error at 'nasmCompile' (status/error)", error);
 	}
 
+	console.log(status);
+	console.log(error);
 	// Check no errors happened
-	return status !== 0 || error;
+	return status === 0 && !error;
 };
 
 module.exports = {
