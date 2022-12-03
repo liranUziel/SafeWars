@@ -1,4 +1,4 @@
-// import '../styles/Header.css'
+import { useEffect, useState } from 'react';
 
 import { ReactComponent as DarkLogo } from '../assets/Images/dark_logo.svg';
 import { ReactComponent as LightLogo } from '../assets/Images/light_logo.svg';
@@ -9,7 +9,6 @@ import { Avatar } from '@chakra-ui/react';
 import { RiAdminFill } from 'react-icons/ri';
 
 import { useNavigate, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -103,8 +102,8 @@ const Header = () => {
 	];
 
 	return (
-		<header className='w-full bg-accent-color dark:bg-dark-accent-color'>
-			<Navbar fluid={true} className='bg-inherit dark:bg-dark-accent-color'>
+		<header className='w-full dark:bg-dark-accenet-900 bg-light-accent-900 p-5'>
+			<Navbar fluid={true} className='!bg-inherit'>
 				{/* This is for the Logo */}
 				<Link to='/home'>
 					<LightLogo className='h-12 sm:h-16 w-fit block dark:hidden' />
