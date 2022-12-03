@@ -9,9 +9,13 @@ export const Horizontal = ({ steps, currStep }) => {
 	return (
 		<Flex flexDir='column' width='100%'>
 			<Steps activeStep={currStep}>
-				{steps.map(({ label }, index) => (
-					<Step label={label} key={label}></Step>
-				))}
+				{steps.map(({ label }) => {
+					return (
+						<Step label={label} key={label}>
+							A
+						</Step>
+					);
+				})}
 			</Steps>
 			{currStep === steps.length ? (
 				<Heading fontSize='xl' textAlign='center' marginTop={2}>
