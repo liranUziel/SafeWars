@@ -17,6 +17,7 @@ module.exports = {
         },
         "light-accent": {
           100: "#2B2E3D",
+          200: "#67B1C1",
 
           800: "#5C6279",
           900: "#4DAFC5",

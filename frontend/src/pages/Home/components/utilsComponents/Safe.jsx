@@ -63,7 +63,7 @@ const Safe = ({ safe: _safe, type }) => {
 
   return (
     <div
-      className={`flex flex-col dark:text-white bg-gray-700 p-5 w-fit boder rounded ${
+      className={`flex flex-col dark:text-white dark:bg-dark-accenet-900 bg-light-accent-200 p-5 w-fit boder rounded ${
         safe.solved ? "border-green-600" : "border-gray-500"
       }`}
       id="safe"
@@ -74,7 +74,7 @@ const Safe = ({ safe: _safe, type }) => {
           className={` ${
             safe.solved
               ? "text-gray-600"
-              : "hover:text-green-600 cursor-pointer"
+              : "hover:text-light-accent-100 text-white cursor-pointer"
           }`}
         />
         {type === "private" ? (
@@ -90,7 +90,7 @@ const Safe = ({ safe: _safe, type }) => {
         {safe.solved ? (
           <RiSafe2Fill className={`text-7xl text-green-600`} />
         ) : (
-          <BsSafe className={`text-7xl`} />
+          <BsSafe className={`text-7xl text-white`} />
         )}
         {safe.solved ? (
           <></>
@@ -104,7 +104,7 @@ const Safe = ({ safe: _safe, type }) => {
           </button>
         )}
       </div>
-      <div id="footer">
+      <div id="footer" className="text-white">
         <h3 className="">
           file name: <span className="">{name}</span>
         </h3>
