@@ -3,13 +3,14 @@ const asyncHandler = require('express-async-handler');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
-const { getSafesByUserId, getSafeById, createSafe } = require('../services/safesService');
+const { getSafesByUserId, getSafeById, createSafe, verifySafe } = require('../services/safesService');
 const { updateUserScore, updateUserSolvedSafes, getUserById } = require('../services/usersService');
 const {
 	extractAbsoulteSafePathWithName,
 	USER_TYPES,
 	extractAbsoulteKeyPathWithName,
 	hasBrokenSafe,
+	createSafeName,
 } = require('../constants');
 
 const getUserSafes = asyncHandler(async (req, res) => {
@@ -23,32 +24,33 @@ const getUserSafes = asyncHandler(async (req, res) => {
 
 const uploadSafe = asyncHandler(async (req, res) => {
 	// Create new safes
+	const safeName = createSafeName(req.user.userId, req.file);
 	const newSafes = await Promise.all(
 		await req.relativeSafePaths.map(async (relPath) => {
-			return await createSafe(req.user.id, req.safeName, relPath);
+			return await createSafe(req.user.id, safeName, relPath);
 		})
 	);
 	res.status(201).json({ newSafes });
 });
 
 const uploadKeyAndBreak = asyncHandler(async (req, res) => {
-	const { user, safeToBrek } = req;
+	const { user, safeToBreak } = req;
 
 	// Diffrent handle for admin safe
-	const safeOwner = await getUserById(safeToBrek.ownerId);
+	const safeOwner = await getUserById(safeToBreak.ownerId);
 	const isAdminSafe = safeOwner.userType === USER_TYPES.ADMIN;
 
 	// Get the paths
-	const safePath = extractAbsoulteSafePathWithName(safeToBrek.relPath, safeToBrek.safeName);
-	const keyPath = extractAbsoulteKeyPathWithName(user.userId, safeToBrek) + '.asm';
+	const safePath = extractAbsoulteSafePathWithName(safeToBreak.relPath, safeToBreak.safeName);
+	const keyPath = extractAbsoulteKeyPathWithName(user.userId, safeToBreak) + '.asm';
 
 	// Make sure safe exists, if not create
 	if (!fs.existsSync(safePath)) {
-		const isCompiled = await nasmCompile(path.resolve(`${safePath}.asm`, safePath));
+		const isCompiled = await nasmCompile(`${safePath}.asm`, safePath);
 		if (!isCompiled) return res.status(400).json('Some error happend while compiling safe.');
 	}
 	// Break the safe and hope for the best
-	const result = await getBreakResults(userId, safeToBrek.safeName, safePath, keyPath);
+	const result = await getBreakResults(user.userId, safeToBreak.safeName, safePath, keyPath);
 	if (!result) return res.status(400).json('Some error happend while breaking safe!');
 
 	// This checks if safe has been broken
@@ -60,19 +62,19 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 		// If the user breaks it's own safe verify it
 		const isOwnSafe = safeOwner.id === user.id;
 		if (isOwnSafe) {
-			await verifySafe(safeToBrek.id);
+			await verifySafe(safeToBreak.id);
 		}
 
 		// Get users solved safes array
-		let solvedSafes = user.solvedsSafes;
+		let solvedSafes = user.solvedSafes;
 		// If safe not in solved of the user, add it and update score for users
-		if (!solvedSafes.includes(safeToBrek.id)) {
+		if (!solvedSafes.includes(safeToBreak.id)) {
 			// Calculate points
 			const increaseBy = isOwnSafe || isAdminSafe ? 0 : 100;
 			const decreaseBy = isOwnSafe || isAdminSafe ? 0 : 30;
 			// Add to broken safes of breaking user
 			await updateUserScore(user.id, user.score + increaseBy);
-			await updateUserSolvedSafes(user.id, safeToBrek.id);
+			await updateUserSolvedSafes(user.id, safeToBreak.id);
 			// Decrease from the user who uploaded the safe
 			await updateUserScore(safeOwner.id, safeOwner.score - decreaseBy);
 		}
@@ -130,11 +132,13 @@ const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 		if (!element) return;
 		try {
 			result = JSON.parse(element.toLocaleString());
-		} catch (error) {}
+		} catch (error) {
+			console.log("Error at 'getBreakResults' (extract JSON)", error);
+		}
 	});
 
 	if (!result) {
-		console.log("Error at 'getBreakResults' (result)", error);
+		console.log("Error at 'getBreakResults' (result)");
 		return undefined;
 	}
 
@@ -143,9 +147,11 @@ const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 		return value in result;
 	});
 	if (!hasAllKeys) {
-		console.log("Error at 'getBreakResults' (hasAllKeys)", error);
+		console.log("Error at 'getBreakResults' (hasAllKeys)");
 		return undefined;
 	}
+
+	console.log(result);
 
 	// Parse to int values
 	result.keyScore = Number.parseInt(result.keyScore);
@@ -159,7 +165,14 @@ const nasmCompile = async (srcPath, dstPath) => {
 	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
 	// Run the script and try to break the safe
 	const { status, output, error } = spawnSync('python3', [pathToScript, 'compile', srcPath, dstPath]);
-	console.log('compileFile output:', output);
+
+	if (status !== 0 || error) {
+		output?.forEach((element) => {
+			if (!element) return;
+			console.log(element.toLocaleString());
+		});
+		console.log("Error at 'nasmCompile' (status/error)", error);
+	}
 
 	// Check no errors happened
 	return status !== 0 || error;

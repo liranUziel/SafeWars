@@ -14,9 +14,9 @@ router.post(
 	'/',
 	verifyToken,
 	prepareUploadSafeData,
-	mUploadSafe.single('safe'),
 	addSafeDataAfterUplaod,
 	clearStudentUploadSafe,
+	mUploadSafe.single('safe'),
 	uploadSafe
 );
 router.get('/', verifyToken, downloadSafe);

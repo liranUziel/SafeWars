@@ -1,4 +1,4 @@
-const { resolve, parse } = require('path');
+const { join, resolve, parse } = require('path');
 const USER_TYPES = {
 	ADMIN: 'admin',
 	INSTRUCTOR: 'instructor',
@@ -9,7 +9,7 @@ const ALLOWED_PERSONAL = [USER_TYPES.INSTRUCTOR, USER_TYPES.ADMIN];
 
 const getRelativeSafePath = ({ className, classNumber }) => {
 	console.log('MAKE SURE THIS IS CORRECT PATH'.bgGreen, `${className}\\${classNumber}`.bgGreen);
-	return resolve(`${className}\\${classNumber}`);
+	return join(className, String(classNumber));
 };
 
 const getAbsouluteSafePath = ({ className, classNumber }) => {
@@ -40,7 +40,7 @@ const createSafeName = (userId, file) => {
 };
 
 const hasBrokenSafe = (result) => {
-	return result.keyScore === 100 && result.safeScore === 0 && result.test === 0;
+	return result.keyScore === 100 && result.safeScore === 0 && result.test === 50;
 };
 
 module.exports = {

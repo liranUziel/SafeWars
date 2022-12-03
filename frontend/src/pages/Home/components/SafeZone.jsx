@@ -15,21 +15,33 @@ import {
   ModalCloseButton,
 } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
+	Modal,
+	ModalOverlay,
+	ModalContent,
+	ModalHeader,
+	ModalFooter,
+	ModalBody,
+	ModalCloseButton,
+	Button,
+	useToast,
+} from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react';
 
-import Safe from "./utilsComponents/Safe";
-import { toast } from "react-toastify";
-import React from "react";
-import { Button } from "@chakra-ui/react";
+import Safe from './utilsComponents/Safe';
+import React from 'react';
 
 const HomeSafeZone = () => {
-  const dispatch = useDispatch();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = useSelector((state) => state.auth);
-  const { safeInfo } = useSelector((state) => state.safe);
-  const { classInfo } = useSelector((state) => state.class);
-  const [progress, setProgress] = useState(0);
-  const [safe, setSafe] = useState({});
-  const [file, setFile] = useState(undefined);
+	const dispatch = useDispatch();
+	const toast = useToast();
+
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { user } = useSelector((state) => state.auth);
+	const { safeInfo } = useSelector((state) => state.safe);
+	const { classInfo } = useSelector((state) => state.class);
+	const [progress, setProgress] = useState(0);
+	const [safe, setSafe] = useState({});
+	const [file, setFile] = useState(undefined);
+	const [newSafes, setNewSafes] = useState([]);
 
   useEffect(() => {
     dispatch(getSafe(user));
@@ -41,17 +53,36 @@ const HomeSafeZone = () => {
     setSafe({ ...safeInfo, solved: false });
   }, [safeInfo]);
 
-  const sendFile = () => {
-    if (file) {
-      switch (progress) {
-        case 0: // Safe
-          const classesId = classInfo.map((currClass) => currClass._id);
-          console.log(classesId);
-          dispatch(safesService.postSafe(user, classesId, file));
-          break;
-        case 1: // Key
-          //safesService.postKey(user, safeInfo._id, file);
-          break;
+	const sendFile = async () => {
+		if (file) {
+			switch (progress) {
+				case 0: // Safe
+					const classesId = classInfo.map((currClass) => currClass._id);
+					const safesResponse = await safesService.postSafe(user, classesId, file);
+					setNewSafes(safesResponse.newSafes);
+					break;
+				case 1: // Key
+					//const isSucce
+					const results = await Promise.all(
+						await newSafes.map(async (currSafe) => {
+							const { isSucceeded } = await safesService.postKey(user, currSafe._id, file);
+							return isSucceeded;
+						})
+					);
+					console.log(results);
+					const isErrorAtKey = results.some((result) => !result);
+					if (isErrorAtKey) {
+						toast({
+							title: 'Invalid Key, please try again.',
+							status: 'error',
+						});
+					} else {
+						toast({
+							title: 'Uploaded successufully.',
+							status: 'success',
+						});
+					}
+					break;
 
         default:
           break;
@@ -147,50 +178,43 @@ const DropZone = ({ file, setFile }) => {
     setFile(e.target.files[0]);
   };
 
-  return (
-    <div class="flex items-center justify-center w-full">
-      <label
-        htmlFor="dropzone-file"
-        class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-      >
-        <div class="flex flex-col items-center justify-center ">
-          <svg
-            aria-hidden="true"
-            class="w-10 h-10 mb-3 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            ></path>
-          </svg>
-          <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-            {file ? (
-              file["name"]
-            ) : (
-              <>
-                <span class="font-semibold">Click to upload</span> or drag and
-                drop
-              </>
-            )}
-          </p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">ASM</p>
-        </div>
-        <input
-          id="dropzone-file"
-          type="file"
-          accept=".asm"
-          hidden
-          onChange={handleFileChanged}
-        />
-      </label>
-    </div>
-  );
+	return (
+		<div className='flex items-center justify-center w-full'>
+			<label
+				htmlFor='dropzone-file'
+				className='flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
+			>
+				<div className='flex flex-col items-center justify-center '>
+					<svg
+						aria-hidden='true'
+						className='w-10 h-10 mb-3 text-gray-400'
+						fill='none'
+						stroke='currentColor'
+						viewBox='0 0 24 24'
+						xmlns='http://www.w3.org/2000/svg'
+					>
+						<path
+							strokeLinecap='round'
+							strokeLinejoin='round'
+							strokeWidth='2'
+							d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
+						></path>
+					</svg>
+					<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
+						{file ? (
+							file['name']
+						) : (
+							<>
+								<span className='font-semibold'>Click to upload</span> or drag and drop
+							</>
+						)}
+					</p>
+					<p className='text-xs text-gray-500 dark:text-gray-400'>ASM</p>
+				</div>
+				<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
+			</label>
+		</div>
+	);
 };
 
 export default HomeSafeZone;
