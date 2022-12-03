@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const fs = require('fs-extra');
-const { getSafesByUserId, getSafeById, createSafe, verifySafe } = require('../services/safesService');
+const { getSafesByUserId, getSafeById, createSafe, verifySafe, deleteSafeById } = require('../services/safesService');
 const { updateUserScore, updateUserSolvedSafes, getUserById } = require('../services/usersService');
 const {
 	extractAbsoulteSafePathWithName,
@@ -20,6 +20,23 @@ const getUserSafes = asyncHandler(async (req, res) => {
 		return res.status(400).json('Upload at first a safe');
 	}
 	res.status(200).json({ safes });
+});
+
+const deleteSafe = asyncHandler(async (req, res) => {
+	const { safeId } = req.body;
+	if (!safeId) {
+		return res.status(400).json('Missing safeId');
+	}
+	const safeToDelete = await getSafeById(safeId);
+	if (!safeToDelete) {
+		return res.status(400).json('No such safe');
+	}
+	if (safeToDelete.ownerId !== req.user.id) {
+		return res.status(400).json('Hands away from my safe! 🛑');
+	}
+	await deleteSafeById(safeId);
+	const safes = await getSafesByUserId(req.user.id);
+	return res.status(200).json({ safes });
 });
 
 const uploadSafe = asyncHandler(async (req, res) => {
@@ -47,6 +64,7 @@ const uploadKeyAndBreak = asyncHandler(async (req, res) => {
 	// Make sure safe exists, if not create
 	if (!fs.existsSync(safePath)) {
 		const isCompiled = await nasmCompile(`${safePath}.asm`, safePath);
+		console.log(`IsCompiled: ${isCompiled}`);
 		if (!isCompiled) return res.status(400).json('Some error happend while compiling safe.');
 	}
 	// Break the safe and hope for the best
@@ -174,8 +192,10 @@ const nasmCompile = async (srcPath, dstPath) => {
 		console.log("Error at 'nasmCompile' (status/error)", error);
 	}
 
+	console.log(status);
+	console.log(error);
 	// Check no errors happened
-	return status !== 0 || error;
+	return status === 0 && !error;
 };
 
 module.exports = {
@@ -183,4 +203,5 @@ module.exports = {
 	uploadSafe,
 	downloadSafe,
 	uploadKeyAndBreak,
+	deleteSafe,
 };

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useColorMode } from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 const ColorModeToggle = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -8,9 +9,9 @@ const ColorModeToggle = () => {
 		<button
 			onClick={toggleColorMode}
 			type='button'
-			className='text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5'
+			className='flex text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none rounded-lg text-sm w-8 h-8 items-center justify-center'
 		>
-			{colorMode === 'light' ? 'Join the dark side' : 'Let there be Light '}
+			{colorMode === 'light' ? <MoonIcon boxSize='6' /> : <SunIcon boxSize='6' />}
 		</button>
 	);
 };

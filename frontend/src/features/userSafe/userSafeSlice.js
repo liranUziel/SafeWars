@@ -9,7 +9,19 @@ import userSafeServices from './userSafeServices';
 // Register user
 export const getSafe = createAsyncThunk('safe/getSafe', async (user, thunkAPI) => {
 	try {
-		return await userSafeServices.getSafe(user);
+		const { safes } = await userSafeServices.getSafe(user);
+		return safes;
+	} catch (error) {
+		const message =
+			(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+		return thunkAPI.rejectWithValue(message);
+	}
+});
+
+export const deleteSafe = createAsyncThunk('safe/deleteSafe', async ({ user, safeId }, thunkAPI) => {
+	try {
+		const { safes } = await userSafeServices.deleteSafe(user, safeId);
+		return safes;
 	} catch (error) {
 		const message =
 			(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
@@ -19,8 +31,7 @@ export const getSafe = createAsyncThunk('safe/getSafe', async (user, thunkAPI) =
 
 // The initial state
 const initialState = {
-	safeInfo: {},
-	file: '',
+	safes: [],
 	isError: false,
 	isSuccess: false,
 	isLoading: false,
@@ -40,13 +51,27 @@ export const safeSlice = createSlice({
 			.addCase(getSafe.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.safeInfo = action.payload[0];
+				state.safes = action.payload;
 			})
 			.addCase(getSafe.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
-				state.safeInfo = {};
+				state.safes = [];
+			})
+			.addCase(deleteSafe.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(deleteSafe.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.safes = action.payload;
+			})
+			.addCase(deleteSafe.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.safes = [];
 			});
 	},
 });
