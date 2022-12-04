@@ -29,7 +29,7 @@ const updateUserScore = async (userId, score) => {
 };
 
 const updateUserSolvedSafes = async (userId, safeId) => {
-	await User.findByIdAndUpdate(userId, { $push: { solved: safeId } });
+	await User.findByIdAndUpdate(userId, { $push: { solvedSafes: safeId } });
 };
 
 module.exports = {

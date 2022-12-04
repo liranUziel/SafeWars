@@ -8,15 +8,10 @@ const USER_TYPES = {
 const ALLOWED_PERSONAL = [USER_TYPES.INSTRUCTOR, USER_TYPES.ADMIN];
 
 const getRelativeSafePath = ({ className, classNumber }) => {
-	console.log('MAKE SURE THIS IS CORRECT PATH'.bgGreen, `${className}\\${classNumber}`.bgGreen);
 	return join(className, String(classNumber));
 };
 
 const getAbsouluteSafePath = ({ className, classNumber }) => {
-	console.log(
-		'MAKE SURE THIS IS CORRECT PATH'.bgYellow,
-		`${__dirname}\\public\\safes\\${className}\\${classNumber}`.bgYellow
-	);
 	return resolve(`${__dirname}\\public\\safes\\${className}\\${classNumber}`);
 };
 

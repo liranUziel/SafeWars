@@ -31,7 +31,7 @@ const deleteSafe = asyncHandler(async (req, res) => {
 	if (!safeToDelete) {
 		return res.status(400).json('No such safe');
 	}
-	if (safeToDelete.ownerId !== req.user.id) {
+	if (!safeToDelete.ownerId.equals(req.user.id)) {
 		return res.status(400).json('Hands away from my safe! 🛑');
 	}
 	await deleteSafeById(safeId);
@@ -125,6 +125,8 @@ const downloadSafe = asyncHandler(async (req, res) => {
 const getBreakResults = async (userId, safeName, safePath, keyPath) => {
 	const pathToScript = path.resolve(`${__dirname}\\..\\workspace\\main.py`);
 	// Run the script and try to break the safe
+
+	//console.log(`python3 ${pathToScript} break ${userId} ${safeName} ${safePath} ${keyPath}`);
 	const { status, output, error } = spawnSync('python3', [
 		pathToScript,
 		'break',

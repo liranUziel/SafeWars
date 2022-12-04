@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
 import safesService from '../../../utils/userSafe';
+import { useDropzone } from 'react-dropzone';
 
 import {
 	Modal,
@@ -20,6 +21,7 @@ import { useDisclosure } from '@chakra-ui/react';
 
 import Safe from './utilsComponents/Safe';
 import React from 'react';
+import DropZone from './utilsComponents/DropZone';
 
 const HomeSafeZone = () => {
 	const dispatch = useDispatch();
@@ -30,7 +32,6 @@ const HomeSafeZone = () => {
 	const { safes } = useSelector((state) => state.safe);
 	const { classInfo } = useSelector((state) => state.class);
 	const [progress, setProgress] = useState(0);
-	const [safe, setSafe] = useState({});
 	const [file, setFile] = useState(undefined);
 	const [newSafes, setNewSafes] = useState([]);
 
@@ -38,11 +39,9 @@ const HomeSafeZone = () => {
 		dispatch(getSafe(user));
 	}, [dispatch, user]);
 
-	useEffect(() => {
-		//TODO:If fail handle
-		console.log(safes);
-		//setSafe({ ...safes[0], solved: false });
-	}, [safes]);
+	const handleDropFile = async (newFile) => {
+		setFile(newFile);
+	};
 
 	const sendFile = async () => {
 		if (file) {
@@ -60,7 +59,6 @@ const HomeSafeZone = () => {
 							return isSucceeded;
 						})
 					);
-					console.log(results);
 					const isErrorAtKey = results.some((result) => !result);
 					if (isErrorAtKey) {
 						toast({
@@ -117,9 +115,7 @@ const HomeSafeZone = () => {
 							{progress < 2 && (
 								<>
 									<ModalBody>
-										<div className='dropZone'>
-											<DropZone file={file} setFile={setFile} />
-										</div>
+										<DropZone file={file} handleDropFile={handleDropFile} />
 									</ModalBody>
 
 									<ModalFooter>
@@ -147,50 +143,6 @@ const HomeSafeZone = () => {
 				</>
 			)}
 		</>
-	);
-};
-
-const DropZone = ({ file, setFile }) => {
-	const handleFileChanged = (e) => {
-		setFile(e.target.files[0]);
-	};
-
-	return (
-		<div className='flex items-center justify-center w-full'>
-			<label
-				htmlFor='dropzone-file'
-				className='flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
-			>
-				<div className='flex flex-col items-center justify-center '>
-					<svg
-						aria-hidden='true'
-						className='w-10 h-10 mb-3 text-gray-400'
-						fill='none'
-						stroke='currentColor'
-						viewBox='0 0 24 24'
-						xmlns='http://www.w3.org/2000/svg'
-					>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							strokeWidth='2'
-							d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
-						></path>
-					</svg>
-					<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-						{file ? (
-							file['name']
-						) : (
-							<>
-								<span className='font-semibold'>Click to upload</span> or drag and drop
-							</>
-						)}
-					</p>
-					<p className='text-xs text-gray-500 dark:text-gray-400'>ASM</p>
-				</div>
-				<input id='dropzone-file' type='file' accept='.asm' hidden onChange={handleFileChanged} />
-			</label>
-		</div>
 	);
 };
 
