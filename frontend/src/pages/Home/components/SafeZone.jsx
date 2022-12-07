@@ -1,11 +1,6 @@
-// import '../../styles/SafeZone.css';
-import Stepper from './utilsComponents/Stepper';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteSafe, getSafe } from '../../../features/userSafe/userSafeSlice';
-import safesService from '../../../utils/userSafe';
-import { useDropzone } from 'react-dropzone';
-
+import { getSafe } from '../../../features/userSafe/userSafeSlice';
 import {
 	Modal,
 	ModalOverlay,
@@ -16,11 +11,12 @@ import {
 	ModalCloseButton,
 	Button,
 	useToast,
+	useDisclosure,
 } from '@chakra-ui/react';
-import { useDisclosure } from '@chakra-ui/react';
+import safesService from '../../../utils/safesService';
 
 import Safe from './utilsComponents/Safe';
-import React from 'react';
+import Stepper from './utilsComponents/Stepper';
 import DropZone from './utilsComponents/DropZone';
 
 const HomeSafeZone = () => {
@@ -86,6 +82,7 @@ const HomeSafeZone = () => {
 		setFile(undefined);
 		setProgress(0);
 		onClose();
+		dispatch(getSafe(user));
 	};
 	return (
 		<>

@@ -29,9 +29,20 @@ export const deleteSafe = createAsyncThunk('safe/deleteSafe', async ({ user, saf
 	}
 });
 
+export const getSolvedSafes = createAsyncThunk('safe/getSolvedSafes', async (user, thunkAPI) => {
+	try {
+		const solvedSafes = await userSafeServices.getSolvedSafes(user);
+		return solvedSafes;
+	} catch (error) {
+		const message =
+			(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+		return thunkAPI.rejectWithValue(message);
+	}
+});
 // The initial state
 const initialState = {
 	safes: [],
+	solvedSafes: [],
 	isError: false,
 	isSuccess: false,
 	isLoading: false,
@@ -72,6 +83,20 @@ export const safeSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.safes = [];
+			})
+			.addCase(getSolvedSafes.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(getSolvedSafes.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.isSuccess = true;
+				state.solvedSafes = action.payload;
+			})
+			.addCase(getSolvedSafes.rejected, (state, action) => {
+				state.isLoading = false;
+				state.isError = true;
+				state.message = action.payload;
+				state.solvedSafes = [];
 			});
 	},
 });

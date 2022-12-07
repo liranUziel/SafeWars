@@ -1,10 +1,12 @@
 import axios from 'axios';
 
-const API_URL_USERS = 'http://localhost:8080/users/safe';
+const API_URL_USERS = 'http://localhost:8080/users';
 const API_URL_SAFES = 'http://localhost:8080/safes';
 
 const getSafe = async (userData) => {
-	const response = await axios.get(API_URL_USERS, { headers: { Authorization: `Bearer ${userData.token}` } });
+	const response = await axios.get(API_URL_USERS + '/safe', {
+		headers: { Authorization: `Bearer ${userData.token}` },
+	});
 	return response.data;
 };
 
@@ -16,9 +18,18 @@ const deleteSafe = async (userData, safeId) => {
 	return response.data;
 };
 
+const getSolvedSafes = async (userData) => {
+	const response = await axios.get(API_URL_USERS + '/user', {
+		headers: { Authorization: `Bearer ${userData.token}` },
+	});
+
+	return response.data.solvedSafes;
+};
+
 const userSafeService = {
 	getSafe,
 	deleteSafe,
+	getSolvedSafes,
 };
 
 export default userSafeService;

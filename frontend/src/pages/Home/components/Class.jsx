@@ -6,19 +6,20 @@ import { getClassSafes } from '../../../features/class/classSlice';
 import { useEffect, useState } from 'react';
 
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
-import { getUserData } from '../../../features/auth/authSlice';
+import { getSolvedSafes } from '../../../features/userSafe/userSafeSlice';
 
 const HomeClass = () => {
 	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
+	const { solvedSafes } = useSelector((state) => state.safe);
 	const { classSafes, isLoading, isError, isSuccess, message } = useSelector((state) => state.class);
 	const [safes, setSafes] = useState([]);
 	const [popupActive, setPopupActive] = useState(false);
 
 	useEffect(() => {
-		//dispatch(getUserData(user));
+		dispatch(getSolvedSafes(user));
 		dispatch(getClassSafes(user));
-	}, []);
+	}, [dispatch]);
 
 	useEffect(() => {
 		setSafes(classSafes);
@@ -55,7 +56,7 @@ const HomeClass = () => {
 	return (
 		<div className='flex flex-wrap m-4 gap-4'>
 			{safes.map((safe) => {
-				safe = { ...safe, solved: user.solvedSafes.includes(safe._id) };
+				safe = { ...safe, solved: solvedSafes.includes(safe._id) };
 				return <Safe key={safe._id} safe={safe} type='public' setPopupActive={setPopupActive}></Safe>;
 			})}
 		</div>

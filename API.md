@@ -9,7 +9,7 @@ Tournament - id, classRelated, showScore, deadline, safes{safeId, displayName}
 /users
 register: POST / ({ realName, email, password, userId })=> {id, userName, email, safesSolved, userType, token}
 login: POST /login ({userName, password})=> {id, userName, email, safesSolved, userType, token}
-#getUserData: GET /user ()=> {id, realName, email}
+#getUserData: GET /user ()=> {id, realName, email, score, solvedSafes}
 #getUsersSafeData: GET /safe ()=> {safes:[Safe]}
 
 /classes

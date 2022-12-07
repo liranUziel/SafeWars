@@ -13,12 +13,10 @@ const getUser = aysncHandler(async (req, res) => {
 	const user = await getUserById(req.user.id);
 	res.status(200).json({
 		id: user.id,
-		userName: user.userName,
-		email: user.email,
-		solvedSafes: user.solvedSafes,
-		userType: user.userType,
 		realName: user.realName,
+		email: user.email,
 		score: user.score,
+		solvedSafes: user.solvedSafes,
 	});
 });
 
@@ -77,7 +75,7 @@ const loginUser = aysncHandler(async (req, res) => {
 			id: user.id,
 			userName: user.userName,
 			email: user.email,
-			solvedSafes: user.solvedSafes,
+			safesSolved: user.solvedSafes,
 			userType: user.userType,
 			realName: user.realName,
 			score: user.score,

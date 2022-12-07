@@ -9,11 +9,9 @@ import {
 	ModalBody,
 	ModalCloseButton,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getSafe } from '../../../../features/userSafe/userSafeSlice';
+import { useState } from 'react';
 
-const BreakSafeModal = ({ file, setFile, isOpen, onClose, breakSafe }) => {
+const BreakSafeModal = ({ file, setFile, isOpen, onClose, breakSafe, isLoadingKey }) => {
 	const handleDropFile = async (newFile) => {
 		setFile(newFile);
 	};
@@ -28,7 +26,8 @@ const BreakSafeModal = ({ file, setFile, isOpen, onClose, breakSafe }) => {
 					<DropZone file={file} handleDropFile={handleDropFile} />
 				</ModalBody>
 				<ModalFooter>
-					<Button colorScheme='teal' variant='outline' onClick={breakSafe}>
+					{isLoadingKey && <span className='m-2'>Loading... Please Wait and don't close the window.</span>}
+					<Button colorScheme='teal' variant='outline' onClick={breakSafe} isDisabled={isLoadingKey}>
 						Submit
 					</Button>
 				</ModalFooter>

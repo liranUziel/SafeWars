@@ -1,14 +1,13 @@
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useDisclosure, useToast } from '@chakra-ui/react';
+import fileDownload from 'js-file-download';
 import { BsFillArrowDownCircleFill, BsFillXCircleFill, BsSafe } from 'react-icons/bs';
 import { RiSafe2Fill } from 'react-icons/ri';
-import { useDisclosure, useToast } from '@chakra-ui/react';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteSafe, getSafe } from '../../../../features/userSafe/userSafeSlice';
-
+import { deleteSafe, getSolvedSafes } from '../../../../features/userSafe/userSafeSlice';
+import safesService from '../../../../utils/safesService';
 import DeleteSafeDialog from './DeleteSafeDialog';
-import safesService from '../../../../features/safe/safeService';
-import fileDownload from 'js-file-download';
 import BreakSafeModal from './BreakSafeModal';
-import { useState } from 'react';
 
 const Safe = ({ safe, type }) => {
 	const dispatch = useDispatch();
@@ -19,8 +18,10 @@ const Safe = ({ safe, type }) => {
 	const { isOpen: isOpenAlert, onOpen: onOpenAlert, onClose: onCloseAlert } = useDisclosure();
 
 	const [file, setFile] = useState(undefined);
+	const [isLoadingKey, setIsLoadingKey] = useState(false);
 
 	const breakSafe = async () => {
+		setIsLoadingKey(true);
 		const { isSucceeded } = await safesService.postKey(user, safe._id, file);
 		if (!isSucceeded) {
 			toast({
@@ -32,11 +33,13 @@ const Safe = ({ safe, type }) => {
 				status: 'success',
 				title: 'Broke Safe!',
 			});
-			dispatch(getSafe(user));
+			dispatch(getSolvedSafes(user));
 		}
+		setIsLoadingKey(false);
 	};
 
 	const downloadSafe = async () => {
+		if (safe.solved) return;
 		const response = await safesService.downloadSafe(user, safe._id);
 		fileDownload(response.data, safe.safeName);
 	};
@@ -97,15 +100,25 @@ const Safe = ({ safe, type }) => {
 					Safe Name: <span className=''>{safe.safeName}</span>
 				</h3>
 				<span className=''>{new Date(safe.updatedAt).toDateString()}</span>
-				{!safe.isVerified && (
-					<>
-						<br />
+				<br />
+				{type === 'private' &&
+					(safe.isVerified ? (
+						<>
+							<span className='text-green-600'>Verified!</span>
+						</>
+					) : (
 						<span className='text-red-600'>Not Verified! Break safe to verify.</span>
-					</>
-				)}
+					))}
 			</footer>
 
-			<BreakSafeModal file={file} setFile={setFile} isOpen={isOpen} onClose={onClose} breakSafe={breakSafe} />
+			<BreakSafeModal
+				file={file}
+				setFile={setFile}
+				isOpen={isOpen}
+				onClose={onClose}
+				breakSafe={breakSafe}
+				isLoadingKey={isLoadingKey}
+			/>
 		</div>
 	);
 };
