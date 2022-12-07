@@ -27,6 +27,9 @@ const createTournamnetHandler = asyncHandler(async (req, res) => {
 	if (!classId) {
 		return res.status(400).json('Missing classId!');
 	}
+	if (deadline && deadline < Date.now()) {
+		return res.status(400).json('Deadline must be future time!');
+	}
 	const oldTournament = await getTournamentByClass(classId);
 	if (oldTournament) return res.status(400).json('Why create again if you have already?');
 	const newTournament = await createTournamnet({
@@ -47,16 +50,18 @@ const updateTournamnetHandler = asyncHandler(async (req, res) => {
 });
 
 const getTournamentSafesHandler = asyncHandler(async (req, res) => {
-	const { tournamentId } = req.body;
+	const { tournamentId } = req.query;
 	if (!tournamentId) {
 		return res.status(400).json('Missing tournament id');
 	}
-	const safes = await getTournamentSafesById(tournamentId);
+	const safes = (await getTournamentSafesById(tournamentId)).map((currSafe) => {
+		return { safeName: currSafe.displayName, _id: currSafe.safeId };
+	});
 	res.status(200).json({ safes });
 });
 
 const getScoreBoardHandler = asyncHandler(async (req, res) => {
-	const { tournamentId } = req.body;
+	const { tournamentId } = req.query;
 	if (!tournamentId) {
 		return res.status(400).json('Missing tournament id');
 	}

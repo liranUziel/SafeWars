@@ -1,56 +1,71 @@
-import Safe from './utilsComponents/Safe';
-import Spinner from '../../../components/Spinner';
-import { useDispatch, useSelector } from 'react-redux';
-import { getTournamentInfo, getTournamentSafes } from '../../../features/tournament/tournamentSlice';
 import { useEffect, useState } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 
+import Safe from './utilsComponents/Safe';
+import Spinner from '../../../components/Spinner';
+import tournamentService from '../../../features/tournament/tournamentServices';
+import { getSolvedSafes } from '../../../features/userSafe/userSafeSlice';
+
 const HomeTournament = () => {
-	const dispatch = useDispatch();
 	const { user } = useSelector((state) => state.auth);
-	const { tournamentInfo, tournamentSafes, isLoading, isInfoError, isSafesError, isSuccess, message } = useSelector(
-		(state) => state.tournament
-	);
+	const { solvedSafes } = useSelector((state) => state.safe);
+	const dispatch = useDispatch();
+	const [availableTournaments, setAvailableTournaments] = useState([]);
+	const [tournamentSafes, setTournamentSafes] = useState([]);
+	const [selectedTournament, setSelectedTournament] = useState(undefined);
 
-	const [safes, setSafes] = useState([]);
-	const [tournamentEnable, setTournamentEnable] = useState(false);
-
-	useEffect(() => {
-		dispatch(getTournamentInfo(user));
-	}, []);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
-		if (tournamentInfo) {
-			if (tournamentInfo.deadline !== undefined || tournamentInfo.deadline < Date.now()) {
-				setTournamentEnable(true);
-				dispatch(getTournamentSafes({ user, tournamentId: tournamentInfo.tournaments[0]._id }));
-			}
+		setIsLoading(true);
+		dispatch(getSolvedSafes(user));
+		tournamentService
+			.getTournamentInfo(user)
+			.then(({ tournaments }) => {
+				setAvailableTournaments(tournaments);
+			})
+			.catch((err) => console.log(err));
+		setIsLoading(false);
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (availableTournaments.length <= 0) return;
+		setSelectedTournament(availableTournaments[0]);
+	}, [availableTournaments]);
+
+	useEffect(() => {
+		if (selectedTournament) {
+			setIsLoading(true);
+			tournamentService
+				.getTournamentSafe(user, selectedTournament._id)
+				.then(({ safes }) => {
+					setTournamentSafes(safes);
+				})
+				.catch((err) => console.log(err));
+			setIsLoading(false);
 		}
-	}, [tournamentInfo]);
+	}, [selectedTournament]);
 
-	useEffect(() => {
-		setSafes(tournamentSafes);
-	}, [tournamentSafes]);
+	// Always false, why?
+	// if (isLoading) {
+	// 	return (
+	// 		<div>
+	// 			<Spinner />
+	// 		</div>
+	// 	);
+	// }
 
-	if (isLoading) {
-		return (
-			<div>
-				<Spinner />
-			</div>
-		);
-	}
+	// if (isInfoError) {
+	// 	return (
+	// 		<Alert status='error'>
+	// 			<AlertIcon />
+	// 			<AlertDescription>{message}</AlertDescription>
+	// 		</Alert>
+	// 	);
+	// }
 
-	if (isInfoError) {
-		return (
-			<Alert status='error'>
-				<AlertIcon />
-				<AlertDescription>{message}</AlertDescription>
-			</Alert>
-		);
-	}
-
-	if (!tournamentEnable) {
+	if (!selectedTournament || (selectedTournament.deadline && selectedTournament.deadline < Date.now())) {
 		return (
 			<div className='flex flex-col items-center m-4 p-4'>
 				<div className='text-lg font-bold text-black dark:text-white'>
@@ -60,16 +75,16 @@ const HomeTournament = () => {
 		);
 	}
 
-	if (isSafesError) {
-		return (
-			<Alert status='error'>
-				<AlertIcon />
-				<AlertDescription>{message}</AlertDescription>
-			</Alert>
-		);
-	}
+	// if (isSafesError) {
+	// 	return (
+	// 		<Alert status='error'>
+	// 			<AlertIcon />
+	// 			<AlertDescription>{message}</AlertDescription>
+	// 		</Alert>
+	// 	);
+	// }
 
-	if (safes.length === 0) {
+	if (tournamentSafes.length === 0) {
 		return (
 			<div className='flex flex-col items-center m-4 p-4'>
 				<img src={require('../../../assets/Images/safes_not_found.png')} className='h-40' />
@@ -80,8 +95,8 @@ const HomeTournament = () => {
 
 	return (
 		<div className='flex flex-wrap m-4 gap-4'>
-			{safes.map((safe) => {
-				safe = { ...safe, solved: user.safesSolved.includes(safe._id) };
+			{tournamentSafes.map((safe) => {
+				safe = { ...safe, solved: solvedSafes.includes(safe._id) };
 				return <Safe key={safe._id} safe={safe} type='tournament'></Safe>;
 			})}
 		</div>

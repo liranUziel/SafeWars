@@ -1,95 +1,122 @@
-import { useEffect, useState } from "react";
-import { useSelector ,useDispatch} from 'react-redux';
-import {getClassStudents} from '../../../features/class/classSlice';
-import StudentsList from "./utilsComponents/StudentsList";
-import { createTournamentSafes } from '../../../features/tournament/tournamentSlice';
-// import '../../styles/dashboard.css';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useToast } from '@chakra-ui/react';
+import StudentsList from './utilsComponents/StudentsList';
+import CreateTournamentForm from './utilsComponents/CreateTournamentForm';
+import tournamentService from '../../../features/tournament/tournamentServices';
+import AddStudentForm from './utilsComponents/AddStudentForm';
+import classService from '../../../features/class/classService';
+import { getClassInfo } from '../../../features/class/classSlice';
 
 const Dashboard = () => {
-    //# Id Name Submited Safe Score 
+	const toast = useToast();
+	const dispatch = useDispatch();
+	const { user } = useSelector((state) => state.auth);
+	const { classInfo } = useSelector((state) => state.class);
+	const [selectedClass, setSelectedClass] = useState(undefined);
+	const [tournament, setTournament] = useState(undefined);
 
-    const {user} = useSelector((state)=> state.auth);
-    const {classInfo, classStudents} = useSelector((state)=> state.class);
-    // const { tournamentInfo} = useSelector((state) => state.tournament);
-    // const classes = [{name:'Emek',_id:123,students:[{_id:1,id:30257,name:'liran',Submited:true,Score:0},{_id:2,id:30168,name:'moshe',Submited:true,Score:0}]},{name:'Karmiel',_id:13,students:[{_id:3,id:20145,name:'gavriel',Submited:true,Score:0},{_id:4,id:20256,name:'david',Submited:false,Score:0},{_id:5,id:20367,name:'ron',Submited:true,Score:0}]}];
-    const [classArray,setCalssArray] = useState([]);
-    const [selection,setSelection] = useState(0);
-    const [students,setStudents] = useState([]);
-    const [showScore,setShowScore] = useState(false);
-    const dispatch = useDispatch();
+	const [students, setStudents] = useState([]);
 
-    const loadClassData = (e) =>{  
-        setSelection(classArray[e.target.value]);
-        console.log(students);
-    }
-    const createTournament = (e) => {
-        e.preventDefault();
-        console.log(`Dashboard.jsx: User ${user.name} creating tournament for class ${classArray[selection]._id} ${showScore?'and show score':''}`);
-    
-        dispatch(createTournamentSafes({user,classId:classArray[selection]._id,showScore:false,deadline:undefined}));
-    }
-    useEffect(()=>{
-        if(classInfo){
-            setCalssArray(classInfo);
-        }
-    },[classInfo]);
-    
-    useEffect(()=>{
-        if(classStudents){
-            setStudents(classStudents);
-        }
-    },[classStudents]);
+	useEffect(() => {
+		if (classInfo <= 0) return;
+		setSelectedClass(classInfo[0]);
+	}, [classInfo]);
 
-    useEffect(()=>{
-        if(selection!==undefined){
-            // setStudents(selection.students);
-        }
-    },[selection])
+	useEffect(() => {
+		if (!selectedClass) return;
 
-    useEffect(()=>{
-    console.log("classArray was loaded");
-    if(classArray.length > 0)
-    {   
-        console.log(`loading class ${classArray[selection]._id} student list`);
-        dispatch(getClassStudents({user,classId: classArray[selection]._id}));
-        
-    }
-    },[classArray]);
-    return (
-        <div className="dashboard_Container">
-            {classArray.length > 0 ?
-            <div className="dashboard_Container__box">
-                <div>
-                    <label>Select Class </label>
-                    <select name="dashboard_Container__box__classList" id="class" onChange={loadClassData}>
-                    {
-                        classArray.map((classObj,index) => <option className="dashboard_Container__box__class" value={index} key={index}>{`${classObj.classInfo.className} ${classObj.classInfo.classNumber}`}</option>)
-                    }
-                    </select>
-                </div>
-                <h1>Student List</h1>
-                <div>
-                    {students.length > 0 ? <StudentsList students={students}></StudentsList> :<>Not students in class {`${classArray[selection].classInfo.className} ${classArray[selection].classInfo.classNumber}`}</>}
-                </div>
-                <form onSubmit={createTournament} className="dashboard_Form">
-                    <div>
-                
-                    </div>
-                    <div>
-                        <button className="bg-green-500" type="submit">create tournament</button>
-                        <label>show score board  </label>
-                        <input type="checkbox" value={showScore} onChange={setShowScore}></input>
-                    </div>
-                    {/* <label>set deadline</label>
-                    <input type="calnder"></input> */}
-                </form>
-            </div>
-            :
-            <>no classes found</>
-            }
-            
-        </div>
-    )
-}
+		classService
+			.getClassStudents(user, selectedClass._id)
+			.then(({ students }) => {
+				setStudents(students);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 
-export default Dashboard
+		tournamentService.getTournamentInfo(user).then(({ tournaments }) => {
+			const relatedTournament = tournaments.find(
+				(currTournament) => selectedClass._id === currTournament.classRelated
+			);
+			setTournament(relatedTournament);
+		});
+	}, [selectedClass]);
+
+	const handleSelectedClass = (e) => {};
+
+	const handleCreateTournamnet = async (deadline, showScore) => {
+		tournamentService
+			.createTournamentSafe(user, selectedClass._id, showScore, deadline)
+			.then(({ newTournament }) => {
+				toast({
+					status: 'success',
+					description: 'Created Successfuly!',
+				});
+				setTournament(newTournament);
+			})
+			.catch((err) => {
+				toast({
+					status: 'error',
+					description: err?.response?.data,
+				});
+			});
+	};
+
+	const handleAddStudent = async (studentUserName) => {
+		classService
+			.addStudentToClass(user, selectedClass._id, studentUserName)
+			.then((data) => {
+				toast({
+					status: 'success',
+					description: 'Added Successfuly!',
+				});
+				setSelectedClass(data);
+				dispatch(getClassInfo(user));
+			})
+			.catch((err) => {
+				toast({
+					status: 'error',
+					description: err?.response?.data,
+				});
+			});
+	};
+
+	// If don't have any classes no need to render everything else
+	if (classInfo.length <= 0) {
+		return <div className='text-center font-bold'>You don't have any classes.</div>;
+	}
+
+	return (
+		<div className='flex flex-col justify-center items-center m-3'>
+			{/* Responsible for selecting the class */}
+			<section>
+				<label>Selected Class: </label>
+				<select onChange={handleSelectedClass}>
+					{classInfo.map((classObj) => {
+						return (
+							<option key={classObj._id} value={classObj._id}>
+								{`${classObj.classInfo.className} ${classObj.classInfo.classNumber}`}
+							</option>
+						);
+					})}
+				</select>
+			</section>
+			{/* Display students in class */}
+			<StudentsList students={students} />
+			<AddStudentForm addStudent={handleAddStudent} />
+			{/* Create Tournament Form */}
+			{!tournament ? (
+				<CreateTournamentForm createTournamnet={handleCreateTournamnet} />
+			) : (
+				<div>
+					Deadline: {new Date(tournament.deadline).toDateString()}
+					<br />
+					Show score board: {tournament.showScore ? 'V' : 'X'}
+				</div>
+			)}
+		</div>
+	);
+};
+
+export default Dashboard;

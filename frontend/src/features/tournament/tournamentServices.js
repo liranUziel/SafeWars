@@ -12,7 +12,7 @@ const getTournamentInfo = async (userData) => {
 const getTournamentSafe = async (userData, tournamentId) => {
 	const response = await axios.get(API_URL_TOURNAMENT_SAFES, {
 		headers: { Authorization: `Bearer ${userData.token}` },
-		params: tournamentId,
+		params: { tournamentId },
 	});
 	return response.data;
 };

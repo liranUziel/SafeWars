@@ -1,65 +1,46 @@
-import { useState } from "react";
-import StudemtItem from "./StudemtItem";
+import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import classService from '../../../../features/class/classService';
 
-const StudentsList = ({students}) => {
-    const [studetId,setStudetId] = useState('');
-    const [searchResult,setSearchResult] = useState([]);
-    const [searchId,setSearchId] = useState('');
+const StudentsList = ({ students }) => {
+	const { user } = useSelector((state) => state.auth);
 
-    const removeStudent = (e) =>{
-        e.preventDefault();
-        console.log(`remove student ${e.target.value}`);
-    }
-    const addStudent = (e) =>{
-        e.preventDefault();
-        console.log(`add student ${studetId}`);
-        setStudetId('');
-        setSearchId('');
-        setSearchResult([]);
-    }
-    const stuedntFind = (e) =>{
-        setSearchId(e.target.value);
-        setSearchResult(['a','b']);
-    }
+	if (students.length <= 0) {
+		return <div className='text-center font-bold'>There are no any students in this class.</div>;
+	}
+	return (
+		<>
+			<TableContainer m='5'>
+				<Table size='sm'>
+					<Thead>
+						<Tr>
+							<Th isNumeric>#</Th>
+							<Th>Id</Th>
+							<Th>Name</Th>
+							<Th>Submited</Th>
+							<Th>Safe Verified</Th>
+							<Th isNumeric>Score</Th>
+						</Tr>
+					</Thead>
+					<Tbody>
+						{students.map((currStudent, index) => {
+							return (
+								<Tr key={currStudent.id}>
+									<Td>{index}</Td>
+									<Td>{currStudent.userId}</Td>
+									<Td>{currStudent.realName}</Td>
+									<Td>{currStudent.hasSubmitedSafe ? 'V' : 'X'}</Td>
+									<Td>{currStudent.isSafeVerified ? 'V' : 'X'}</Td>
+									<Td>{currStudent.score}</Td>
+								</Tr>
+							);
+						})}
+					</Tbody>
+				</Table>
+			</TableContainer>
+		</>
+	);
+};
 
-    const setSearch = (e) =>{
-        console.log(`set result to ${e.target.id}`);
-        setStudetId(e.target.id);
-        setSearchId(e.target.id);
-        setSearchResult([]);
-    }
-    return (
-        <div className="studentList_container">
-            <div className="studentList_table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Submited Safe</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student,index) =><StudemtItem key={student.id} index={index} student={student} removeStudent={removeStudent}/>)}
-                    </tbody>
-                </table>
-            </div>
-            <form onSubmit={addStudent} className="studentSreach_form">
-                <label>Search: </label>
-                <input type="text" className="searchBox" value={searchId} onChange={stuedntFind}></input><button >+</button>
-                {searchResult.length>0?<div className="searchReslut_box">
-
-                    {searchResult.map((student,index) => {
-                    return <div className="searchReslut_option" id={student} key={index} onClick={setSearch} value={student}>{student} </div>;
-                    })}
-                </div>
-                :<>
-                </>}
-            </form>
-        </div>
-    )
-}
-
-export default StudentsList
+export default StudentsList;

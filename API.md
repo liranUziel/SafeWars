@@ -15,7 +15,7 @@ login: POST /login ({userName, password})=> {id, userName, email, safesSolved, u
 /classes
 #getClassesData: GET / () => {classesIn:[Class]}
 #getAdminSafesData: GET /safes () => {safes:[Safe]}
-#getStudentsInClass: GET /students ({classId}) => {students:[{id, userId, hasSubmitedSafe, isSafeVerified, score}]}
+#getStudentsInClass: GET /students ({classId}) => {students:[{id, userId, hasSubmitedSafe, isSafeVerified, score, realName}]}
 #addStudentToClass: POST /students ({classId, studentUserName}) => {Class}
 
 /safes

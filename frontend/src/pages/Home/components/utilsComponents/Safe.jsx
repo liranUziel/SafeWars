@@ -99,8 +99,12 @@ const Safe = ({ safe, type }) => {
 				<h3 className=''>
 					Safe Name: <span className=''>{safe.safeName}</span>
 				</h3>
-				<span className=''>{new Date(safe.updatedAt).toDateString()}</span>
-				<br />
+				{safe.updatedAt && (
+					<>
+						<span className=''>{new Date(safe.updatedAt).toDateString()}</span>
+						<br />
+					</>
+				)}
 				{type === 'private' &&
 					(safe.isVerified ? (
 						<>

@@ -9,6 +9,7 @@ const user = JSON.parse(localStorage.getItem('user'));
 // Register user
 export const getClassInfo = createAsyncThunk('class/getClassInfo', async (user, thunkAPI) => {
 	try {
+		console.log('getClassInfo classSlice');
 		return await classSerivce.getClassInfo(user);
 	} catch (error) {
 		const message =
@@ -27,21 +28,20 @@ export const getClassSafes = createAsyncThunk('class/getClassSafes', async (user
 	}
 });
 
-export const getClassStudents = createAsyncThunk('class/getClassStudents', async ({ user, classId }, thunkAPI) => {
-	try {
-		return await classSerivce.getClassStudents(user, classId);
-	} catch (error) {
-		const message =
-			(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
-		return thunkAPI.rejectWithValue(message);
-	}
-});
+// export const getClassStudents = createAsyncThunk('class/getClassStudents', async ({ user, classId }, thunkAPI) => {
+// 	try {
+// 		return await classSerivce.getClassStudents(user, classId);
+// 	} catch (error) {
+// 		const message =
+// 			(error.response && error.response.data && error.response.data.message) || error.message || error.toString();
+// 		return thunkAPI.rejectWithValue(message);
+// 	}
+// });
 
 // The initial state
 const initialState = {
 	classInfo: [],
 	classSafes: [],
-	classStudents: [],
 	isError: false,
 	isSuccess: false,
 	isLoading: false,
@@ -82,21 +82,21 @@ export const classSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.classStudents = [];
-			})
-			.addCase(getClassStudents.pending, (state) => {
-				state.isLoading = true;
-			})
-			.addCase(getClassStudents.fulfilled, (state, action) => {
-				state.isLoading = false;
-				state.isSuccess = true;
-				state.classStudents = [...action.payload];
-			})
-			.addCase(getClassStudents.rejected, (state, action) => {
-				state.isLoading = false;
-				state.isError = true;
-				state.message = action.payload;
-				state.classStudents = [];
 			});
+		// .addCase(getClassStudents.pending, (state) => {
+		// 	state.isLoading = true;
+		// })
+		// .addCase(getClassStudents.fulfilled, (state, action) => {
+		// 	state.isLoading = false;
+		// 	state.isSuccess = true;
+		// 	state.classStudents = [action.payload];
+		// })
+		// .addCase(getClassStudents.rejected, (state, action) => {
+		// 	state.isLoading = false;
+		// 	state.isError = true;
+		// 	state.message = action.payload;
+		// 	state.classStudents = [];
+		// });
 	},
 });
 
