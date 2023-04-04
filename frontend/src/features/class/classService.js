@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL_CLASS = 'http://localhost:8080/classes';
-const API_URL_CLASS_SAFES = 'http://localhost:8080/classes/safes';
+const API_URL_CLASS = `http://${import.meta.env.VITE_BACKEND_IP}:8080/classes`;
+const API_URL_CLASS_SAFES = `http://${import.meta.env.VITE_BACKEND_IP}:8080/classes/safes`;
 
 const getClassInfo = async (userData) => {
 	const response = await axios.get(API_URL_CLASS, {

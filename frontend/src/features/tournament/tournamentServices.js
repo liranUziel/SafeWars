@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL_TOURNAMENT = 'http://localhost:8080/tournaments';
-const API_URL_TOURNAMENT_SAFES = 'http://localhost:8080/tournaments/safes';
+const API_URL_TOURNAMENT = `http://${import.meta.env.VITE_BACKEND_IP}:8080/tournaments`;
+const API_URL_TOURNAMENT_SAFES = `http://${import.meta.env.VITE_BACKEND_IP}:8080/tournaments/safes`;
 
 const getTournamentInfo = async (userData) => {
 	const response = await axios.get(API_URL_TOURNAMENT, { headers: { Authorization: `Bearer ${userData.token}` } });

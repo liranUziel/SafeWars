@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/users';
+const API_URL = `http://${import.meta.env.VITE_BACKEND_IP}:8080/users`;
 
 // Register user
 // Async function

@@ -33,6 +33,8 @@ const theme = extendTheme({
 	},
 });
 
+console.log(import.meta.env);
+
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
 		<ChakraProvider theme={theme}>

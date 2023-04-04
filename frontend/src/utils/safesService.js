@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL_SAFES = 'http://localhost:8080/safes';
+const API_URL_SAFES = `http://${import.meta.env.VITE_BACKEND_IP}:8080/safes`;
 
 const downloadSafe = async (userData, safeId) => {
 	const response = await axios.get(API_URL_SAFES, {
